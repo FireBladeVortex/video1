@@ -1,2 +1,1 @@
-# video1
-qwe
+https://firebladevortex.github.io/video1/
