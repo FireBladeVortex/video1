@@ -33,6 +33,19 @@ body
 	background: var(--bg);
 }
 
+#switch
+{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 500px;
+	height: 500px;
+	background: var(--emp);
+	cursor: pointer;
+	z-index: 50;
+}
+
 #box
 { /* 좌우 배열 결정 */
 	display: flex;
@@ -350,34 +363,34 @@ body
 	cursor: default;
 }
 
-#right h1 
+#right h1
 {
 	position: absolute;
 	top: 0;
 	left: 3%;
-	display: flex; 
-	gap: 30px; 
+	display: flex;
+	gap: 30px;
 	font-size: 60px;
 }
 
-#help_btn 
+#help_btn
 {
 	color: var(--text);
 	cursor: help;
 }
 
-#help_btn:hover 
+#help_btn:hover
 {
 	color: #ff0000;
 }
 
-#alert_btn 
+#alert_btn
 {
 	color: var(--text);
 	cursor: progress;
 }
 
-#alert_btn:hover 
+#alert_btn:hover
 {
 	color: var(--highlight);
 }
