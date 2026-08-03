@@ -18,7 +18,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_v
 // YouTube Player iframe API 불러오기
 const api = document.createElement("script")
 api.src = "https://www.youtube.com/iframe_api"
-document.head.appendChild(api)
+// document.head.appendChild(api)
 
 
 

@@ -2,7 +2,7 @@
 // YouTube Player iframe API 불러오기
 const api = document.createElement("script")
 api.src = "https://www.youtube.com/iframe_api"
-document.head.appendChild(api)
+// document.head.appendChild(api) // call에서 처리
 
 // iframe 들어갈 변수 준비
 let player = null
