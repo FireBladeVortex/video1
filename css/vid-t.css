@@ -77,6 +77,7 @@ body
 #left h1 .h1_left /* (추가) */
 {
 	flex: 1; /* (추가) */
+	display: flex; /* (추가) */
 }
 
 #left h1 .h1_right
@@ -86,6 +87,17 @@ body
 	justify-content: space-evenly;
 }
 
+.h1_left_txt /* (추가) */
+{
+	flex: 1;
+}
+
+.h1_left_btn /* (추가) */
+{
+	flex: 1;
+	display: flex;
+	justify-content: space-evenly;
+}
 
 .section
 {
