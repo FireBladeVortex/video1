@@ -134,22 +134,12 @@ function make_list()
 		h1_left_btn.className = "h1_left_btn" // (추가)
 		h1_left.appendChild(h1_left_btn) // (추가)
 
-		const small_txt = document.createElement("span") // (추가)
-		small_txt.className = "txt_click" // (추가)
-		small_txt.textContent = "작게" // (추가)
-		h1_left_btn.appendChild(small_txt) // (추가)
-		small_txt.addEventListener("click", () => resize_section(type.type, false)) // (추가)
-
-		const big_txt = document.createElement("span") // (추가)
-		big_txt.className = "txt_click" // (추가)
-		big_txt.textContent = "크게" // (추가)
-		h1_left_btn.appendChild(big_txt) // (추가)
-		big_txt.addEventListener("click", () => resize_section(type.type, true)) // (추가)
-
-
-
-
-
+		const toggle_txt = document.createElement("span") // (추가)
+		toggle_txt.className = "txt_click" // (추가)
+		toggle_txt.textContent = "크게" // (추가)
+		toggle_txt.dataset.type = type.type // (추가)
+		h1_left_btn.appendChild(toggle_txt) // (추가)
+		toggle_txt.addEventListener("click", () => resize_section(type.type)) // (추가)
 
 
 
@@ -603,13 +593,17 @@ function click_img(target)
 	img_click = target
 }
 
-// (추가) 재생 목록 칸 확대/축소 전환
-function resize_section(type_str, big)
+
+let big_type = null // (추가) 현재 확대된 섹션 타입 저장
+// (수정) 재생 목록 칸 확대/축소 전환 (토글 방식)
+function resize_section(type_str)
 {
 	const left = document.getElementById("left")
 	const rows = { video: "2fr", short: "2fr", long: "1fr" }
 
-	if (big)
+	const next_big = big_type === type_str ? null : type_str // (추가) 같은 타입 재클릭 시 해제
+
+	if (next_big)
 	{
 		rows.video = type_str === "video" ? "1fr" : "0fr"
 		rows.short = type_str === "short" ? "1fr" : "0fr"
@@ -617,8 +611,14 @@ function resize_section(type_str, big)
 	}
 
 	left.style.gridTemplateRows = `${rows.video} ${rows.short} ${rows.long}`
-} // (추가)
 
+	big_type = next_big // (추가) 상태 갱신
+
+	document.querySelectorAll(".h1_left_btn .txt_click").forEach(span => // (추가) 모든 토글 문자열 재설정
+	{
+		span.textContent = span.dataset.type === big_type ? "작게" : "크게"
+	})
+}
 // youtube 정보 가져오기 cue 상태 되기전
 function ready_data(id, start = 0, end = 0)
 {
