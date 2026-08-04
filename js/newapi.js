@@ -119,8 +119,47 @@ function make_list()
 
 		const h1_left = document.createElement("div")
 		h1_left.className = "h1_left"
-		h1_left.textContent = type.tag + " 재생 목록"
+		// h1_left.textContent = type.tag + " 재생 목록"
 		h1.appendChild(h1_left)
+
+
+
+
+		const h1_left_txt = document.createElement("div") // (추가)
+		h1_left_txt.className = "h1_left_txt" // (추가)
+		h1_left_txt.textContent = type.tag + " 재생 목록" // (추가)
+		h1_left.appendChild(h1_left_txt) // (추가)
+
+		const h1_left_btn = document.createElement("div") // (추가)
+		h1_left_btn.className = "h1_left_btn" // (추가)
+		h1_left.appendChild(h1_left_btn) // (추가)
+
+		const small_txt = document.createElement("span") // (추가)
+		small_txt.className = "txt_click" // (추가)
+		small_txt.textContent = "작게" // (추가)
+		h1_left_btn.appendChild(small_txt) // (추가)
+		small_txt.addEventListener("click", () => resize_section(type.type, false)) // (추가)
+
+		const big_txt = document.createElement("span") // (추가)
+		big_txt.className = "txt_click" // (추가)
+		big_txt.textContent = "크게" // (추가)
+		h1_left_btn.appendChild(big_txt) // (추가)
+		big_txt.addEventListener("click", () => resize_section(type.type, true)) // (추가)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		if (type.type === "long")
 		{
@@ -564,7 +603,21 @@ function click_img(target)
 	img_click = target
 }
 
+// (추가) 재생 목록 칸 확대/축소 전환
+function resize_section(type_str, big)
+{
+	const left = document.getElementById("left")
+	const rows = { video: "2fr", short: "2fr", long: "1fr" }
 
+	if (big)
+	{
+		rows.video = type_str === "video" ? "1fr" : "0fr"
+		rows.short = type_str === "short" ? "1fr" : "0fr"
+		rows.long = type_str === "long" ? "1fr" : "0fr"
+	}
+
+	left.style.gridTemplateRows = `${rows.video} ${rows.short} ${rows.long}`
+} // (추가)
 
 // youtube 정보 가져오기 cue 상태 되기전
 function ready_data(id, start = 0, end = 0)
