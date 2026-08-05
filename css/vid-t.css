@@ -72,7 +72,10 @@ body
 	border-bottom: 3px solid var(--emp);
 	padding-bottom: 3px;
 	display: flex; /* (수정) 좌우 2등분 배치 */
+	align-items: center; /* (추가) */
 }
+
+
 
 #left h1 .h1_name
 {
@@ -96,7 +99,6 @@ body
 	display: flex;
 	justify-content: space-evenly;
 }
-
 
 
 .btn_center /* (수정) */
