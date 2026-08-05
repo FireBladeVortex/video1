@@ -1017,20 +1017,20 @@ function make_long()
 	ready_btn.addEventListener("click", () =>
 	{
 		const target = "long_ready"
-		if (img_click === target)
-		{
-			if (play())
-			{
-				player.pauseVideo()
-			}
-			else if (pause())
-			{
-				player.playVideo()
-			}
-			else
-				return
-		}
-		else
+		// if (img_click === target)
+		// {
+		// 	if (play())
+		// 	{
+		// 		player.pauseVideo()
+		// 	}
+		// 	else if (pause())
+		// 	{
+		// 		player.playVideo()
+		// 	}
+		// 	else
+		// 		return
+		// }
+		// else
 		{
 			click_img(target)
 			const lang_value = lang_select.value
