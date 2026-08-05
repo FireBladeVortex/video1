@@ -1319,7 +1319,7 @@ function onPlayerStateChange(event)
 		overlay.style.cursor = pop ? "pointer" : "default"
 		overlay.onclick = pop ? play_or_pause : null
 	})
-	document.getElementById("ad").style.pointerEvents = pop ? "auto" : "none"
+	// document.getElementById("ad").style.pointerEvents = pop ? "auto" : "none"
 }
 
 // 싲가
