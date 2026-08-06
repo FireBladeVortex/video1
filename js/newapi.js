@@ -244,230 +244,6 @@ function make_list()
 			return
 		}
 
-// 		const h1_left = document.createElement("div")
-// 		h1_left.className = "h1_left"
-// 		// h1_left.textContent = type.tag + " 재생 목록"
-// 		h1.appendChild(h1_left)
-
-
-
-
-// 		const h1_left_txt = document.createElement("div") // (추가)
-// 		h1_left_txt.className = "h1_left_txt" // (추가)
-// 		h1_left_txt.textContent = type.tag + " 재생 목록" // (추가)
-// 		h1_left.appendChild(h1_left_txt) // (추가)
-
-// 		const h1_left_btn = document.createElement("div") // (추가)
-// 		h1_left_btn.className = "h1_left_btn" // (추가)
-// 		h1_left.appendChild(h1_left_btn) // (추가)
-
-// 		const toggle_txt = document.createElement("span") // (추가)
-// 		toggle_txt.className = "txt_click" // (추가)
-// 		toggle_txt.textContent = "크게" // (추가)
-// 		toggle_txt.dataset.type = type.type // (추가)
-// 		h1_left_btn.appendChild(toggle_txt) // (추가)
-// 		toggle_txt.addEventListener("click", () => resize_section(type.type)) // (추가)
-
-
-
-
-
-
-
-
-
-
-
-// 		if (type.type === "long")
-// 		{
-// 			make_long()
-// 			return
-// 		}
-// 		else
-// 		{
-// 			active_data[type.type] = type.data // (추가) video/short 현재 표시 데이터 초기화
-
-// 			const h1_right = document.createElement("div")
-// 			h1_right.className = "h1_right"
-// 			h1.appendChild(h1_right)
-
-// 			const h1_right_qweqwe = document.createElement("div")
-// 			h1_right_qweqwe.className = "h1_right"
-// 			h1_right.appendChild(h1_right_qweqwe)
-
-// 			if (type.type === "video")
-// 			{
-// 				list_ori = type.data.filter(video => "original" in video) // (추가) original 값 있는 데이터 분리
-// 				list_non = type.data.filter(video => !("original" in video)) // (추가) original 값 없는 데이터 분리
-
-// 				const ori = ori => !ori.original
-// 				if (type.data.some(ori) && !type.data.every(ori)) // 전체가 아닌 일부만 오리지날일때
-// 				{
-// 					const h1_right_all = document.createElement("div")
-// 					h1_right_all.className = "h1_right"
-// 					h1_right_qweqwe.appendChild(h1_right_all)
-
-// 						const all_txt = document.createElement("span")
-// 						all_txt.className = "txt_click"
-// 						all_txt.textContent = "모두"
-// 						h1_right_all.appendChild(all_txt)
-// 						all_txt.addEventListener("click", () => switch_video_data(list_data.video))
-
-// 					const h1_right_original = document.createElement("div")
-// 					h1_right_original.className = "h1_right"
-// 					h1_right_qweqwe.appendChild(h1_right_original)
-
-// 						const original_txt = document.createElement("span")
-// 						original_txt.className = "txt_click"
-// 						original_txt.textContent = "원곡"
-// 						h1_right_original.appendChild(original_txt)
-// 						original_txt.addEventListener("click", () => switch_video_data(list_ori))
-
-// 					const h1_right_cover = document.createElement("div")
-// 					h1_right_cover.className = "h1_right"
-// 					h1_right_qweqwe.appendChild(h1_right_cover)
-
-// 						const cover_txt = document.createElement("span")
-// 						cover_txt.className = "txt_click"
-// 						cover_txt.textContent = "커버"
-// 						h1_right_cover.appendChild(cover_txt)
-// 						cover_txt.addEventListener("click", () => switch_video_data(list_non))
-// 				}
-// 			}
-
-// 			const h1_right_btn = document.createElement("div")
-// 			h1_right_btn.className = "h1_right"
-// 			h1_right.appendChild(h1_right_btn)
-
-// /*
-// 			// if 썸네일 수가 허용하는 grid 칸 갯수 이상이라 여러개의 page 있는 조건일때 추가 필요
-// 				const btn_prev = document.createElement("div")
-// 				btn_prev.className = "h1_right"
-// 				btn_prev.textContent = "이전"
-// 				h1_right_btn.appendChild(btn_prev)
-// 				btn_prev.addEventListener("click", () =>
-// 				{
-// 					if (type.type === "short")
-// 					{
-// 						short_multiple = Math.max(1, short_multiple - 1)
-// 						num_prev.textContent = short_multiple === 1 ? "" : short_multiple - 1
-// 						num_curr.textContent = short_multiple
-// 						num_next.textContent = short_multiple + 1
-// 					}
-// 					else
-// 					{
-// 						video_multiple = Math.max(1, video_multiple - 1)
-// 						num_prev.textContent = video_multiple === 1 ? "" : video_multiple - 1
-// 						num_curr.textContent = video_multiple
-// 						num_next.textContent = video_multiple + 1
-// 					}
-// 					update_page(type.type)
-// 				})
-
-// 				const btn_center = document.createElement("div")
-// 				btn_center.className = "h1_right"
-// 				h1_right_btn.appendChild(btn_center)
-
-// 					const num_prev = document.createElement("div")
-// 					num_prev.className = "h1_right num_prev"
-// 					num_prev.dataset.type = type.type
-// 					num_prev.textContent = ""
-// 					btn_center.appendChild(num_prev)
-
-// 					const num_curr = document.createElement("div")
-// 					num_curr.className = "h1_right num_curr"
-// 					num_curr.dataset.type = type.type
-// 					num_curr.textContent = type.type === "short" ? short_multiple : video_multiple
-// 					btn_center.appendChild(num_curr)
-
-// 					const num_next = document.createElement("div")
-// 					num_next.className = "h1_right num_next"
-// 					num_next.dataset.type = type.type
-// 					const num = type.type === "short" ? total_cell.short : total_cell.video
-// 					const mul = type.type === "short" ? short_multiple : video_multiple
-// 					const last = get_last(type.type)
-// 					num_next.textContent = mul + 1 >= last ? "" : mul + 1
-// 					btn_center.appendChild(num_next)
-
-// 				const btn_next = document.createElement("div")
-// 				btn_next.className = "h1_right"
-// 				btn_next.textContent = "다음"
-// 				h1_right_btn.appendChild(btn_next)
-// 				btn_next.addEventListener("click", () =>
-// 				{
-// 					if (type.type === "short")
-// 					{
-// 						const last = get_last(type.type)
-// 						if (short_multiple >= last)
-// 							return
-// 						short_multiple = short_multiple + 1
-// 						num_prev.textContent = short_multiple === 1 ? "" : short_multiple - 1
-// 						num_curr.textContent = short_multiple
-// 						num_next.textContent = short_multiple + 1 > last ? "" : short_multiple + 1
-// 					}
-// 					else
-// 					{
-// 						const last = get_last(type.type)
-// 						if (video_multiple >= last)
-// 							return
-// 						video_multiple = video_multiple + 1
-// 						num_prev.textContent = video_multiple === 1 ? "" : video_multiple - 1
-// 						num_curr.textContent = video_multiple
-// 						num_next.textContent = video_multiple + 1 > last ? "" : video_multiple + 1
-// 					}
-// 			update_page(type.type)
-// 				})
-// 			*/
-// 				const btn_prev = document.createElement("div")
-// 				btn_prev.className = "h1_right btn_prev"
-// 				btn_prev.dataset.type = type.type
-// 				h1_right_btn.appendChild(btn_prev)
-
-// 					const btn_prev_txt = document.createElement("span")
-// 					btn_prev_txt.className = "txt_click"
-// 					btn_prev.appendChild(btn_prev_txt)
-// 					btn_prev_txt.addEventListener("click", () =>
-// 					{
-// 						if (type.type === "short")
-// 							short_multiple = Math.max(1, short_multiple - 1)
-// 						else
-// 							video_multiple = Math.max(1, video_multiple - 1)
-// 						render_nav(type.type)
-// 						update_page(type.type)
-// 					})
-
-// 				const btn_center = document.createElement("div")
-// 				btn_center.className = "h1_right btn_center"
-// 				btn_center.dataset.type = type.type
-// 				h1_right_btn.appendChild(btn_center)
-
-// 				const btn_next = document.createElement("div")
-// 				btn_next.className = "h1_right btn_next"
-// 				btn_next.dataset.type = type.type
-// 				h1_right_btn.appendChild(btn_next)
-
-// 					const btn_next_txt = document.createElement("span")
-// 					btn_next_txt.className = "txt_click"
-// 					btn_next.appendChild(btn_next_txt)
-// 					btn_next_txt.addEventListener("click", () =>
-// 					{
-// 						const last = get_last(type.type)
-// 						const multiple = type.type === "short" ? short_multiple : video_multiple
-// 						if (multiple >= last)
-// 							return
-// 						if (type.type === "short")
-// 							short_multiple = short_multiple + 1
-// 						else
-// 							video_multiple = video_multiple + 1
-// 						render_nav(type.type)
-// 						update_page(type.type)
-// 					})
-// 			render_nav(type.type) // (추가) 최초 nav 상태 그리기
-// 		}
-
-
-
-
 
 
 
@@ -482,45 +258,6 @@ function make_list()
 		list.appendChild(page)
 
 
-		/*
-		for (let num = 0; num < total_cell[type.type]; num++)
-		{
-			const ready = type.data[num]
-			const btn = document.createElement("button")
-			btn.className = "btn"
-			btn.dataset.num = num
-			btn.dataset.type = type.type
-
-			const img = document.createElement("img")
-			img.src = `https://img.youtube.com/vi/${ready_data(ready.id)}/mqdefault.jpg`
-
-			btn.appendChild(img)
-			page.appendChild(btn)
-
-			btn.addEventListener("click", () =>
-			{
-				const target = (type.type + "_" + (num + "").padStart(3, "0"))
-				if (img_click === target)
-				{
-					if (play())
-					{
-						player.pauseVideo()
-					}
-					else if (pause())
-					{
-						player.playVideo()
-					}
-					else
-						return
-				}
-				else
-				{
-					click_img(target)
-					const short = type.type === "short"
-					ready_data(ready.id, short ? 0 : ready.start, short ? 0 : ready.end)
-				}
-			})
-		}*/
 		fill_page(type.type)
 	})
 }
@@ -1017,20 +754,6 @@ function make_long()
 	ready_btn.addEventListener("click", () =>
 	{
 		const target = "long_ready"
-		// if (img_click === target)
-		// {
-		// 	if (play())
-		// 	{
-		// 		player.pauseVideo()
-		// 	}
-		// 	else if (pause())
-		// 	{
-		// 		player.playVideo()
-		// 	}
-		// 	else
-		// 		return
-		// }
-		// else
 		{
 			click_img(target)
 			const lang_value = lang_select.value
@@ -1314,12 +1037,12 @@ function onPlayerStateChange(event)
 	}
 	//
 	const pop = [1, 2, 3].includes(event.data)
-	document.querySelectorAll("#right").forEach(overlay => // ("#right, #ad")  // #ad 임시 삭제 사용자 선택으로 버튼 만들기 전까지
+	document.querySelectorAll("#right").forEach(overlay => // ("#right, #ad") // #ad 임시 삭제 사용자 선택으로 버튼 만들기 전까지
 	{
 		overlay.style.cursor = pop ? "pointer" : "default"
 		overlay.onclick = pop ? play_or_pause : null
 	})
-	document.getElementById("ad").style.pointerEvents = pop ? "auto" : "none"
+	// document.getElementById("ad").style.pointerEvents = pop ? "auto" : "none" // 상동
 }
 
 // 싲가
