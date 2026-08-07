@@ -1,31 +1,30 @@
 
 window.playlist ??= {}
-
 playlist.intro =
 [
 	{
-		id : "",
+		id : "https://youtube.com/playlist?list=PLaC2Fqsh35N0&si=ate2cJOMGqdsvCQ9",
 	},
 ]
 
 playlist.ori =
 [
 	{
-		id : "",
+		id : "https://youtube.com/playlist?list=PLaC2Fqsh35N0&si=ate2cJOMGqdsvCQ9",
 	},
 ]
 
 playlist.video =
 [
 	{
-		id : "",
+		id : "https://youtube.com/playlist?list=PLaC2Fqsh35N0&si=ate2cJOMGqdsvCQ9",
 	},
 ]
 
 playlist.short =
 [
 	{
-		id : "",
+		id : "https://youtube.com/playlist?list=PLaC2Fqsh35N0&si=ate2cJOMGqdsvCQ9",
 	},
 ]
 

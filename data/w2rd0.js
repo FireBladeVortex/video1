@@ -1,37 +1,30 @@
 
-window.list_data ??= {}
-list_data.intro =
+window.playlist ??= {}
+
+playlist.intro =
 [
 	{
-		id : ""
+		id : "https://youtu.be/FePuk8xH4b0?si=7qH4VaKGY1qlrCsR",
 	},
 ]
 
-list_data.video =
+playlist.ori =
 [
 	{
-		id : "https://youtu.be/d8E8db1u-b8?si=sEiOTzEkekjt9ngl",
-	},
-	{
-		id : "https://youtu.be/0zI7YQoExlg?si=Hwh3gh6YW5gAmN6K",
-	},
-	{
-		id : "https://youtu.be/cqDwbIFbB3A?si=-sHClnjoBRg6a8AC",
-	},
-	{
-		id : "https://youtu.be/K4p8zelpWeg?si=71VBQz3_zsxm8CWH",
+		id : "https://youtube.com/playlist?list=PLUGs0TpP4EQM&si=_cdK9jCBZbmy95H-",
 	},
 ]
 
-
-list_data.part =
+playlist.video =
 [
 	{
-		id: "https://youtu.be/d8E8db1u-b8?si=sEiOTzEkekjt9ngl",
-		song:
-		[
-			{ lang : ["한국어", "개사"], name : "아쿠루", title : "나는 반딧불이", start : "1:11:33", end : "1:15:15", },
-			{ lang : ["한국어"], name : "아쿠루", title : "한숨", start : "1:22:45", end : "1:27:33", },
-		]
+		id : "https://youtube.com/playlist?list=PLAqfD68SSkOk&si=ikv97BzuNlHiY-Bv",
+	},
+]
+
+playlist.short =
+[
+	{
+		id : "https://youtube.com/playlist?list=PLEgDaBZKqRT4&si=myS6SOD9aYXvMUo4",
 	},
 ]
