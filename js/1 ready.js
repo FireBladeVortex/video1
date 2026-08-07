@@ -122,6 +122,11 @@ function get_id(id)
 	try
 	{
 		const url = new URL(id)
+
+		const playlist = url.searchParams.get("list")
+		if (playlist)
+			return playlist
+
 		const v = url.searchParams.get("v")
 		const path = url.pathname.split("/").pop()
 		const vid = v ?? path
@@ -139,54 +144,62 @@ function get_id(id)
 	}
 }
 
-function data_filter(data, type)
-{
-	const a = new Map()
-	const b = new Map()
 
-	data.forEach(video =>
-	{
-		const vid = get_id(video.id)
-		if (!vid)
-			return
 
-		const id = Array.isArray(vid) ? vid[0] : vid
-		const comp = video[type]
 
-		if (comp)
-		{
-			const v = { id: id, [type]: video[type] }
-			if (!a.has(id))
-			{
-				a.set(id, v)
-			}
-		}
-		else
-		{
-			const v = { id: id }
-			if (!b.has(id))
-			{
-				b.set(id, v)
-			}
-		}
-	})
 
-	const ori = [...a.values()]
-	const non = [...b.values()].filter(video => !a.has(video.id))
-	const all = ori.concat(non)
 
-	return { ori, non, all }
-}
 
-const list_video = data_filter(list_data.video, "original")
-const list_short = data_filter(list_data.short)
 
-console.log(list_video.ori)
-console.log(list_video.non)
-console.log(list_video.all)
-console.log(list_short.ori)
-console.log(list_short.non)
-console.log(list_short.all)
+
+// function data_filter(data, type)
+// {
+// 	const a = new Map()
+// 	const b = new Map()
+
+// 	data.forEach(video =>
+// 	{
+// 		const vid = get_id(video.id)
+// 		if (!vid)
+// 			return
+
+// 		const id = Array.isArray(vid) ? vid[0] : vid
+// 		const comp = video[type]
+
+// 		if (comp)
+// 		{
+// 			const v = { id: id, [type]: video[type] }
+// 			if (!a.has(id))
+// 			{
+// 				a.set(id, v)
+// 			}
+// 		}
+// 		else
+// 		{
+// 			const v = { id: id }
+// 			if (!b.has(id))
+// 			{
+// 				b.set(id, v)
+// 			}
+// 		}
+// 	})
+
+// 	const ori = [...a.values()]
+// 	const non = [...b.values()].filter(video => !a.has(video.id))
+// 	const all = ori.concat(non)
+
+// 	return { ori, non, all }
+// }
+
+// const list_video = data_filter(list_data.video, "original")
+// const list_short = data_filter(list_data.short)
+
+// console.log(list_video.ori)
+// console.log(list_video.non)
+// console.log(list_video.all)
+// console.log(list_short.ori)
+// console.log(list_short.non)
+// console.log(list_short.all)
 
 
 

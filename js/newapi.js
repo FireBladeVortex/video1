@@ -90,9 +90,9 @@ let msg_end = null
 let video_multiple = 1
 let short_multiple = 1
 
-let active_data = { video: null, short: null } // (추가) 현재 표시중인 목록 데이터
-let list_ori = [] // (추가) original 값을 가진 데이터만 모음
-let list_non = [] // (추가) original 값이 없는 데이터만 모음
+let active_data = { video: null, short: null } // 현재 표시중인 목록 데이터
+let list_ori = [] // original 값을 가진 데이터만 모음
+let list_non = [] // original 값이 없는 데이터만 모음
 
 function make_list()
 {
@@ -117,78 +117,78 @@ function make_list()
 		const h1 = document.createElement("h1")
 		section.appendChild(h1)
 
-		const h1_name = document.createElement("div") // (추가)
-		h1_name.className = "h1_name" // (추가)
-		h1_name.textContent = type.tag + " 재생 목록" // (추가)
-		h1.appendChild(h1_name) // (추가)
+		const h1_name = document.createElement("div")
+		h1_name.className = "h1_name"
+		h1_name.textContent = type.tag + " 재생 목록"
+		h1.appendChild(h1_name)
 
 
-		const h1_class = document.createElement("div") // (추가)
-		h1_class.className = "h1_class" // (추가)
-		h1.appendChild(h1_class) // (추가)
+		const h1_class = document.createElement("div")
+		h1_class.className = "h1_class"
+		h1.appendChild(h1_class)
 
 
 
-			const h1_page = document.createElement("div") // (추가)
-			h1_page.className = "h1_page" // (추가)
-			h1.appendChild(h1_page) // (추가)
+			const h1_page = document.createElement("div")
+			h1_page.className = "h1_page"
+			h1.appendChild(h1_page)
 
 
-		if (type.type !== "long") // (추가)
+		if (type.type !== "long")
 		{
-			active_data[type.type] = type.data // (추가)
+			active_data[type.type] = type.data
 
 
-			if (type.type === "video") // (추가)
+			if (type.type === "video")
 			{
-				list_ori = type.data.filter(video => "original" in video) // (추가)
-				list_non = type.data.filter(video => !("original" in video)) // (추가)
+				list_ori = type.data.filter(video => "original" in video)
+				list_non = type.data.filter(video => !("original" in video))
 
-				const ori = ori => !ori.original // (추가)
-				if (type.data.some(ori) && !type.data.every(ori)) // (추가)
+				const ori = ori => !ori.original
+				if (type.data.some(ori) && !type.data.every(ori))
 				{
-					const h1_class_all = document.createElement("div") // (추가)
-					h1_class_all.className = "h1_class_item" // (추가)
-					h1_class.appendChild(h1_class_all) // (추가)
+					const h1_class_all = document.createElement("div")
+					h1_class_all.className = "h1_class_item"
+					h1_class.appendChild(h1_class_all)
 
-						const all_txt = document.createElement("span") // (추가)
-						all_txt.className = "txt_click" // (추가)
-						all_txt.textContent = "모두" // (추가)
-						h1_class_all.appendChild(all_txt) // (추가)
-						all_txt.addEventListener("click", () => switch_video_data(list_data.video)) // (추가)
+						const all_txt = document.createElement("span")
+						all_txt.className = "txt_click"
+						all_txt.textContent = "모두"
+						h1_class_all.appendChild(all_txt)
+						all_txt.addEventListener("click", () => switch_video_data(list_data.video))
 
-					const h1_class_original = document.createElement("div") // (추가)
-					h1_class_original.className = "h1_class_item" // (추가)
-					h1_class.appendChild(h1_class_original) // (추가)
+					const h1_class_original = document.createElement("div")
+					h1_class_original.className = "h1_class_item"
+					h1_class.appendChild(h1_class_original)
 
-						const original_txt = document.createElement("span") // (추가)
-						original_txt.className = "txt_click" // (추가)
-						original_txt.textContent = "원곡" // (추가)
-						h1_class_original.appendChild(original_txt) // (추가)
-						original_txt.addEventListener("click", () => switch_video_data(list_ori)) // (추가)
+						const original_txt = document.createElement("span")
+						original_txt.className = "txt_click"
+						original_txt.textContent = "원곡"
+						h1_class_original.appendChild(original_txt)
+						original_txt.addEventListener("click", () => switch_video_data(list_ori))
 
-					const h1_class_cover = document.createElement("div") // (추가)
-					h1_class_cover.className = "h1_class_item" // (추가)
-					h1_class.appendChild(h1_class_cover) // (추가)
+					const h1_class_cover = document.createElement("div")
+					h1_class_cover.className = "h1_class_item"
+					h1_class.appendChild(h1_class_cover)
 
-						const cover_txt = document.createElement("span") // (추가)
-						cover_txt.className = "txt_click" // (추가)
-						cover_txt.textContent = "커버" // (추가)
-						h1_class_cover.appendChild(cover_txt) // (추가)
-						cover_txt.addEventListener("click", () => switch_video_data(list_non)) // (추가)
+						const cover_txt = document.createElement("span")
+						cover_txt.className = "txt_click"
+						cover_txt.textContent = "커버"
+						h1_class_cover.appendChild(cover_txt)
+						cover_txt.addEventListener("click", () => switch_video_data(list_non))
 				}
 			}
 
 
-				const btn_prev = document.createElement("div") // (추가)
-				btn_prev.className = "btn_prev" // (추가)
-				btn_prev.dataset.type = type.type // (추가)
-				h1_page.appendChild(btn_prev) // (추가)
+				const btn_prev = document.createElement("div")
+				btn_prev.className = "btn_prev"
+				btn_prev.dataset.type = type.type
+				h1_page.appendChild(btn_prev)
 
-					const btn_prev_txt = document.createElement("span") // (추가)
-					btn_prev_txt.className = "txt_click" // (추가)
-					btn_prev.appendChild(btn_prev_txt) // (추가)
-					btn_prev_txt.addEventListener("click", () => // (추가)
+					const btn_prev_txt = document.createElement("span")
+					btn_prev_txt.className = "txt_click"
+					btn_prev.appendChild(btn_prev_txt)
+					btn_prev_txt.addEventListener("click", () =>
 					{
 						if (type.type === "short")
 							short_multiple = Math.max(1, short_multiple - 1)
@@ -198,20 +198,20 @@ function make_list()
 						update_page(type.type)
 					})
 
-				const btn_center = document.createElement("div") // (추가)
-				btn_center.className = "btn_center" // (추가)
-				btn_center.dataset.type = type.type // (추가)
-				h1_page.appendChild(btn_center) // (추가)
+				const btn_center = document.createElement("div")
+				btn_center.className = "btn_center"
+				btn_center.dataset.type = type.type
+				h1_page.appendChild(btn_center)
 
-				const btn_next = document.createElement("div") // (추가)
-				btn_next.className = "btn_next" // (추가)
-				btn_next.dataset.type = type.type // (추가)
-				h1_page.appendChild(btn_next) // (추가)
+				const btn_next = document.createElement("div")
+				btn_next.className = "btn_next"
+				btn_next.dataset.type = type.type
+				h1_page.appendChild(btn_next)
 
-					const btn_next_txt = document.createElement("span") // (추가)
-					btn_next_txt.className = "txt_click" // (추가)
-					btn_next.appendChild(btn_next_txt) // (추가)
-					btn_next_txt.addEventListener("click", () => // (추가)
+					const btn_next_txt = document.createElement("span")
+					btn_next_txt.className = "txt_click"
+					btn_next.appendChild(btn_next_txt)
+					btn_next_txt.addEventListener("click", () =>
 					{
 						const last = get_last(type.type)
 						const multiple = type.type === "short" ? short_multiple : video_multiple
@@ -224,21 +224,21 @@ function make_list()
 						render_nav(type.type)
 						update_page(type.type)
 					})
-			render_nav(type.type) // (추가)
+			render_nav(type.type)
 		}
 
-		const h1_size = document.createElement("div") // (추가)
-		h1_size.className = "h1_size" // (추가)
-		h1.appendChild(h1_size) // (추가)
+		const h1_size = document.createElement("div")
+		h1_size.className = "h1_size"
+		h1.appendChild(h1_size)
 
-			const toggle_txt = document.createElement("span") // (추가)
-			toggle_txt.className = "txt_click" // (추가)
-			toggle_txt.textContent = "크게" // (추가)
-			toggle_txt.dataset.type = type.type // (추가)
-			h1_size.appendChild(toggle_txt) // (추가)
-			toggle_txt.addEventListener("click", () => resize_section(type.type)) // (추가)
+			const toggle_txt = document.createElement("span")
+			toggle_txt.className = "txt_click"
+			toggle_txt.textContent = "크게"
+			toggle_txt.dataset.type = type.type
+			h1_size.appendChild(toggle_txt)
+			toggle_txt.addEventListener("click", () => resize_section(type.type))
 
-		if (type.type === "long") // (추가)
+		if (type.type === "long")
 		{
 			make_long()
 			return
@@ -286,7 +286,7 @@ function calc_size(list)
 }
 
 
-// (추가) total_cell 값에 맞춰 썸네일 버튼을 (재)생성하는 함수
+// total_cell 값에 맞춰 썸네일 버튼을 (재)생성하는 함수
 function fill_page(type_str)
 {
 	const page = document.querySelector(`.page.${type_str}`)
@@ -343,22 +343,22 @@ function fill_page(type_str)
 		})
 	}
 }
-// (추가) 모두/원곡/커버 클릭 시 표시할 video 데이터 교체
+// 모두/원곡/커버 클릭 시 표시할 video 데이터 교체
 function switch_video_data(next_data)
 {
-	active_data.video = next_data // (추가) 현재 데이터 갱신
+	active_data.video = next_data // 현재 데이터 갱신
 
 	const page = document.querySelector(`.page.video`)
-	if (page) page.innerHTML = "" // (추가) 기존 썸네일 제거 후 재생성
+	if (page) page.innerHTML = "" // 기존 썸네일 제거 후 재생성
 
-	fill_page("video") // (추가) 새 데이터로 다시 채움
+	fill_page("video") // 새 데이터로 다시 채움
 
-	video_multiple = 1 // (추가) 페이지 번호 초기화
+	video_multiple = 1 // 페이지 번호 초기화
 	render_nav("video")
 	update_page("video")
 }
 
-// (추가) multiple 값에 맞는 범위만 썸네일 표시/숨김
+// multiple 값에 맞는 범위만 썸네일 표시/숨김
 function update_page(type_str)
 {
 	const num = total_cell[type_str]
@@ -377,7 +377,7 @@ function update_page(type_str)
 	})
 }
 
-// (추가) 크기 변경 시 multiple, 표시값 초기화
+// 크기 변경 시 multiple, 표시값 초기화
 function reset_page(type_str)
 {
 	if (type_str === "short")
@@ -389,7 +389,7 @@ function reset_page(type_str)
 	render_nav(type_str)
 }
 
-// (추가) 마지막 페이지 번호 계산 공통 함수
+// 마지막 페이지 번호 계산 공통 함수
 function get_last(type_str)
 {
 	const num = total_cell[type_str]
@@ -397,7 +397,7 @@ function get_last(type_str)
 	return Math.ceil(data.length / num)
 }
 
-// (추가) 이전/중앙/다음 버튼 영역을 상태에 맞게 다시 그리는 공통 함수
+// 이전/중앙/다음 버튼 영역을 상태에 맞게 다시 그리는 공통 함수
 function render_nav(type_str)
 {
 	const btn_prev = document.querySelector(`.btn_prev[data-type="${type_str}"]`)
@@ -464,14 +464,14 @@ function click_img(target)
 }
 
 
-let big_type = null // (추가) 현재 확대된 섹션 타입 저장
+let big_type = null // 현재 확대된 섹션 타입 저장
 // (수정) 재생 목록 칸 확대/축소 전환 (토글 방식)
 function resize_section(type_str)
 {
 	const left = document.getElementById("left")
 	const rows = { video: "2fr", short: "2fr", long: "1fr" }
 
-	const next_big = big_type === type_str ? null : type_str // (추가) 같은 타입 재클릭 시 해제
+	const next_big = big_type === type_str ? null : type_str // 같은 타입 재클릭 시 해제
 
 	if (next_big)
 	{
@@ -482,9 +482,9 @@ function resize_section(type_str)
 
 	left.style.gridTemplateRows = `${rows.video} ${rows.short} ${rows.long}`
 
-	big_type = next_big // (추가) 상태 갱신
+	big_type = next_big // 상태 갱신
 
-	document.querySelectorAll(".h1_size .txt_click").forEach(span => // (추가) 모든 토글 문자열 재설정
+	document.querySelectorAll(".h1_size .txt_click").forEach(span => // 모든 토글 문자열 재설정
 	{
 		span.textContent = span.dataset.type === big_type ? "작게" : "크게"
 	})
@@ -1063,13 +1063,13 @@ const resize = new ResizeObserver(entry =>
 // 스위치 클릭 시 실제 초기화 실행 (추가)
 function switch_click()
 {
-	document.head.appendChild(api) // (추가) YouTube iframe API 로드 시작 → onYouTubeIframeAPIReady 자동 호출됨
+	document.head.appendChild(api) // YouTube iframe API 로드 시작 → onYouTubeIframeAPIReady 자동 호출됨
 
-	make_list() // (추가) 뼈대(.list, .page) + 썸네일 DOM 생성
+	make_list() // 뼈대(.list, .page) + 썸네일 DOM 생성
 
-	document.querySelectorAll(".list").forEach(list => resize.observe(list)) // (추가) 크기 관찰 시작
+	document.querySelectorAll(".list").forEach(list => resize.observe(list)) // 크기 관찰 시작
 
-	this.remove() // (추가) 스위치 사각형 제거
+	this.remove() // 스위치 사각형 제거
 }
 
-document.getElementById("switch").addEventListener("click", switch_click) // (추가)
+document.getElementById("switch").addEventListener("click", switch_click)
