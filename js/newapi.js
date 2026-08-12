@@ -94,15 +94,49 @@ let active_data = { video: null, short: null } // 현재 표시중인 목록 데
 let list_ori = [] // original 값을 가진 데이터만 모음
 let list_non = [] // original 값이 없는 데이터만 모음
 
+// id 값이 실제로 채워진 배열인지 확인 (추가)
+function valid_playlist(arr)
+{
+	return Array.isArray(arr) && arr.some(video => video.id)
+}
+
+
 function make_list()
 {
 	const left = document.getElementById("left")
+
+
+
+
+	const has_ori = valid_playlist(playlist.ori) // (추가)
+	const has_video = valid_playlist(playlist.video) // (추가)
+
+	list_ori = has_ori ? playlist.ori : [] // (수정)
+	list_non = has_video ? playlist.video : [] // (수정)
+
+	const video_data = // (추가) 존재 조합에 따른 기본 표시 데이터 결정
+		has_ori && has_video ? list_ori.concat(list_non) :
+		has_ori ? list_ori :
+		has_video ? list_non :
+		null
+
 	const video_type =
 	[
-		{ type: "video", tag: "동영상", data: list_data.video ?? null },
-		{ type: "short", tag: "쇼츠", data: list_data.short ?? null },
-		{ type: "long", tag: "부분 재생", data: list_data.long ?? null },
+		{ type: "video", tag: "동영상", data: video_data }, // 수정
+		{ type: "short", tag: "쇼츠", data: playlist.short ?? null }, // 수정
+		{ type: "long", tag: "부분 재생", data: playlist.part ?? null }, // 수정
 	]
+
+
+
+
+
+	// const video_type =
+	// [
+	// 	{ type: "video", tag: "동영상", data: list_data.video ?? null },
+	// 	{ type: "short", tag: "쇼츠", data: list_data.short ?? null },
+	// 	{ type: "long", tag: "부분 재생", data: list_data.long ?? null },
+	// ]
 
 	video_type.forEach(type =>
 	{
@@ -141,11 +175,7 @@ function make_list()
 
 			if (type.type === "video")
 			{
-				list_ori = type.data.filter(video => "original" in video)
-				list_non = type.data.filter(video => !("original" in video))
-
-				const ori = ori => !ori.original
-				if (type.data.some(ori) && !type.data.every(ori))
+				if (has_ori && has_video) // (수정) 위에서 계산한 값 재사용
 				{
 					const h1_class_all = document.createElement("div")
 					h1_class_all.className = "h1_class_item"
@@ -1072,4 +1102,4 @@ function switch_click()
 	this.remove() // 스위치 사각형 제거
 }
 
-document.getElementById("switch").addEventListener("click", switch_click)
+// document.getElementById("switch").addEventListener("click", switch_click)
