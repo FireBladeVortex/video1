@@ -12,29 +12,29 @@ document.getElementById("alert_btn").addEventListener("click", async () =>
 	popup.classList.add("active")
 })
 
-// // ? 클릭 시 팝업 표시 (추가)
-// document.getElementById("help_btn").addEventListener("click", async () =>
-// {
-// 	popup.style.background = "#000000"
-// 	popup.style.color = "var(--highlight)"
-// 	popup_txt.textContent = await fetch("anne/ctrl.txt").then(res => res.text())
-// 	popup.classList.add("active")
-// })
-
-
-
-const playlist_id = "PLaC2Fqsh35N0" // (추가)
+// ? 클릭 시 팝업 표시 (추가)
 document.getElementById("help_btn").addEventListener("click", async () =>
 {
 	popup.style.background = "#000000"
 	popup.style.color = "var(--highlight)"
-	player.cuePlaylist({ listType: "playlist", list: playlist_id }) // (추가)
-	setTimeout(() => // (추가)
-	{
-		popup_txt.textContent = JSON.stringify(player.getPlaylist()) // (추가)
-	}, 1500) // (추가)
+	popup_txt.textContent = await fetch("anne/ctrl.txt").then(res => res.text())
 	popup.classList.add("active")
 })
+
+
+
+// const playlist_id = "PLaC2Fqsh35N0" // (추가)
+// document.getElementById("help_btn").addEventListener("click", async () =>
+// {
+// 	popup.style.background = "#000000"
+// 	popup.style.color = "var(--highlight)"
+// 	player.cuePlaylist({ listType: "playlist", list: playlist_id }) // (추가)
+// 	setTimeout(() => // (추가)
+// 	{
+// 		popup_txt.textContent = JSON.stringify(player.getPlaylist()) // (추가)
+// 	}, 1500) // (추가)
+// 	popup.classList.add("active")
+// })
 
 
 

@@ -1,5 +1,11 @@
 
 window.playlist ??= {}
+
+playlist.color = // (추가)
+{
+	bg: "#000000", box: "#123123", highlight: "#232323",
+}
+
 playlist.intro =
 [
 	{
@@ -20,6 +26,8 @@ playlist.video =
 		id : "https://youtube.com/playlist?list=PLL_Rtqr3y4Y8&si=L-ogCboSl-88645r"
 	},
 ]
+
+playlist.all = (playlist.ori ?? []).concat(playlist.video ?? [])
 
 playlist.short =
 [
