@@ -631,7 +631,7 @@ function test_playlist_timing(id, idx = 0)
 	const parsed = get_id(id)
 	console.log("호출 직전:", player.getPlaylist())
 
-	player.cuePlaylist(parsed, idx, 0)
+	player.cuePlaylist(playlist: parsed)
 	console.log("cuePlaylist 직후:", player.getPlaylist()) // 대부분 undefined 예상
 
 	let count = 0
