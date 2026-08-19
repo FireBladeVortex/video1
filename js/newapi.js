@@ -625,23 +625,7 @@ function ctrl_view()
 	*/
 
 }
-// getPlaylist() 시점별 값 확인용 실험 함수 (추가, 확인 후 삭제)
-function test_playlist_timing(id, idx = 0)
-{
-	const parsed = get_id(id)
-	console.log("호출 직전:", player.getPlaylist())
 
-	player.cuePlaylist(playlist: parsed)
-	console.log("cuePlaylist 직후:", player.getPlaylist()) // 대부분 undefined 예상
-
-	let count = 0
-	const timer = setInterval(() =>
-	{
-		count++
-		console.log(`+${count * 300}ms:`, player.getPlaylist())
-		if (count >= 10) clearInterval(timer) // 3초간 300ms 간격으로 10번 확인
-	}, 100)
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
