@@ -25,7 +25,15 @@ api.src = "https://www.youtube.com/iframe_api"
 // iframe 들어갈 변수 준비
 let player = null
 
+let player_ready_resolve = null // (추가)
+const player_ready = new Promise(resolve => { player_ready_resolve = resolve }) // (추가) player 준비 완료 시점을 외부에서 기다리기 위함
 
+// api 스크립트 삽입 + player 준비될 때까지 대기 (추가)
+function load_player()
+{
+	document.head.appendChild(api)
+	return player_ready
+}
 
 // iframe 호출
 function onYouTubeIframeAPIReady()
@@ -53,6 +61,7 @@ function onYouTubeIframeAPIReady()
 			onReady: () =>
 			{
 				player.setVolume(+volume_bar.value) // 현재 value 적용
+				player_ready_resolve() // (추가) player 사용 가능해진 시점 알림
 			},
 			onStateChange : onPlayerStateChange
 		}
@@ -1093,7 +1102,7 @@ const resize = new ResizeObserver(entry =>
 // 스위치 클릭 시 실제 초기화 실행 (추가)
 function switch_click()
 {
-	document.head.appendChild(api) // YouTube iframe API 로드 시작 → onYouTubeIframeAPIReady 자동 호출됨
+	// document.head.appendChild(api) // YouTube iframe API 로드 시작 → onYouTubeIframeAPIReady 자동 호출됨
 
 	make_list() // 뼈대(.list, .page) + 썸네일 DOM 생성
 
@@ -1103,3 +1112,54 @@ function switch_click()
 }
 
 // document.getElementById("switch").addEventListener("click", switch_click)
+
+
+
+// 유효한 유튜브 링크 확인 및 id 확인
+async function get_id(id) // (수정) async 전환
+{
+	try
+	{
+		const url = new URL(id)
+		const playlist = url.searchParams.get("list")
+		if (playlist)
+		{
+			player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
+			const list = await wait_playlist() // (추가) getPlaylist()가 값 채워질 때까지 대기
+			// return list
+			return list.map(id => ({ id })) // (수정) 기존 [{id:""}, ...] 형태 유지하도록
+		}
+		const v = url.searchParams.get("v")
+		const path = url.pathname.split("/").pop()
+		const vid = v ?? path
+
+		const regex = /^[a-zA-Z0-9_-]{11}$/
+		if (!regex.test(vid))
+			return null
+
+		const t = parseInt(url.searchParams.get("t"))
+		return (Number.isNaN(t)) ? vid : [vid, t]
+	}
+	catch
+	{
+		return null
+	}
+}
+
+
+// player.getPlaylist()가 유효한 배열을 줄 때까지 100ms마다 재시도 (추가)
+function wait_playlist()
+{
+	return new Promise(resolve =>
+	{
+		const check = () =>
+		{
+			const list = player?.getPlaylist?.()
+			if (Array.isArray(list) && list.length)
+				resolve(list)
+			else
+				setTimeout(check, 100)
+		}
+		check()
+	})
+}

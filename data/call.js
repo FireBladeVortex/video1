@@ -32,8 +32,12 @@ function load_playlist(item)
 	const script = document.createElement("script")
 	script.src = item.file
 
-	script.addEventListener("load", () =>
+	script.addEventListener("load", async () =>
 	{
+
+		await load_player() // (추가) player 생성 완료까지 대기
+
+		await fix_playlist_data(window.playlist) // (추가) 데이터 불러온 직후 id 가공
 
 		apply_color(window.playlist.color)
 		switch_click.call(document.getElementById("switch")) // (추가) 파일 로드 완료 후 기존 초기화 흐름 실행
@@ -53,3 +57,78 @@ function apply_color(color)
 	if (color.highlight) root.setProperty("--highlight", color.highlight)
 }
 render_switch()
+
+// function fix_playlist_data(playlist)
+// {
+// 	const keys = ["intro", "ori", "video", "short", "part"] // 가공 대상 키 목록
+
+// 	keys.forEach(key =>
+// 	{
+// 		if (!Array.isArray(playlist[key])) return
+
+// 		playlist[key].forEach(video =>
+// 		{
+// 			const fix = get_id(video.id)
+// 			if (!fix) return
+
+// 			video.id = Array.isArray(fix) ? fix[0] : fix // t값 있으면 배열 반환되므로 id만 추출
+// 		})
+// 	})
+// }
+
+
+// async function fix_playlist_data(playlist) // (수정) async 전환
+// {
+// 	const keys = ["intro", "ori", "video", "short", "part"]
+
+// 	for (const key of keys) // (수정) forEach -> for...of (await 사용 위해)
+// 	{
+// 		if (!Array.isArray(playlist[key])) continue
+
+// 		for (const video of playlist[key]) // (수정) forEach -> for...of
+// 		{
+// 			const fix = await get_id(video.id) // (수정) await 추가
+// 			if (!fix) continue
+
+// 			video.id = Array.isArray(fix) ? fix[0] : fix
+// 		}
+// 	}
+// }
+
+
+// url 형태의 id를 실제 id 값으로 가공
+async function fix_playlist_data(playlist)
+{
+	const keys = ["intro", "ori", "video", "short", "part"]
+
+	for (const key of keys)
+	{
+		if (!Array.isArray(playlist[key])) continue
+
+		const result = [] // (추가) 가공된 결과를 새로 쌓을 배열
+
+		for (const video of playlist[key])
+		{
+			const fix = await get_id(video.id)
+			if (!fix)
+			{
+				result.push(video) // (추가) 실패 시 원본 그대로 유지
+				continue
+			}
+
+			const is_playlist = Array.isArray(fix) && fix.every(item => typeof item === "object") // (추가) playlist가 여러 항목으로 확장된 경우 구분
+
+			if (is_playlist)
+			{
+				result.push(...fix) // (추가) 확장된 항목들을 하나씩 펼쳐서 삽입
+			}
+			else
+			{
+				video.id = Array.isArray(fix) ? fix[0] : fix // 단일 영상 id (t값 있으면 [vid, t] 형태)
+				result.push(video)
+			}
+		}
+
+		playlist[key] = result // (수정) 가공된 배열로 교체
+	}
+}
