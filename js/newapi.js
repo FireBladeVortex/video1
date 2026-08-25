@@ -1179,20 +1179,53 @@ async function get_id(id) // (수정) async 전환
 // 	})
 // }
 
-// player.getPlaylist()가 이전 목록과 다른 새 값을 줄 때까지 100ms마다 재시도 (수정)
-function wait_playlist(prev = []) // (수정) 이전 목록 매개변수 추가
+// // player.getPlaylist()가 이전 목록과 다른 새 값을 줄 때까지 100ms마다 재시도 (수정)
+// function wait_playlist(prev = []) // (수정) 이전 목록 매개변수 추가
+// {
+// 	return new Promise(resolve =>
+// 	{
+// 		const check = () =>
+// 		{
+// 			const list = player?.getPlaylist?.()
+// 			const changed = Array.isArray(list) && list.length && JSON.stringify(list) !== JSON.stringify(prev) // (추가) 이전 목록과 실제로 달라졌는지 비교
+// 			if (changed)
+// 				resolve(list)
+// 			else
+// 				setTimeout(check, 100)
+// 		}
+// 		check()
+// 	})
+// }
+
+// player.getPlaylist()가 이전 목록과 다른 새 값을 줄 때까지 100ms마다 재시도, 일정 횟수 넘으면 포기 (수정)
+function wait_playlist(prev = [])
 {
-	return new Promise(resolve =>
+	let tries = 0 // (추가) 재시도 횟수 기록
+	const max_tries = 50 // (추가) 100ms * 50 = 약 5초 후 포기
+
+	const promise = new Promise(resolve => // (수정) 실행 로직을 promise 변수에 먼저 담아둠
 	{
 		const check = () =>
 		{
 			const list = player?.getPlaylist?.()
-			const changed = Array.isArray(list) && list.length && JSON.stringify(list) !== JSON.stringify(prev) // (추가) 이전 목록과 실제로 달라졌는지 비교
-			if (changed)
+			const changed = Array.isArray(list) && list.length && JSON.stringify(list) !== JSON.stringify(prev)
+			tries++ // (추가)
+
+			if (changed) // (수정) 정상적으로 바뀐 경우
+			{
 				resolve(list)
+			}
+			else if (tries >= max_tries) // (추가) 무한 대기 방지, 시간 초과 시 있는 값(또는 이전 값)으로 포기
+			{
+				resolve(list ?? prev)
+			}
 			else
+			{
 				setTimeout(check, 100)
+			}
 		}
 		check()
 	})
+
+	return promise // (수정) return은 1줄로 간단하게
 }
