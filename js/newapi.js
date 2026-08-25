@@ -548,7 +548,7 @@ function ready_data(id, start = 0, end = 0)
 	// // 주소에서 t값 추출 + 시작시간 비교후 결정
 	// const get_start = parseInt(url.searchParams.get("t"))
 	// const set_start = !Number.isNaN(get_start) ? get_start : start
-	const start_t = data_split(set_start)
+	const start_t = data_split(start)
 	sec_start = start_t[0]
 	msg_start = start_t[1]
 
