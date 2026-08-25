@@ -352,7 +352,10 @@ function fill_page(type_str)
 		btn.dataset.type = type_str
 
 		const img = document.createElement("img")
-		img.src = `https://img.youtube.com/vi/${ready_data(ready.id)}/mqdefault.jpg`
+		const src_1 = "https://img.youtube.com/vi/"
+		const src_2 = ready.id
+		const src_3 = "/mqdefault.jpg"
+		img.src = src_1 + src_2 + src_3
 
 		btn.appendChild(img)
 		page.appendChild(btn)
@@ -531,21 +534,28 @@ function resize_section(type_str)
 // youtube 정보 가져오기 cue 상태 되기전
 function ready_data(id, start = 0, end = 0)
 {
-	// 주소에서 id 추출
-	const url = new URL(id)
-	const get_id = url.searchParams.get("v") ?? url.pathname.split("/").pop()
+	// // 주소에서 id 추출
+	// const url = new URL(id)
+	// const get_id = url.searchParams.get("v") ?? url.pathname.split("/").pop()
+	const get_id = id
+
 	if (arguments.length === 1)
 		return get_id
 
 	// 클릭 시 id 저장
-	set_id = get_id
-	// 주소에서 t값 추출 + 시작시간 비교후 결정
-	const get_start = parseInt(url.searchParams.get("t"))
-	const set_start = !Number.isNaN(get_start) ? get_start : start
-	;[sec_start, msg_start] = data_split(set_start)
+	set_id = id
+
+	// // 주소에서 t값 추출 + 시작시간 비교후 결정
+	// const get_start = parseInt(url.searchParams.get("t"))
+	// const set_start = !Number.isNaN(get_start) ? get_start : start
+	const start_t = data_split(set_start)
+	sec_start = start_t[0]
+	msg_start = start_t[1]
 
 	// 종료 시간 결정(getDuration() 아님)
-	;[sec_end, msg_end] = data_split(end)
+	const end_t = data_split(end)
+	sec_end = end_t[0]
+	msg_end = end_t[1]
 
 	// 영상 불러오기
 	player.cueVideoById(
