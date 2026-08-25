@@ -194,7 +194,7 @@ function make_list()
 						all_txt.className = "txt_click"
 						all_txt.textContent = "모두"
 						h1_class_all.appendChild(all_txt)
-						all_txt.addEventListener("click", () => switch_video_data(list_data.video))
+						all_txt.addEventListener("click", () => switch_video_data(list_ori.concat(list_non)))
 
 					const h1_class_original = document.createElement("div")
 					h1_class_original.className = "h1_class_item"
