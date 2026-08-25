@@ -194,7 +194,7 @@ function make_list()
 						all_txt.className = "txt_click"
 						all_txt.textContent = "모두"
 						h1_class_all.appendChild(all_txt)
-						all_txt.addEventListener("click", () => switch_video_data(list_data.video))
+						all_txt.addEventListener("click", () => switch_video_data(list_ori.concat(list_non))) // (수정)
 
 					const h1_class_original = document.createElement("div")
 					h1_class_original.className = "h1_class_item"
@@ -548,7 +548,7 @@ function ready_data(id, start = 0, end = 0)
 	// // 주소에서 t값 추출 + 시작시간 비교후 결정
 	// const get_start = parseInt(url.searchParams.get("t"))
 	// const set_start = !Number.isNaN(get_start) ? get_start : start
-	const start_t = data_split(set_start)
+	const start_t = data_split(start)
 	sec_start = start_t[0]
 	msg_start = start_t[1]
 
@@ -1134,10 +1134,15 @@ async function get_id(id) // (수정) async 전환
 		const playlist = url.searchParams.get("list")
 		if (playlist)
 		{
+
+			// player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
+			// const list = await wait_playlist() // (추가) getPlaylist()가 값 채워질 때까지 대기
+			// // return list
+			// return list.map(id => ({ id })) // (수정) 기존 [{id:""}, ...] 형태 유지하도록
+			const prev = player.getPlaylist?.() ?? [] // (추가) 큐잉 전 기존 목록 기억
 			player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
-			const list = await wait_playlist() // (추가) getPlaylist()가 값 채워질 때까지 대기
-			// return list
-			return list.map(id => ({ id })) // (수정) 기존 [{id:""}, ...] 형태 유지하도록
+			const list = await wait_playlist(prev) // (수정) 이전 목록과 달라질 때까지 대기
+			return list.map(id => ({ id })) // 기존 [{id:""}, ...] 형태 유지하도록
 		}
 		const v = url.searchParams.get("v")
 		const path = url.pathname.split("/").pop()
@@ -1157,15 +1162,33 @@ async function get_id(id) // (수정) async 전환
 }
 
 
-// player.getPlaylist()가 유효한 배열을 줄 때까지 100ms마다 재시도 (추가)
-function wait_playlist()
+// // player.getPlaylist()가 유효한 배열을 줄 때까지 100ms마다 재시도 (추가)
+// function wait_playlist()
+// {
+// 	return new Promise(resolve =>
+// 	{
+// 		const check = () =>
+// 		{
+// 			const list = player?.getPlaylist?.()
+// 			if (Array.isArray(list) && list.length)
+// 				resolve(list)
+// 			else
+// 				setTimeout(check, 100)
+// 		}
+// 		check()
+// 	})
+// }
+
+// player.getPlaylist()가 이전 목록과 다른 새 값을 줄 때까지 100ms마다 재시도 (수정)
+function wait_playlist(prev = []) // (수정) 이전 목록 매개변수 추가
 {
 	return new Promise(resolve =>
 	{
 		const check = () =>
 		{
 			const list = player?.getPlaylist?.()
-			if (Array.isArray(list) && list.length)
+			const changed = Array.isArray(list) && list.length && JSON.stringify(list) !== JSON.stringify(prev) // (추가) 이전 목록과 실제로 달라졌는지 비교
+			if (changed)
 				resolve(list)
 			else
 				setTimeout(check, 100)
