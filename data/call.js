@@ -20,13 +20,34 @@ function render_switch()
 		switch_box.appendChild(name_btn)
 
 		name_btn.addEventListener("click", () =>
-			{
-				load_playlist(item)
-			})
+		{
+			switch_box.innerHTML = "" // (추가) 클릭 즉시 상자 비우기
+			switch_box.textContent = "불러오는 중" // (추가)
+			load_playlist(item)
+		})
 	})
 }
 
-// 이름 클릭 시 해당 파일만 동적으로 불러오기 (추가)
+// // 이름 클릭 시 해당 파일만 동적으로 불러오기 (추가)
+// function load_playlist(item)
+// {
+// 	const script = document.createElement("script")
+// 	script.src = item.file
+
+// 	script.addEventListener("load", async () =>
+// 	{
+
+// 		await load_player() // (추가) player 생성 완료까지 대기
+
+// 		await fix_playlist_data(window.playlist) // (추가) 데이터 불러온 직후 id 가공
+
+// 		apply_color(window.playlist.color)
+// 		switch_click.call(document.getElementById("switch")) // (추가) 파일 로드 완료 후 기존 초기화 흐름 실행
+// 	})
+
+// 	document.head.appendChild(script)
+// }
+
 function load_playlist(item)
 {
 	const script = document.createElement("script")
@@ -34,17 +55,33 @@ function load_playlist(item)
 
 	script.addEventListener("load", async () =>
 	{
+		await load_player() // player 생성 완료까지 대기
 
-		await load_player() // (추가) player 생성 완료까지 대기
-
-		await fix_playlist_data(window.playlist) // (추가) 데이터 불러온 직후 id 가공
+		await fix_playlist_data(window.playlist) // (수정) ori/video/short 재생목록 id 가공
 
 		apply_color(window.playlist.color)
-		switch_click.call(document.getElementById("switch")) // (추가) 파일 로드 완료 후 기존 초기화 흐름 실행
+
+		switch_click() // (수정) 뼈대 + 썸네일 생성
+
+		await cue_intro(window.playlist.intro) // (추가) intro 재생 준비
+
+		document.getElementById("switch").remove() // (추가) 상자 제거
 	})
 
 	document.head.appendChild(script)
 }
+
+
+
+
+
+
+
+
+
+
+
+
 // color 객체 값을 root CSS 변수에 즉시 반영 (추가)
 function apply_color(color)
 {
@@ -96,39 +133,73 @@ render_switch()
 // }
 
 
-// url 형태의 id를 실제 id 값으로 가공
+// // url 형태의 id를 실제 id 값으로 가공
+// async function fix_playlist_data(playlist)
+// {
+// 	const keys = ["intro", "ori", "video", "short", "part"]
+
+// 	for (const key of keys)
+// 	{
+// 		if (!Array.isArray(playlist[key])) continue
+
+// 		const result = [] // (추가) 가공된 결과를 새로 쌓을 배열
+
+// 		for (const video of playlist[key])
+// 		{
+// 			const fix = await get_id(video.id)
+// 			if (!fix)
+// 			{
+// 				result.push(video) // (추가) 실패 시 원본 그대로 유지
+// 				continue
+// 			}
+
+// 			const is_playlist = Array.isArray(fix) && fix.every(item => typeof item === "object") // (추가) playlist가 여러 항목으로 확장된 경우 구분
+
+// 			if (is_playlist)
+// 			{
+// 				result.push(...fix) // (추가) 확장된 항목들을 하나씩 펼쳐서 삽입
+// 			}
+// 			else
+// 			{
+// 				video.id = Array.isArray(fix) ? fix[0] : fix // 단일 영상 id (t값 있으면 [vid, t] 형태)
+// 				result.push(video)
+// 			}
+// 		}
+
+// 		playlist[key] = result // (수정) 가공된 배열로 교체
+// 	}
+// }
+
+// url 형태의 id를 실제 id 값으로 가공 (재작성)
 async function fix_playlist_data(playlist)
 {
-	const keys = ["intro", "ori", "video", "short", "part"]
+	const keys = ["ori", "video", "short"] // (수정) intro/part 제외, 재생목록 변환 대상만
 
 	for (const key of keys)
 	{
 		if (!Array.isArray(playlist[key])) continue
 
-		const result = [] // (추가) 가공된 결과를 새로 쌓을 배열
+		const result = []
 
 		for (const video of playlist[key])
 		{
-			const fix = await get_id(video.id)
-			if (!fix)
-			{
-				result.push(video) // (추가) 실패 시 원본 그대로 유지
-				continue
-			}
+			const list_id = get_list_id(video.id) // (추가) 재생목록 id 여부 확인
 
-			const is_playlist = Array.isArray(fix) && fix.every(item => typeof item === "object") // (추가) playlist가 여러 항목으로 확장된 경우 구분
-
-			if (is_playlist)
+			if (list_id)
 			{
-				result.push(...fix) // (추가) 확장된 항목들을 하나씩 펼쳐서 삽입
+				const list = await cue_and_wait(list_id) // (추가) cuePlaylist 실행 + CUED 대기 + 목록 확보
+				result.push(...list.map(id => ({ id }))) // (추가) 기존 [{id:""}, ...] 형태 유지
 			}
 			else
 			{
-				video.id = Array.isArray(fix) ? fix[0] : fix // 단일 영상 id (t값 있으면 [vid, t] 형태)
+				const fix = get_id(video.id) // (수정) 동기 함수로 되돌림
+				if (fix)
+					video.id = Array.isArray(fix) ? fix[0] : fix
+
 				result.push(video)
 			}
 		}
 
-		playlist[key] = result // (수정) 가공된 배열로 교체
+		playlist[key] = result // 가공된 배열로 교체
 	}
 }
