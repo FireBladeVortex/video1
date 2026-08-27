@@ -1040,6 +1040,11 @@ function onPlayerStateChange(event)
 	// 영상 정보 불러온 상태(재생 시작 전)
 	if (event.data === 5)
 	{
+		if (playlist_ready_resolve) // (추가) 대기 중인 큐잉이 있으면 완료 알림
+		{
+			playlist_ready_resolve()
+			playlist_ready_resolve = null
+		}
 		player.setPlaybackRate(1)
 		if (sec_end === 0)
 		{
@@ -1118,32 +1123,55 @@ function switch_click()
 
 	document.querySelectorAll(".list").forEach(list => resize.observe(list)) // 크기 관찰 시작
 
-	this.remove() // 스위치 사각형 제거
+	// this.remove() // 스위치 사각형 제거
 }
 
 // document.getElementById("switch").addEventListener("click", switch_click)
 
 
 
-// 유효한 유튜브 링크 확인 및 id 확인
-async function get_id(id) // (수정) async 전환
+// // 유효한 유튜브 링크 확인 및 id 확인
+// async function get_id(id) // (수정) async 전환
+// {
+// 	try
+// 	{
+// 		const url = new URL(id)
+// 		const playlist = url.searchParams.get("list")
+// 		if (playlist)
+// 		{
+
+// 			// player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
+// 			// const list = await wait_playlist() // (추가) getPlaylist()가 값 채워질 때까지 대기
+// 			// // return list
+// 			// return list.map(id => ({ id })) // (수정) 기존 [{id:""}, ...] 형태 유지하도록
+// 			const prev = player.getPlaylist?.() ?? [] // (추가) 큐잉 전 기존 목록 기억
+// 			player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
+// 			const list = await wait_playlist(prev) // (수정) 이전 목록과 달라질 때까지 대기
+// 			return list.map(id => ({ id })) // 기존 [{id:""}, ...] 형태 유지하도록
+// 		}
+// 		const v = url.searchParams.get("v")
+// 		const path = url.pathname.split("/").pop()
+// 		const vid = v ?? path
+
+// 		const regex = /^[a-zA-Z0-9_-]{11}$/
+// 		if (!regex.test(vid))
+// 			return null
+
+// 		const t = parseInt(url.searchParams.get("t"))
+// 		return (Number.isNaN(t)) ? vid : [vid, t]
+// 	}
+// 	catch
+// 	{
+// 		return null
+// 	}
+// }
+
+// 유효한 유튜브 영상 id 확인 (수정) 재생목록 처리 분리, 동기 함수로 원복
+function get_id(id)
 {
 	try
 	{
 		const url = new URL(id)
-		const playlist = url.searchParams.get("list")
-		if (playlist)
-		{
-
-			// player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
-			// const list = await wait_playlist() // (추가) getPlaylist()가 값 채워질 때까지 대기
-			// // return list
-			// return list.map(id => ({ id })) // (수정) 기존 [{id:""}, ...] 형태 유지하도록
-			const prev = player.getPlaylist?.() ?? [] // (추가) 큐잉 전 기존 목록 기억
-			player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
-			const list = await wait_playlist(prev) // (수정) 이전 목록과 달라질 때까지 대기
-			return list.map(id => ({ id })) // 기존 [{id:""}, ...] 형태 유지하도록
-		}
 		const v = url.searchParams.get("v")
 		const path = url.pathname.split("/").pop()
 		const vid = v ?? path
@@ -1161,71 +1189,55 @@ async function get_id(id) // (수정) async 전환
 	}
 }
 
-
-// // player.getPlaylist()가 유효한 배열을 줄 때까지 100ms마다 재시도 (추가)
-// function wait_playlist()
-// {
-// 	return new Promise(resolve =>
-// 	{
-// 		const check = () =>
-// 		{
-// 			const list = player?.getPlaylist?.()
-// 			if (Array.isArray(list) && list.length)
-// 				resolve(list)
-// 			else
-// 				setTimeout(check, 100)
-// 		}
-// 		check()
-// 	})
-// }
-
-// // player.getPlaylist()가 이전 목록과 다른 새 값을 줄 때까지 100ms마다 재시도 (수정)
-// function wait_playlist(prev = []) // (수정) 이전 목록 매개변수 추가
-// {
-// 	return new Promise(resolve =>
-// 	{
-// 		const check = () =>
-// 		{
-// 			const list = player?.getPlaylist?.()
-// 			const changed = Array.isArray(list) && list.length && JSON.stringify(list) !== JSON.stringify(prev) // (추가) 이전 목록과 실제로 달라졌는지 비교
-// 			if (changed)
-// 				resolve(list)
-// 			else
-// 				setTimeout(check, 100)
-// 		}
-// 		check()
-// 	})
-// }
-
-// player.getPlaylist()가 이전 목록과 다른 새 값을 줄 때까지 100ms마다 재시도, 일정 횟수 넘으면 포기 (수정)
-function wait_playlist(prev = [])
+// 재생목록 id만 추출 (추가)
+function get_list_id(id)
 {
-	let tries = 0 // (추가) 재시도 횟수 기록
-	const max_tries = 50 // (추가) 100ms * 50 = 약 5초 후 포기
-
-	const promise = new Promise(resolve => // (수정) 실행 로직을 promise 변수에 먼저 담아둠
+	try
 	{
-		const check = () =>
-		{
-			const list = player?.getPlaylist?.()
-			const changed = Array.isArray(list) && list.length && JSON.stringify(list) !== JSON.stringify(prev)
-			tries++ // (추가)
+		const url = new URL(id)
+		return url.searchParams.get("list")
+	}
+	catch
+	{
+		return null
+	}
+}
 
-			if (changed) // (수정) 정상적으로 바뀐 경우
-			{
-				resolve(list)
-			}
-			else if (tries >= max_tries) // (추가) 무한 대기 방지, 시간 초과 시 있는 값(또는 이전 값)으로 포기
-			{
-				resolve(list ?? prev)
-			}
-			else
-			{
-				setTimeout(check, 100)
-			}
-		}
-		check()
-	})
+// CUED(5) 상태 감지용 대기 장치 (추가)
+let playlist_ready_resolve = null
 
-	return promise // (수정) return은 1줄로 간단하게
+// 큐잉 완료(CUED)까지 대기 (추가)
+function wait_cued()
+{
+	return new Promise(resolve => { playlist_ready_resolve = resolve })
+}
+
+// 재생목록 id 큐잉 + CUED 대기 + 내부 영상 목록 반환 (추가)
+async function cue_and_wait(list_id)
+{
+	player.cuePlaylist({ listType: "playlist", list: list_id })
+	await wait_cued()
+	return player.getPlaylist()
+}
+
+// intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
+async function cue_intro(intro)
+{
+	const video = intro?.[0]
+	if (!video) return
+
+	const list_id = get_list_id(video.id)
+
+	if (list_id)
+	{
+		player.setShuffle(true) // 랜덤 선택
+		player.cuePlaylist({ listType: "playlist", list: list_id })
+		await wait_cued()
+		return
+	}
+
+	const fix = get_id(video.id)
+	if (!fix) return
+
+	ready_data(Array.isArray(fix) ? fix[0] : fix)
 }
