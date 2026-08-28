@@ -38,11 +38,15 @@ function load_player()
 // iframe 호출
 function onYouTubeIframeAPIReady()
 {
+	const vidvid = Array.isArray(pli_intro)
+	? pli_intro[Math.floor(Math.random() * pli_intro.length)]
+	: pli_intro
 	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
-		videoId: "d8dqNFNrXPk",
+		// videoId: "d8dqNFNrXPk",
+		videoId: vidvid,
 		playerVars:
 		{
 			autoplay: 0, // 자동재생 방지
@@ -105,6 +109,7 @@ let list_non = [] // original 값이 없는 데이터만 모음
 let pli_ori = null // (추가) 재생목록에서 받아온 원곡 목록 저장
 let pli_non = null // (추가) 재생목록에서 받아온 커버(video) 목록 저장
 let pli_short = null // (추가) 재생목록에서 받아온 쇼츠 목록 저장
+let pli_intro = null
 
 // id 값이 실제로 채워진 배열인지 확인 (추가)
 function valid_playlist(arr)
@@ -669,7 +674,7 @@ function get_songs(video) // valid_list 생성 대신 video 하나당 유효한 
 // long 섹션 필터 드롭다운 생성 (수정/추가)
 function make_long()
 {
-	if (!list_data.long)
+	if (!playlist.part)
 		return // long 파일 없으면 작동 안함
 
 	const section = document.querySelector('.section[data-type="long"]')
@@ -737,7 +742,7 @@ function make_long()
 		const lang_value = lang_select.value
 		const names = new Set()
 
-		list_data.long.forEach(video => // valid_list 대신 list_data.long 직접 순회
+		playlist.part.forEach(video => // valid_list 대신 list_data.long 직접 순회
 		{
 			get_songs(video).forEach(song =>
 			{
@@ -769,7 +774,7 @@ function make_long()
 
 		const titles = new Set()
 
-		list_data.long.forEach(video => // valid_list 대신 list_data.long 직접 순회
+		playlist.part.forEach(video => // valid_list 대신 list_data.long 직접 순회
 		{
 			get_songs(video).forEach(song =>
 			{
@@ -812,7 +817,7 @@ function make_long()
 			const title_value = title_select.value
 
 			let song = null
-			for (const video of list_data.long) // valid_list 대신 list_data.long 직접 순회
+			for (const video of playlist.part) // valid_list 대신 list_data.long 직접 순회
 			{
 				const found = get_songs(video).find(s =>
 					s.lang && // id만 가진 항목은 제외
@@ -1247,7 +1252,8 @@ function cue_and_wait(list_id, key)
 
 					const result = list.map(id => ({ id }))
 
-					if (key === "ori") pli_ori = result
+					if (key === "intro") pli_intro = result
+					else if (key === "ori") pli_ori = result
 					else if (key === "short") pli_short = result
 					else pli_non = result
 
