@@ -102,6 +102,9 @@ let short_multiple = 1
 let active_data = { video: null, short: null } // 현재 표시중인 목록 데이터
 let list_ori = [] // original 값을 가진 데이터만 모음
 let list_non = [] // original 값이 없는 데이터만 모음
+let pli_ori = null // (추가) 재생목록에서 받아온 원곡 목록 저장
+let pli_non = null // (추가) 재생목록에서 받아온 커버(video) 목록 저장
+let pli_short = null // (추가) 재생목록에서 받아온 쇼츠 목록 저장
 
 // id 값이 실제로 채워진 배열인지 확인 (추가)
 function valid_playlist(arr)
@@ -116,12 +119,11 @@ function make_list()
 
 
 
+	const has_ori = valid_playlist(pli_ori) // (수정) playlist.ori 대신 pli_ori 사용
+	const has_video = valid_playlist(pli_non) // (수정) playlist.video 대신 pli_non 사용
 
-	const has_ori = valid_playlist(playlist.ori) // (추가)
-	const has_video = valid_playlist(playlist.video) // (추가)
-
-	list_ori = has_ori ? playlist.ori : [] // (수정)
-	list_non = has_video ? playlist.video : [] // (수정)
+	list_ori = has_ori ? pli_ori : [] // (수정)
+	list_non = has_video ? pli_non : [] // (수정)
 
 	const video_data = // (추가) 존재 조합에 따른 기본 표시 데이터 결정
 		has_ori && has_video ? list_ori.concat(list_non) :
@@ -132,7 +134,7 @@ function make_list()
 	const video_type =
 	[
 		{ type: "video", tag: "동영상", data: video_data }, // 수정
-		{ type: "short", tag: "쇼츠", data: playlist.short ?? null }, // 수정
+		{ type: "short", tag: "쇼츠", data: pli_short ?? null }, // 수정
 		{ type: "long", tag: "부분 재생", data: playlist.part ?? null }, // 수정
 	]
 
@@ -1212,13 +1214,66 @@ function wait_cued()
 	return new Promise(resolve => { playlist_ready_resolve = resolve })
 }
 
-// 재생목록 id 큐잉 + CUED 대기 + 내부 영상 목록 반환 (추가)
-async function cue_and_wait(list_id)
+// // 재생목록 id 큐잉 + CUED 대기 + 내부 영상 목록 반환 (추가)
+// async function cue_and_wait(list_id)
+// {
+// 	player.cuePlaylist({ listType: "playlist", list: list_id })
+// 	await wait_cued()
+// 	return player.getPlaylist()
+// }
+
+
+// 재생목록 id마다 독립된 임시 player로 동시 큐잉 + 결과를 pli_* 전역 변수에 저장 (수정)
+function cue_and_wait(list_id, key)
 {
-	player.cuePlaylist({ listType: "playlist", list: list_id })
-	await wait_cued()
-	return player.getPlaylist()
+	const temp_div = document.createElement("div") // (수정) Promise 밖으로 이동
+	document.body.appendChild(temp_div) // (수정)
+
+	let temp_player = null // (추가) 콜백 내부에서 참조할 수 있도록 미리 선언
+
+	const promise = new Promise(resolve => // (수정) Promise를 변수에 먼저 담음
+	{
+		temp_player = new YT.Player(temp_div, // (수정)
+		{
+			height: "0", width: "0",
+			events:
+			{
+				onStateChange: event =>
+				{
+					if (event.data !== YT.PlayerState.CUED) return
+
+					const list = temp_player.getPlaylist()
+					if (!list || !list.length) return
+
+					const result = list.map(id => ({ id }))
+
+					if (key === "ori") pli_ori = result
+					else if (key === "short") pli_short = result
+					else pli_non = result
+
+					temp_player.destroy()
+					temp_div.remove()
+
+					resolve() // 대입/정리 끝난 뒤 신호만 보냄
+				}
+			}
+		})
+	})
+
+	temp_player.cuePlaylist({ listType: "playlist", list: list_id }) // (수정) Promise 밖에서 큐잉 실행
+
+	return promise // (수정) 마지막에 한 줄로 return
 }
+
+
+
+
+
+
+
+
+
+
 
 // intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
 async function cue_intro(intro)

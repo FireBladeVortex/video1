@@ -95,104 +95,68 @@ function apply_color(color)
 }
 render_switch()
 
-// function fix_playlist_data(playlist)
-// {
-// 	const keys = ["intro", "ori", "video", "short", "part"] // 가공 대상 키 목록
-
-// 	keys.forEach(key =>
-// 	{
-// 		if (!Array.isArray(playlist[key])) return
-
-// 		playlist[key].forEach(video =>
-// 		{
-// 			const fix = get_id(video.id)
-// 			if (!fix) return
-
-// 			video.id = Array.isArray(fix) ? fix[0] : fix // t값 있으면 배열 반환되므로 id만 추출
-// 		})
-// 	})
-// }
 
 
-// async function fix_playlist_data(playlist) // (수정) async 전환
-// {
-// 	const keys = ["intro", "ori", "video", "short", "part"]
-
-// 	for (const key of keys) // (수정) forEach -> for...of (await 사용 위해)
-// 	{
-// 		if (!Array.isArray(playlist[key])) continue
-
-// 		for (const video of playlist[key]) // (수정) forEach -> for...of
-// 		{
-// 			const fix = await get_id(video.id) // (수정) await 추가
-// 			if (!fix) continue
-
-// 			video.id = Array.isArray(fix) ? fix[0] : fix
-// 		}
-// 	}
-// }
 
 
-// // url 형태의 id를 실제 id 값으로 가공
+// // url 형태의 id를 실제 id 값으로 가공 (재작성)
 // async function fix_playlist_data(playlist)
 // {
-// 	const keys = ["intro", "ori", "video", "short", "part"]
+// 	const keys = ["ori", "video", "short"] // (수정) intro/part 제외, 재생목록 변환 대상만
 
 // 	for (const key of keys)
 // 	{
 // 		if (!Array.isArray(playlist[key])) continue
 
-// 		const result = [] // (추가) 가공된 결과를 새로 쌓을 배열
+// 		const result = []
 
 // 		for (const video of playlist[key])
 // 		{
-// 			const fix = await get_id(video.id)
-// 			if (!fix)
-// 			{
-// 				result.push(video) // (추가) 실패 시 원본 그대로 유지
-// 				continue
-// 			}
+// 			const list_id = get_list_id(video.id) // (추가) 재생목록 id 여부 확인
 
-// 			const is_playlist = Array.isArray(fix) && fix.every(item => typeof item === "object") // (추가) playlist가 여러 항목으로 확장된 경우 구분
-
-// 			if (is_playlist)
+// 			if (list_id)
 // 			{
-// 				result.push(...fix) // (추가) 확장된 항목들을 하나씩 펼쳐서 삽입
+// 				const list = await cue_and_wait(list_id) // (추가) cuePlaylist 실행 + CUED 대기 + 목록 확보
+// 				result.push(...list.map(id => ({ id }))) // (추가) 기존 [{id:""}, ...] 형태 유지
 // 			}
 // 			else
 // 			{
-// 				video.id = Array.isArray(fix) ? fix[0] : fix // 단일 영상 id (t값 있으면 [vid, t] 형태)
+// 				const fix = get_id(video.id) // (수정) 동기 함수로 되돌림
+// 				if (fix)
+// 					video.id = Array.isArray(fix) ? fix[0] : fix
+
 // 				result.push(video)
 // 			}
 // 		}
 
-// 		playlist[key] = result // (수정) 가공된 배열로 교체
+// 		playlist[key] = result // 가공된 배열로 교체
 // 	}
 // }
 
-// url 형태의 id를 실제 id 값으로 가공 (재작성)
+
+
+// url 형태의 id를 실제 id 값으로 가공 (수정) - 재생목록은 pli_*에 동시 저장, 직접 id는 playlist[key]에 유지
 async function fix_playlist_data(playlist)
 {
-	const keys = ["ori", "video", "short"] // (수정) intro/part 제외, 재생목록 변환 대상만
+	const keys = ["ori", "video", "short"]
 
-	for (const key of keys)
+	const tasks = keys.map(async key => // (추가) Promise.all로 동시 처리하기 위해 map으로 변경
 	{
-		if (!Array.isArray(playlist[key])) continue
+		if (!Array.isArray(playlist[key])) return // (수정)
 
 		const result = []
 
 		for (const video of playlist[key])
 		{
-			const list_id = get_list_id(video.id) // (추가) 재생목록 id 여부 확인
+			const list_id = get_list_id(video.id)
 
 			if (list_id)
 			{
-				const list = await cue_and_wait(list_id) // (추가) cuePlaylist 실행 + CUED 대기 + 목록 확보
-				result.push(...list.map(id => ({ id }))) // (추가) 기존 [{id:""}, ...] 형태 유지
+				await cue_and_wait(list_id, key) // (수정) pli_* 대입은 cue_and_wait 내부에서 처리
 			}
 			else
 			{
-				const fix = get_id(video.id) // (수정) 동기 함수로 되돌림
+				const fix = get_id(video.id)
 				if (fix)
 					video.id = Array.isArray(fix) ? fix[0] : fix
 
@@ -200,6 +164,13 @@ async function fix_playlist_data(playlist)
 			}
 		}
 
-		playlist[key] = result // 가공된 배열로 교체
-	}
+		if (result.length) // (추가) 재생목록이 아닌 직접 id 항목이 있으면 pli_*에 합쳐 저장
+		{
+			if (key === "ori") pli_ori = (pli_ori ?? []).concat(result) // (추가)
+			else if (key === "short") pli_short = (pli_short ?? []).concat(result) // (추가)
+			else pli_non = (pli_non ?? []).concat(result) // (추가)
+		}
+	})
+
+	await Promise.all(tasks) // (추가) ori/video/short 동시 큐잉 진행
 }
