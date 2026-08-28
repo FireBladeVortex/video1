@@ -38,15 +38,15 @@ function load_player()
 // iframe 호출
 function onYouTubeIframeAPIReady()
 {
-	const vidvid = Array.isArray(pli_intro)
-	? pli_intro[Math.floor(Math.random() * pli_intro.length)]
-	: pli_intro
+	// const vidvid = Array.isArray(pli_intro)
+	// ? pli_intro[Math.floor(Math.random() * pli_intro.length)]
+	// : pli_intro
 	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
 		// videoId: "d8dqNFNrXPk",
-		videoId: vidvid,
+		videoId: "",
 		playerVars:
 		{
 			autoplay: 0, // 자동재생 방지
