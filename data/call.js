@@ -99,42 +99,6 @@ render_switch()
 
 
 
-// // url 형태의 id를 실제 id 값으로 가공 (재작성)
-// async function fix_playlist_data(playlist)
-// {
-// 	const keys = ["ori", "video", "short"] // (수정) intro/part 제외, 재생목록 변환 대상만
-
-// 	for (const key of keys)
-// 	{
-// 		if (!Array.isArray(playlist[key])) continue
-
-// 		const result = []
-
-// 		for (const video of playlist[key])
-// 		{
-// 			const list_id = get_list_id(video.id) // (추가) 재생목록 id 여부 확인
-
-// 			if (list_id)
-// 			{
-// 				const list = await cue_and_wait(list_id) // (추가) cuePlaylist 실행 + CUED 대기 + 목록 확보
-// 				result.push(...list.map(id => ({ id }))) // (추가) 기존 [{id:""}, ...] 형태 유지
-// 			}
-// 			else
-// 			{
-// 				const fix = get_id(video.id) // (수정) 동기 함수로 되돌림
-// 				if (fix)
-// 					video.id = Array.isArray(fix) ? fix[0] : fix
-
-// 				result.push(video)
-// 			}
-// 		}
-
-// 		playlist[key] = result // 가공된 배열로 교체
-// 	}
-// }
-
-
-
 // url 형태의 id를 실제 id 값으로 가공 (수정) - 재생목록은 pli_*에 동시 저장, 직접 id는 playlist[key]에 유지
 async function fix_playlist_data(playlist)
 {
