@@ -138,7 +138,7 @@ render_switch()
 // url 형태의 id를 실제 id 값으로 가공 (수정) - 재생목록은 pli_*에 동시 저장, 직접 id는 playlist[key]에 유지
 async function fix_playlist_data(playlist)
 {
-	const keys = [ "intro", "ori", "video", "short"]
+	const keys = [ "intro", "ori", "video", "short", "part"]
 
 	const tasks = keys.map(async key => // (추가) Promise.all로 동시 처리하기 위해 map으로 변경
 	{
@@ -154,7 +154,7 @@ async function fix_playlist_data(playlist)
 			{
 				await cue_and_wait(list_id, key) // (수정) pli_* 대입은 cue_and_wait 내부에서 처리
 			}
-			else if (key = "intro")
+			else if (key === "intro")
 			{
 				continue
 			}
