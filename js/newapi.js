@@ -1241,6 +1241,10 @@ function cue_and_wait(list_id, key)
 			height: "0", width: "0",
 			events:
 			{
+				onReady: () => // (추가) player가 실제로 준비된 뒤에만 cuePlaylist 호출 가능
+				{
+					temp_player.cuePlaylist({ listType: "playlist", list: list_id }) // (수정) onReady 콜백 내부로 이동
+				},
 				onStateChange: event =>
 				{
 					if (event.data !== YT.PlayerState.CUED) return
@@ -1263,8 +1267,6 @@ function cue_and_wait(list_id, key)
 			}
 		})
 	})
-
-	temp_player.cuePlaylist({ listType: "playlist", list: list_id }) // (수정) Promise 밖에서 큐잉 실행
 
 	return promise // (수정) 마지막에 한 줄로 return
 }
