@@ -46,7 +46,7 @@ function onYouTubeIframeAPIReady()
 		width: "100%",
 		height: "100%",
 		// videoId: "d8dqNFNrXPk",
-		videoId: "",
+		videoId: get_id(playlist.intro),
 		playerVars:
 		{
 			autoplay: 0, // 자동재생 방지
