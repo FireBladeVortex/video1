@@ -38,15 +38,13 @@ function load_player()
 // iframe 호출
 function onYouTubeIframeAPIReady()
 {
-	const vidvid = Array.isArray(pli_intro)
-	? pli_intro[Math.floor(Math.random() * pli_intro.length)]
-	: pli_intro
+
 	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
 		// videoId: "d8dqNFNrXPk",
-		videoId: vidvid,
+		videoId: get_id(playlist.intro[0].id),
 		playerVars:
 		{
 			autoplay: 0, // 자동재생 방지
@@ -731,7 +729,7 @@ function make_long()
 	}
 
 	make_option(lang_select, "", "언어", true)
-	;["한국어", "일본어", "외국어"].forEach(lang => make_option(lang_select, lang, lang))
+	;["한국어", "영어", "일본어", "외국어", "개사"].forEach(lang => make_option(lang_select, lang, lang))
 
 	make_option(name_select, "", "부른 이", true)
 	make_option(title_select, "", "제목", true)
@@ -748,7 +746,7 @@ function make_long()
 			{
 				if (!song.lang)
 					return // id만 가진 항목은 lang이 없으므로 제외
-				if (!lang_value || song.lang === lang_value)
+				if (!lang_value || song.lang.includes(lang_value)) // (수정) === → includes
 				{
 					names.add(song.name)
 				}
@@ -780,7 +778,7 @@ function make_long()
 			{
 				if (!song.lang)
 					return // id만 가진 항목은 제외
-				const lang_match = !lang_value || song.lang === lang_value
+				const lang_match = !lang_value || song.lang.includes(lang_value) // (수정) === → includes
 				const name_match = song.name === name_value
 				if (lang_match && name_match)
 				{
@@ -821,7 +819,7 @@ function make_long()
 			{
 				const found = get_songs(video).find(s =>
 					s.lang && // id만 가진 항목은 제외
-					(!lang_value || s.lang === lang_value) &&
+					(!lang_value || s.lang.includes(lang_value)) &&
 					s.name === name_value &&
 					s.title === title_value
 				)
