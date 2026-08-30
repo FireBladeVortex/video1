@@ -8,10 +8,24 @@ playlist.intro =
 	},
 ]
 
+playlist.ori =
+[
+	{
+		id : "",
+	},
+]
+
 playlist.video =
 [
 	{
 		id : "https://youtube.com/playlist?list=PLJKBrLjq-JWc&si=_XZ0fhkFE2LVKhCO",
+	},
+]
+
+playlist.short =
+[
+	{
+		id : "",
 	},
 ]
 

@@ -5,6 +5,12 @@ const data_list =
 	{ name: "감규리", file: "data/gamgyuri.js" },
 	{ name: "이오몽", file: "data/omong.js" },
 	{ name: "마레 플로스", file: "data/mare.js" },
+	{ name: "미녕이데러오께", file: "data/givemecs.js" },
+	{ name: "마젯", file: "data/mazet.js" },
+	{ name: "레드", file: "data/red.js" },
+	{ name: "위도", file: "data/w2rd0.js" },
+	{ name: "판구리", file: "data/panguri.js" },
+
 ]
 
 // switch 상자 내부에 이름 목록 채우기 (추가)
@@ -28,26 +34,6 @@ function render_switch()
 	})
 }
 
-// // 이름 클릭 시 해당 파일만 동적으로 불러오기 (추가)
-// function load_playlist(item)
-// {
-// 	const script = document.createElement("script")
-// 	script.src = item.file
-
-// 	script.addEventListener("load", async () =>
-// 	{
-
-// 		await load_player() // (추가) player 생성 완료까지 대기
-
-// 		await fix_playlist_data(window.playlist) // (추가) 데이터 불러온 직후 id 가공
-
-// 		apply_color(window.playlist.color)
-// 		switch_click.call(document.getElementById("switch")) // (추가) 파일 로드 완료 후 기존 초기화 흐름 실행
-// 	})
-
-// 	document.head.appendChild(script)
-// }
-
 function load_playlist(item)
 {
 	const script = document.createElement("script")
@@ -70,15 +56,6 @@ function load_playlist(item)
 
 	document.head.appendChild(script)
 }
-
-
-
-
-
-
-
-
-
 
 
 

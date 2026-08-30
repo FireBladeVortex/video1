@@ -1,9 +1,17 @@
 
 window.list_data ??= {}
+
 list_data.intro =
 [
 	{
 		id : ""
+	},
+]
+
+playlist.ori =
+[
+	{
+		id : "",
 	},
 ]
 
