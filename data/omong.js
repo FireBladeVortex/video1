@@ -22,6 +22,13 @@ playlist.video =
 	},
 ]
 
+playlist.short =
+[
+	{
+		id : "",
+	},
+]
+
 playlist.part =
 [
 	{
