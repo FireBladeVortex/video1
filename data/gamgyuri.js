@@ -1,7 +1,7 @@
 
-window.list_data ??= {}
+window.playlist ??= {}
 
-list_data.intro =
+playlist.intro =
 [
 	{
 		id : "https://youtube.com/playlist?list=PLJFRohzTTqAo&si=BVT387KP64jbKKbX" // 브이로그 랜덤 1개 골라서 재생 준비
@@ -15,7 +15,7 @@ playlist.ori =
 	},
 ]
 
-list_data.video =
+playlist.video =
 [
 	{
 		id : "https://youtube.com/playlist?list=PLRFFDzd67X4w&si=3RehAJ8LJQyzvrpd",
