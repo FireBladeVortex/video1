@@ -1,7 +1,7 @@
 
-window.list_data ??= {}
+window.playlist ??= {}
 
-list_data.intro =
+playlist.intro =
 [
 	{
 		id : ""
@@ -15,7 +15,7 @@ playlist.ori =
 	},
 ]
 
-list_data.video =
+playlist.video =
 [
 	{
 		id : "https://youtu.be/RXNwZg_WzT8?si=GUnMyp7-9hsmXHFx",
@@ -35,4 +35,21 @@ list_data.video =
 	},
 ]
 
+playlist.short =
+[
+	{
+		id : "",
+	},
+]
 
+playlist.part =
+[
+	{
+		id: "",
+		song:
+		[
+			{ lang : ["한국어", "개사"], name : "아쿠루", title : "나는 반딧불이", start : "1:11:33", end : "1:15:15", },
+			{ lang : ["한국어"], name : "아쿠루", title : "한숨", start : "1:22:45", end : "1:27:33", },
+		]
+	},
+]
