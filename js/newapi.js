@@ -39,12 +39,17 @@ function load_player()
 function onYouTubeIframeAPIReady()
 {
 
+	const intro_id = get_id(playlist.intro?.[0]?.id) // (추가) intro id 유효성 미리 확인 (배열이 비었거나 id가 없어도 안전)
+	const intro_vid = Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) get_id가 [id, t] 형태로 반환하는 경우 처리
+
 	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
 		// videoId: "d8dqNFNrXPk",
-		videoId: get_id(playlist.intro[0].id),
+		// videoId: get_id(playlist.intro[0].id),
+
+		...(intro_vid && { videoId: intro_vid }), // (추가) 유효한 id가 있을 때만 videoId 전달
 		playerVars:
 		{
 			autoplay: 0, // 자동재생 방지
@@ -1135,41 +1140,6 @@ function switch_click()
 
 
 
-// // 유효한 유튜브 링크 확인 및 id 확인
-// async function get_id(id) // (수정) async 전환
-// {
-// 	try
-// 	{
-// 		const url = new URL(id)
-// 		const playlist = url.searchParams.get("list")
-// 		if (playlist)
-// 		{
-
-// 			// player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
-// 			// const list = await wait_playlist() // (추가) getPlaylist()가 값 채워질 때까지 대기
-// 			// // return list
-// 			// return list.map(id => ({ id })) // (수정) 기존 [{id:""}, ...] 형태 유지하도록
-// 			const prev = player.getPlaylist?.() ?? [] // (추가) 큐잉 전 기존 목록 기억
-// 			player.cuePlaylist({ listType: "playlist", list: playlist }) // (추가) 재생목록 큐잉 시작
-// 			const list = await wait_playlist(prev) // (수정) 이전 목록과 달라질 때까지 대기
-// 			return list.map(id => ({ id })) // 기존 [{id:""}, ...] 형태 유지하도록
-// 		}
-// 		const v = url.searchParams.get("v")
-// 		const path = url.pathname.split("/").pop()
-// 		const vid = v ?? path
-
-// 		const regex = /^[a-zA-Z0-9_-]{11}$/
-// 		if (!regex.test(vid))
-// 			return null
-
-// 		const t = parseInt(url.searchParams.get("t"))
-// 		return (Number.isNaN(t)) ? vid : [vid, t]
-// 	}
-// 	catch
-// 	{
-// 		return null
-// 	}
-// }
 
 // 유효한 유튜브 영상 id 확인 (수정) 재생목록 처리 분리, 동기 함수로 원복
 function get_id(id)

@@ -10,7 +10,6 @@ const data_list =
 	{ name: "레드", file: "data/red.js" },
 	{ name: "위도", file: "data/w2rd0.js" },
 	{ name: "판구리", file: "data/panguri.js" },
-
 ]
 
 // switch 상자 내부에 이름 목록 채우기 (추가)
