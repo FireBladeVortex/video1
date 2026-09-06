@@ -25,6 +25,9 @@ playlist.video =
 	{
 		id : "https://youtube.com/playlist?list=PLL_Rtqr3y4Y8&si=L-ogCboSl-88645r"
 	},
+	{
+		id : "https://youtu.be/R-5ZU679nf4?si=sHdC5zqEz-iumOor"
+	},
 ]
 
 playlist.short =
