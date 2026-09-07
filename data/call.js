@@ -78,11 +78,17 @@ render_switch()
 // url 형태의 id를 실제 id 값으로 가공 (수정) - 재생목록은 pli_*에 동시 저장, 직접 id는 playlist[key]에 유지
 async function fix_playlist_data(playlist)
 {
-	const keys = [ "intro", "ori", "video", "short", "part"]
+	// const keys = [ "intro", "ori", "video", "short", "part"]
 
-	const tasks = keys.map(async key => // (추가) Promise.all로 동시 처리하기 위해 map으로 변경
+	const keys = Object.keys(playlist)
+
+
+	// const tasks = keys.map(async key => // (추가) Promise.all로 동시 처리하기 위해 map으로 변경
+
+	for (const key of keys)
 	{
-		if (!Array.isArray(playlist[key])) return // (수정)
+		if (!Array.isArray(playlist[key]))
+			 continue // (수정)
 
 		const result = []
 
@@ -114,7 +120,5 @@ async function fix_playlist_data(playlist)
 			else if (key === "short") pli_short = (pli_short ?? []).concat(result) // (추가)
 			else pli_non = (pli_non ?? []).concat(result) // (추가)
 		}
-	})
-
-	await Promise.all(tasks) // (추가) ori/video/short 동시 큐잉 진행
+	}
 }

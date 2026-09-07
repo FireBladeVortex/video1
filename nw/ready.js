@@ -296,7 +296,7 @@ function get_id(link)
 		// 해당 링크가 재생목록인지 확인
 		const playlist = url.searchParams.get("list")
 		// 재생목록이 맞고 PL 타입 재생목록인지 확인하고 맞으면 값을 전달
-		if (playlist && playlist.startsWith("PL"))
+		if (playlist && playlist_or_video(playlist))
 			return playlist
 
 		// 해당 링크가 동영상 링크인지 확인
@@ -323,24 +323,15 @@ function get_id(link)
 	}
 }
 
-
-
-// 재생목록 id만 추출 (추가)
-/////////////////// 삭제 대기
-/////////////////// 삭제 대기
-/////////////////// 삭제 대기
-function get_list_id(id)
+// 재생목록 id인가 동영상 id인가 구분하기
+function playlist_or_video(id)
 {
-	try
-	{
-		const url = new URL(id)
-		return url.searchParams.get("list")
-	}
-	catch
-	{
-		return null
-	}
+	return id.startsWith("PL")
 }
+
+
+
+
 
 
 
