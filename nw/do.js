@@ -31,7 +31,7 @@ function load_playlist(data)
 
 		switch_click() // (수정) 뼈대 + 썸네일 생성
 
-		await cue_intro(window.playlist.intro) // (추가) intro 재생 준비
+		await cue_intro(temp_list.intro) // (추가) intro 재생 준비
 
 		document.getElementById("switch").remove()
 		// wait
@@ -71,16 +71,17 @@ function load_player()
 
 
 // url 형태의 id를 실제 id 값으로 가공 (수정) - 재생목록은 pli_*에 동시 저장, 직접 id는 playlist[key]에 유지
+
 async function fix_playlist_data(playlist)
 {
 	const keys = Object.keys(playlist)
 
-		// (추가) Promise.all로 동시 처리하기 위해 map으로 변경
-	const tasks = keys.map(async key =>
+
+	for (const key of keys)
 	{
 		// color 등 붎필요한 호출 방지 및 미래 대비
 		if (!Array.isArray(playlist[key]))
-			return
+			continue
 
 		for (const video of playlist[key])
 		{
@@ -90,9 +91,9 @@ async function fix_playlist_data(playlist)
 			{
 				if (id.startsWith("PL"))
 				{
-					const list_result = await cue_and_wait(id)
+					const data = await cue_and_wait(id)
 					// (수정) key 전달 제거, 반환값을 직접 받음
-					temp_list[key] = (temp_list[key] ?? []).concat(list_result)
+					temp_list[key] = (temp_list[key] ?? []).concat(data)
 					// (추가) 받아온 값을 바로 temp_list에 삽입
 				}
 				else
@@ -110,9 +111,7 @@ async function fix_playlist_data(playlist)
 				}
 			}
 		}
-	})
-
-	await Promise.all(tasks) // ori/video/short 동시 큐잉 진행
+	}
 }
 
 
@@ -134,14 +133,17 @@ function cue_and_wait(id)
 			{
 				onReady: () => // (추가) player가 실제로 준비된 뒤에만 메서드 호출 가능
 				{
-					temp_player.cuePlaylist({ listType: "playlist", list: id }) // (수정) 위치 이동: onReady 안에서 실행
+					temp_player.cuePlaylist({ listType: "playlist", list: id })
+					// (수정) 위치 이동: onReady 안에서 실행
 				},
 				onStateChange: event =>
 				{
-					if (event.data !== YT.PlayerState.CUED) return
+					if (event.data !== YT.PlayerState.CUED)
+						return
 
 					const list = temp_player.getPlaylist()
-					if (!list || !list.length) return
+					if (!list)
+						return
 
 					const result = list.map(id => ({ id }))
 
@@ -153,7 +155,6 @@ function cue_and_wait(id)
 			}
 		})
 	})
-
 	return promise
 }
 
@@ -179,25 +180,24 @@ function switch_click()
 
 
 // intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
-async function cue_intro(intro)
+function cue_intro(intro)
 {
-	const video = intro?.[0]
-	if (!video) return
-
-	const list_id = get_list_id(video.id)
-
-	if (list_id)
+	if (playlist_or_video(intro))
 	{
 		player.setShuffle(true) // 랜덤 선택
-		player.cuePlaylist({ listType: "playlist", list: list_id })
-		await wait_cued()
-		return
+		player.cuePlaylist(
+		{
+			listType: "playlist",
+			list: intro
+		})
 	}
-
-	const fix = get_id(video.id)
-	if (!fix) return
-
-	ready_data(Array.isArray(fix) ? fix[0] : fix)
+	else
+	{
+		player.cueVideoById(
+		{
+			videoId : intro,
+		})
+	}
 }
 
 
