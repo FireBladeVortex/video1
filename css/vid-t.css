@@ -33,32 +33,14 @@ body
 	background : var(--bg);
 }
 
-#switch
-{
-	position : fixed;
-	top : 50%;
-	left : 50%;
-	transform : translate(-50%, -50%);
-	width : 500px;
-	height : 500px;
-	background : var(--emp);
-	cursor : pointer;
-	z-index : 50;
-	display: flex; /* 추가 */
-	flex-direction: column; /* 추가 */
-	align-items: center; /* 추가 */
-	justify-content: center; /* 추가 */
-	gap: 10px; /* 추가 */
-}
-
-.switch_item /* 추가 */
+.name_tag
 {
 	color: var(--text);
 	font-size: 20px;
 	cursor: pointer;
 }
 
-.switch_item:hover /* 추가 */
+.name_tag:hover
 {
 	color: var(--highlight);
 }

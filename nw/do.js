@@ -3,17 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 function load_playlist(data)
 {
 	const script = document.createElement("script")
@@ -23,19 +12,17 @@ function load_playlist(data)
 	// https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
 	script.addEventListener("load", async () =>
 	{
-		await load_player() // player 생성 완료까지 대기
+		await load_player()
 
-		await fix_playlist_data(window.playlist) // (수정) ori/video/short 재생목록 id 가공
+		await fix_playlist_data(window.playlist)
 
 		apply_color(window.playlist.color)
 
-		switch_click() // (수정) 뼈대 + 썸네일 생성
+		document.getElementById("left").innerHTML = ""
 
-		await cue_intro(temp_list.intro) // (추가) intro 재생 준비
+		switch_click()
 
-		document.getElementById("switch").remove()
-		// wait
-		// document.getElementById("name_box").remove()
+		await cue_intro(temp_list.intro)
 	})
 
 	document.head.appendChild(script)
