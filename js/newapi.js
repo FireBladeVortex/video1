@@ -1187,51 +1187,93 @@ function wait_cued()
 	return new Promise(resolve => { playlist_ready_resolve = resolve })
 }
 
-// 재생목록 id마다 독립된 임시 player로 동시 큐잉 + 결과를 pli_* 전역 변수에 저장 (수정)
-function cue_and_wait(list_id, key)
+// // 재생목록 id마다 독립된 임시 player로 동시 큐잉 + 결과를 pli_* 전역 변수에 저장 (수정)
+// function cue_and_wait(list_id, key)
+// {
+// 	const temp_div = document.createElement("div") // (수정) Promise 밖으로 이동
+// 	document.body.appendChild(temp_div) // (수정)
+
+// 	let temp_player = null // (추가) 콜백 내부에서 참조할 수 있도록 미리 선언
+
+// 	const promise = new Promise(resolve => // (수정) Promise를 변수에 먼저 담음
+// 	{
+// 		temp_player = new YT.Player(temp_div, // (수정)
+// 		{
+// 			height: "0", width: "0",
+// 			events:
+// 			{
+// 				onReady: () => // (추가) player가 실제로 준비된 뒤에만 메서드 호출 가능
+// 				{
+// 					temp_player.cuePlaylist({ listType: "playlist", list: list_id }) // (수정) 위치 이동: onReady 안에서 실행
+// 				},
+// 				onStateChange: event =>
+// 				{
+// 					if (event.data !== YT.PlayerState.CUED) return
+
+// 					const list = temp_player.getPlaylist()
+// 					if (!list || !list.length) return
+
+// 					const result = list.map(id => ({ id }))
+
+// 					if (key === "intro") pli_intro = result
+// 					else if (key === "ori") pli_ori = result
+// 					else if (key === "short") pli_short = result
+// 					else pli_non = result
+
+// 					temp_player.destroy()
+// 					temp_div.remove()
+
+// 					resolve() // 대입/정리 끝난 뒤 신호만 보냄
+// 				}
+// 			}
+// 		})
+// 	})
+
+// 	// temp_player.cuePlaylist({ listType: "playlist", list: list_id }) // (수정) Promise 밖에서 큐잉 실행
+
+// 	return promise // (수정) 마지막에 한 줄로 return
+// }
+
+
+function cue_and_wait(id)
 {
-	const temp_div = document.createElement("div") // (수정) Promise 밖으로 이동
-	document.body.appendChild(temp_div) // (수정)
+	const temp_div = document.createElement("div")
+	document.body.appendChild(temp_div)
 
 	let temp_player = null // (추가) 콜백 내부에서 참조할 수 있도록 미리 선언
 
 	const promise = new Promise(resolve => // (수정) Promise를 변수에 먼저 담음
 	{
-		temp_player = new YT.Player(temp_div, // (수정)
+		temp_player = new YT.Player(temp_div,
 		{
 			height: "0", width: "0",
 			events:
 			{
 				onReady: () => // (추가) player가 실제로 준비된 뒤에만 메서드 호출 가능
 				{
-					temp_player.cuePlaylist({ listType: "playlist", list: list_id }) // (수정) 위치 이동: onReady 안에서 실행
+					temp_player.cuePlaylist({ listType: "playlist", list: id })
+					// (수정) 위치 이동: onReady 안에서 실행
 				},
 				onStateChange: event =>
 				{
-					if (event.data !== YT.PlayerState.CUED) return
+					if (event.data !== YT.PlayerState.CUED)
+						return
 
 					const list = temp_player.getPlaylist()
-					if (!list || !list.length) return
+					if (!list)
+						return
 
 					const result = list.map(id => ({ id }))
-
-					if (key === "intro") pli_intro = result
-					else if (key === "ori") pli_ori = result
-					else if (key === "short") pli_short = result
-					else pli_non = result
 
 					temp_player.destroy()
 					temp_div.remove()
 
-					resolve() // 대입/정리 끝난 뒤 신호만 보냄
+					resolve(result)
 				}
 			}
 		})
 	})
-
-	// temp_player.cuePlaylist({ listType: "playlist", list: list_id }) // (수정) Promise 밖에서 큐잉 실행
-
-	return promise // (수정) 마지막에 한 줄로 return
+	return promise
 }
 
 
@@ -1241,27 +1283,50 @@ function cue_and_wait(list_id, key)
 
 
 
+
+
+// // intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
+// async function cue_intro(intro)
+// {
+// 	const video = intro?.[0]
+// 	if (!video) return
+
+// 	const list_id = get_list_id(video.id)
+
+// 	if (list_id)
+// 	{
+// 		player.setShuffle(true) // 랜덤 선택
+// 		player.cuePlaylist({ listType: "playlist", list: list_id })
+// 		await wait_cued()
+// 		return
+// 	}
+
+// 	const fix = get_id(video.id)
+// 	if (!fix) return
+
+// 	ready_data(Array.isArray(fix) ? fix[0] : fix)
+// }
 
 
 
 // intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
-async function cue_intro(intro)
+function cue_intro(intro)
 {
-	const video = intro?.[0]
-	if (!video) return
-
-	const list_id = get_list_id(video.id)
-
-	if (list_id)
+	if (playlist_or_video(intro))
 	{
 		player.setShuffle(true) // 랜덤 선택
-		player.cuePlaylist({ listType: "playlist", list: list_id })
-		await wait_cued()
-		return
+		player.cuePlaylist(
+		{
+			listType: "playlist",
+			list: intro
+		})
 	}
-
-	const fix = get_id(video.id)
-	if (!fix) return
-
-	ready_data(Array.isArray(fix) ? fix[0] : fix)
+	else
+	{
+		player.cueVideoById(
+		{
+			videoId : intro,
+		})
+	}
 }
+

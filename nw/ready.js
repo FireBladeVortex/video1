@@ -26,30 +26,19 @@ const data_list =
 function render_switch()
 // function name_list_box() 이름 변경 대기
 {
-	const switch_box = document.getElementById("left")
-	// const switch_box = document.getElementById("switch")
-	// wait
-	// const name_box = document.getElementById("name_box")
+	const name_box = document.getElementById("left")
 
 	data_list.forEach(who =>
 	{
 		const name_btn = document.createElement("div")
-		name_btn.className = "switch_item"
-		// wait
-		// name_btn.className = "who"
+		name_btn.className = "name_tag"
 		name_btn.textContent = who.name
-		switch_box.appendChild(name_btn)
-		// wait
-		// name_box.appendChild(name_btn)
+		name_box.appendChild(name_btn)
 
-		// 이름을 클릭하면
 		name_btn.addEventListener("click", () =>
 		{
-			// 내용 비우기
-			switch_box.innerHTML = ""
-			// 불러오는 중으로 채우기
-			switch_box.textContent = "불러오는 중"
-			// 플레이 리스트들 불러오기
+			name_box.innerHTML = ""
+			name_box.textContent = "불러오는 중"
 			load_playlist(who)
 		})
 	})
