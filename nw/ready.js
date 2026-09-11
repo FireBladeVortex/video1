@@ -20,7 +20,12 @@ const data_list =
 	{ name: "판구리", file: "data/panguri.js" },
 ]
 
-
+// 이름 가나다순 정렬
+function name_sort(list)
+{
+	const Collator = new Intl.Collator("ko")
+	return [...list].sort((a, b) => Collator.compare(a.name, b.name))
+}
 
 // switch 상자 내부에 이름 목록 채우기 (추가)
 function render_switch()
@@ -28,7 +33,7 @@ function render_switch()
 {
 	const name_box = document.getElementById("name_box")
 
-	data_list.forEach(who =>
+	name_sort(data_list).forEach(who =>
 	{
 		const name_btn = document.createElement("div")
 		name_btn.className = "name_tag"
