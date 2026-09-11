@@ -18,11 +18,11 @@ function load_playlist(data)
 
 		apply_color(window.playlist.color)
 
-		document.getElementById("left").innerHTML = ""
-
 		switch_click()
 
 		await cue_intro(temp_list.intro)
+
+		document.getElementById("name_box").remove()
 	})
 
 	document.head.appendChild(script)

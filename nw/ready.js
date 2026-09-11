@@ -26,7 +26,7 @@ const data_list =
 function render_switch()
 // function name_list_box() 이름 변경 대기
 {
-	const name_box = document.getElementById("left")
+	const name_box = document.getElementById("name_box")
 
 	data_list.forEach(who =>
 	{
