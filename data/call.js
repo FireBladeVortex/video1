@@ -15,7 +15,7 @@ const data_list =
 // switch 상자 내부에 이름 목록 채우기 (추가)
 function render_switch()
 {
-	const name_box = document.getElementById("left")
+	const name_box = document.getElementById("name_box")
 
 	data_list.forEach(who =>
 	{
@@ -45,11 +45,11 @@ function load_playlist(data)
 		await fix_playlist_data(window.playlist)
 
 		apply_color(window.playlist.color)
-		document.getElementById("left").innerHTML = ""
 
 		switch_click()
 
 		await cue_intro(window.playlist.intro)
+		document.getElementById("name_box").remove()
 
 	})
 
