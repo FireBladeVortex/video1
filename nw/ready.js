@@ -38,6 +38,32 @@ function render_switch()
 {
 	const name_box = document.getElementById("name_box")
 
+	const abc_h1 = document.createElement("h1")
+	abc_h1.className = "abc_h1"
+	name_box.appendChild(abc_h1)
+
+	const abc =
+	[
+		"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ",
+		"ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
+	]
+
+	abc.forEach(abc =>
+	{
+		const abc_box = document.createElement("span")
+		abc_box.className = "abc_item"
+		abc_box.textContent = abc
+		abc_h1.appendChild(abc_box)
+
+		const abc_num = document.createElement("span")
+		abc_num.className = "abc_num"
+		abc_h1.appendChild(abc_num)
+	})
+
+	const name_list = document.createElement("div")
+	name_list.className = "name_list"
+	name_box.appendChild(name_list)
+
 	name_sort(data_list).forEach(who =>
 	{
 		const name_btn = document.createElement("div")

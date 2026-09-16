@@ -40,9 +40,9 @@ function render_switch()
 		"ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
 	]
 
-	abc.forEach(abc => // (수정)
+	abc.forEach(abc =>
 	{
-		const abc_box = document.createElement("span") // (수정)
+		const abc_box = document.createElement("span")
 		abc_box.className = "abc_item"
 		abc_box.textContent = abc
 		abc_h1.appendChild(abc_box)
