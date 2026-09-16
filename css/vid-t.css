@@ -67,6 +67,7 @@ body
 	width : 95%;
 	height : auto;
 	font-size : 14px;
+	text-align : center;
 	color : var(--highlight);
 	border-bottom : 3px solid var(--highlight);
 	padding-bottom : 3px;
@@ -84,7 +85,8 @@ body
 	display : grid;
 	grid-template-columns : repeat(5, 1fr);
 	grid-auto-rows : auto;
-	width : 100%;
+	width : 80%;
+	padding-top: 10px;
 }
 
 .name_tag

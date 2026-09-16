@@ -1,15 +1,21 @@
 // playlist 구조를 가진 데이터 파일 목록 (추가)
 const data_list =
 [
-	{ name: "아쿠루", file: "data/Akuru.js" },
-	{ name: "감규리", file: "data/gamgyuri.js" },
-	{ name: "이오몽", file: "data/omong.js" },
-	{ name: "마레 플로스", file: "data/mare.js" },
-	{ name: "미녕이데러오께", file: "data/givemecs.js" },
-	{ name: "마젯", file: "data/mazet.js" },
-	{ name: "레드", file: "data/red.js" },
-	{ name: "위도", file: "data/w2rd0.js" },
-	{ name: "판구리", file: "data/panguri.js" },
+	{ name: "아쿠루", file: "Akuru.js" },
+	{ name: "감규리", file: "gamgyuri.js" },
+	{ name: "이오몽", file: "omong.js" },
+	{ name: "마레 플로스", file: "mare.js" },
+	{ name: "미녕이데러오께", file: "givemecs.js" },
+	{ name: "마젯", file: "mazet.js" },
+	{ name: "레드", file: "red.js" },
+	{ name: "위도", file: "w2rd0.js" },
+	{ name: "판구리", file: "panguri.js" },
+	{ name: "판구리", file: "panguri.js" },
+	{ name: "앵보", file: "panguri.js" },
+	{ name: "불법스님", file: "panguri.js" },
+	{ name: "판구리", file: "panguri.js" },
+	{ name: "판구리", file: "panguri.js" },
+	{ name: "판구리", file: "panguri.js" },
 ]
 
 // 이름 가나다순 정렬
@@ -69,7 +75,7 @@ function render_switch()
 function load_playlist(who)
 {
 	const script = document.createElement("script")
-	script.src = who.file
+	script.src = "" + who.file
 
 	script.addEventListener("load", async () =>
 	{

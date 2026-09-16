@@ -6,7 +6,7 @@
 function load_playlist(data)
 {
 	const script = document.createElement("script")
-	script.src = data.file
+	script.src = "data/" + data.file
 
 	// 준비 되었을때 실행
 	// https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
