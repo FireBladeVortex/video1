@@ -28,9 +28,32 @@ const data_list =
 // 이름 가나다순 정렬
 function name_sort(list)
 {
-	const Collator = new Intl.Collator("ko")
-	return [...list].sort((a, b) => Collator.compare(a.name, b.name))
+	const list_fix = list.filter((it, idx) =>
+	{
+		const fix = idx === list.findIndex(find =>
+		{
+			const fix = find.name === it.name && find.file === it.file
+			return fix
+		})
+		return fix
+	})
+
+	const collator = new Intl.Collator("ko")
+	const list_sort = [...list_fix].sort((a, b) =>
+	{
+		const compare = collator.compare(a.name, b.name)
+		return compare
+	})
+
+	return list_sort
 }
+
+
+
+
+
+
+
 
 // switch 상자 내부에 이름 목록 채우기 (추가)
 function render_switch()
