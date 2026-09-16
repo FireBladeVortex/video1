@@ -75,7 +75,7 @@ function render_switch()
 function load_playlist(who)
 {
 	const script = document.createElement("script")
-	script.src = "" + who.file
+	script.src = "data/" + who.file
 
 	script.addEventListener("load", async () =>
 	{
