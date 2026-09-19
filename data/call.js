@@ -1,7 +1,7 @@
 // playlist 구조를 가진 데이터 파일 목록 (추가)
 const data_list =
 [
-	{ name: "아쿠루", file: "Akuru.js" },
+	{ name: "아쿠루", file: "akuru.js" },
 	{ name: "감규리", file: "gamgyuri.js" },
 	{ name: "이오몽", file: "omong.js" },
 	{ name: "마레 플로스", file: "mare.js" },
@@ -11,11 +11,11 @@ const data_list =
 	{ name: "위도", file: "w2rd0.js" },
 	{ name: "판구리", file: "panguri.js" },
 	{ name: "판구리", file: "panguri.js" },
-	{ name: "앵보", file: "panguri.js" },
+	{ name: "앵보", file: "ab.js" },
 	{ name: "불법스님", file: "panguri.js" },
 	{ name: "판구리", file: "panguri.js" },
 	{ name: "판구리", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
+	{ name: "향아치", file: "hyang.js" },
 ]
 
 

@@ -4,7 +4,7 @@ window.playlist ??= {}
 playlist.intro =
 [
 	{
-		id : "",
+		id : "https://youtu.be/GhiU-IvtBHo?si=NIhfhheEv50_EAk1",
 	},
 ]
 
@@ -18,7 +18,7 @@ playlist.ori =
 playlist.video =
 [
 	{
-		id : "",
+		id : "https://youtube.com/playlist?list=PLb8LSvEXeCbo&si=EH-6queDKFjh3LQ9",
 	},
 ]
 
