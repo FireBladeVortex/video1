@@ -6,6 +6,7 @@ api.src = "https://www.youtube.com/iframe_api"
 // document.head.appendChild(api)
 
 
+
 // 불러올 데이터 목록
 const data_list =
 [
@@ -26,6 +27,7 @@ const data_list =
 ]
 
 
+const temp_list = {}
 
 // 이름 가나다순 정렬
 function name_sort(list)

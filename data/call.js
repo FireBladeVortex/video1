@@ -1,3 +1,4 @@
+
 // playlist 구조를 가진 데이터 파일 목록 (추가)
 const data_list =
 [
@@ -17,6 +18,8 @@ const data_list =
 	{ name: "판구리", file: "panguri.js" },
 	{ name: "향아치", file: "hyang.js" },
 ]
+
+const temp_list = null
 
 
 // 이름 가나다순 정렬
