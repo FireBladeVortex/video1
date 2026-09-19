@@ -19,7 +19,7 @@ const data_list =
 	{ name: "향아치", file: "hyang.js" },
 ]
 
-const temp_list = null
+const temp_list = {}
 
 
 // 이름 가나다순 정렬
