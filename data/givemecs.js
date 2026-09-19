@@ -4,7 +4,7 @@ window.playlist ??= {}
 playlist.intro =
 [
 	{
-		id : "",
+		id : "https://youtu.be/rsfFoMuWKBQ?si=4YRbL5wYvBM6j97r",
 	},
 ]
 

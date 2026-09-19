@@ -4,7 +4,7 @@ window.playlist ??= {}
 playlist.intro =
 [
 	{
-		id : "",
+		id : "https://youtube.com/shorts/JuPtWkc6xtU?si=C00gvH43kpv_p6we",
 	},
 ]
 
@@ -24,6 +24,12 @@ playlist.video =
 
 playlist.short =
 [
+	{
+		id : "https://youtube.com/shorts/JuPtWkc6xtU?si=C00gvH43kpv_p6we",
+	},
+	{
+		id : "https://youtube.com/shorts/4t3dIFfPY8k?si=ZpXl5ksgUgLFTJkl",
+	},
 	{
 		id : "",
 	},
