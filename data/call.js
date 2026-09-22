@@ -17,7 +17,35 @@ const data_list =
 	{ name: "판구리", file: "panguri.js" },
 	{ name: "판구리", file: "panguri.js" },
 	{ name: "향아치", file: "hyang.js" },
+	{ name: "테스트", file: "테스트.js" },
+
 ]
+
+
+// const data_list =
+// [
+// 	{ name: "아쿠루", file: "akuru.js" },
+// 	{ name: "감규리", file: "gamgyuri.js" },
+// 	{ name: "이오몽", file: "omong.js" },
+// 	{ name: "마레 플로스", file: "mare.js" },
+// 	{ name: "미녕이데러오께", file: "givemecs.js" },
+// 	{ name: "마젯", file: "mazet.js" },
+// 	{ name: "레드", file: "red.js" },
+// 	{ name: "위도", file: "w2rd0.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "앵보", file: "ab.js" },
+// 	{ name: "불법스님", file: "panguri.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "향아치", file: "hyang.js" },
+// ]
+
+
+
+
+
+
 
 const temp_list = {}
 
@@ -25,25 +53,31 @@ const temp_list = {}
 // 이름 가나다순 정렬
 function name_sort(list)
 {
-	const list_fix = list.filter((it, idx) =>
-	{
-		const fix = idx === list.findIndex(find =>
-		{
-			const fix = find.name === it.name && find.file === it.file
-			return fix
-		})
-		return fix
-	})
-
 	const collator = new Intl.Collator("ko")
-	const list_sort = [...list_fix].sort((a, b) =>
+	const list_sort = [...list].sort((a, b) =>
 	{
-		const compare = collator.compare(a.name, b.name)
+		const compare = collator.compare(a.name.trim(), b.name.trim())
 		return compare
 	})
 
-	return list_sort
+	const map = new Map()
+	list_sort.forEach(it =>
+	{
+		const key = it.name.trim()
+		if (map.has(key))
+		{
+			map.get(key).is_has = true
+		}
+		else
+		{
+			map.set(key, { ...it })
+		}
+	})
+	const list_fix = [...map.values()]
+
+	return list_fix
 }
+
 
 
 
@@ -88,7 +122,7 @@ function render_switch()
 	{
 		const name_btn = document.createElement("div")
 		name_btn.className = "name_tag"
-		name_btn.textContent = who.name
+		name_btn.textContent = who.is_has ? who.name + "*" : who.name
 		name_list.appendChild(name_btn)
 
 		name_btn.addEventListener("click", () =>

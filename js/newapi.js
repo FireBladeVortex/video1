@@ -39,8 +39,9 @@ function load_player()
 function onYouTubeIframeAPIReady()
 {
 
-	const intro_id = get_id(playlist.intro?.[0]?.id) // (추가) intro id 유효성 미리 확인 (배열이 비었거나 id가 없어도 안전)
-	const intro_vid = Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) get_id가 [id, t] 형태로 반환하는 경우 처리
+	const intro_id = temp_list.intro // (추가) intro id 유효성 미리 확인 (배열이 비었거나 id가 없어도 안전)
+	const intro_vid = intro_id
+	// Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) get_id가 [id, t] 형태로 반환하는 경우 처리
 
 	player = new YT.Player("you_player",
 	{
@@ -49,7 +50,9 @@ function onYouTubeIframeAPIReady()
 		// videoId: "d8dqNFNrXPk",
 		// videoId: get_id(playlist.intro[0].id),
 
-		...(intro_vid && { videoId: intro_vid }), // (추가) 유효한 id가 있을 때만 videoId 전달
+		// ...(intro_vid && { videoId: intro_vid }), // (추가) 유효한 id가 있을 때만 videoId 전달
+		...(temp_list.intro.id && { videoId: temp_list.intro.id }), // (추가) 유효한 id가 있을 때만 videoId 전달
+
 		playerVars:
 		{
 			autoplay: 0, // 자동재생 방지
@@ -60,7 +63,6 @@ function onYouTubeIframeAPIReady()
 			origin: window.location.origin,
 			cc_lang_pref: "ko",
 			cc_load_policy: 1,
-			color: "blue",
 		},
 		// 현재 상태 불러오기
 		events:
@@ -127,11 +129,11 @@ function make_list()
 
 
 
-	const has_ori = valid_playlist(pli_ori) // (수정) playlist.ori 대신 pli_ori 사용
-	const has_video = valid_playlist(pli_non) // (수정) playlist.video 대신 pli_non 사용
+	const has_ori = valid_playlist(temp_list.ori)
+	const has_video = valid_playlist(temp_list.video)
 
-	list_ori = has_ori ? pli_ori : [] // (수정)
-	list_non = has_video ? pli_non : [] // (수정)
+	list_ori = has_ori ? temp_list.ori : []
+	list_non = has_video ? temp_list.video : []
 
 	const video_data = // (추가) 존재 조합에 따른 기본 표시 데이터 결정
 		has_ori && has_video ? list_ori.concat(list_non) :
@@ -141,21 +143,13 @@ function make_list()
 
 	const video_type =
 	[
-		{ type: "video", tag: "동영상", data: video_data }, // 수정
-		{ type: "short", tag: "쇼츠", data: pli_short ?? null }, // 수정
-		{ type: "long", tag: "부분 재생", data: playlist.part ?? null }, // 수정
+		{ type: "video", tag: "동영상", data: video_data ?? null }, // 수정
+		{ type: "short", tag: "쇼츠", data: temp_list.short ?? null }, // 수정
+		{ type: "long", tag: "부분 재생", data: temp_list.part ?? null }, // 수정
 	]
 
 
 
-
-
-	// const video_type =
-	// [
-	// 	{ type: "video", tag: "동영상", data: list_data.video ?? null },
-	// 	{ type: "short", tag: "쇼츠", data: list_data.short ?? null },
-	// 	{ type: "long", tag: "부분 재생", data: list_data.long ?? null },
-	// ]
 
 	video_type.forEach(type =>
 	{
@@ -395,6 +389,8 @@ function fill_page(type_str)
 		})
 	}
 }
+
+
 // 모두/원곡/커버 클릭 시 표시할 video 데이터 교체
 function switch_video_data(next_data)
 {
@@ -541,6 +537,8 @@ function resize_section(type_str)
 		span.textContent = span.dataset.type === big_type ? "작게" : "크게"
 	})
 }
+
+
 // youtube 정보 가져오기 cue 상태 되기전
 function ready_data(id, start = 0, end = 0)
 {
