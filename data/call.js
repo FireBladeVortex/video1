@@ -55,14 +55,14 @@ function name_sort(list)
 	const collator = new Intl.Collator("ko")
 	const list_sort = [...list].sort((a, b) =>
 	{
-		const compare = collator.compare(a.name.trim(), b.name.trim())
+		const compare = collator.compare(get_name(a.file).trim(), get_name(b.file).trim())
 		return compare
 	})
 
 	const map = new Map()
 	list_sort.forEach(it =>
 	{
-		const key = it.name.trim()
+		const key = get_name(it.file).trim()
 		if (map.has(key))
 		{
 			map.get(key).is_has = true
@@ -121,7 +121,7 @@ function render_switch()
 	{
 		const name_btn = document.createElement("div")
 		name_btn.className = "name_tag"
-		name_btn.textContent = who.is_has ? who.name + "*" : who.name
+		name_btn.textContent = who.is_has ? get_name(who.file) + "*" : get_name(who.file)
 		name_list.appendChild(name_btn)
 
 		name_btn.addEventListener("click", () =>
