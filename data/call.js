@@ -2,22 +2,17 @@
 // playlist 구조를 가진 데이터 파일 목록 (추가)
 const data_list =
 [
-	{ name: "아쿠루", file: "akuru.js" },
-	{ name: "감규리", file: "gamgyuri.js" },
-	{ name: "이오몽", file: "omong.js" },
-	{ name: "마레 플로스", file: "mare.js" },
-	{ name: "미녕이데러오께", file: "givemecs.js" },
-	{ name: "마젯", file: "mazet.js" },
-	{ name: "레드", file: "red.js" },
-	{ name: "위도", file: "w2rd0.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "앵보", file: "ab.js" },
-	{ name: "불법스님", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "향아치", file: "hyang.js" },
-	{ name: "테스트", file: "테스트.js" },
+	{ file: "아쿠루.js" },
+	{ file: "감규리.js" },
+	{ file: "이오몽.js" },
+	{ file: "마레 플로스.js" },
+	{ file: "미녕이데려오깨.js" },
+	{ file: "마젯.js" },
+	{ file: "레드.js" },
+	{ file: "위도.js" },
+	{ file: "판구리.js" },
+	{ file: "앵보.js" },
+	{ file: "향아치.js" },
 
 ]
 
@@ -44,6 +39,10 @@ const data_list =
 
 
 
+function get_name(file) // (추가) file에서 확장자를 뺀 부분을 이름으로 사용
+{
+	return file.replace(/\.js$/, "")
+}
 
 
 
