@@ -1,52 +1,80 @@
 
 // playlist 구조를 가진 데이터 파일 목록 (추가)
-const 불러올_목록 =
+const data_list =
 [
-	{ 이름: "아쿠루" },
-	{ 이름: "감규리" },
-	{ 이름: "이오몽" },
-	{ 이름: "마레 플로스" },
-	{ 이름: "미녕이데려오깨" },
-	{ 이름: "마젯" },
-	{ 이름: "레드" },
-	{ 이름: "위도" },
-	{ 이름: "판구리" },
-	{ 이름: "앵보" },
-	{ 이름: "향아치" },
+	{ file: "아쿠루.js" },
+	{ file: "감규리.js" },
+	{ file: "이오몽.js" },
+	{ file: "마레 플로스.js" },
+	{ file: "미녕이데려오깨.js" },
+	{ file: "마젯.js" },
+	{ file: "레드.js" },
+	{ file: "위도.js" },
+	{ file: "판구리.js" },
+	{ file: "앵보.js" },
+	{ file: "향아치.js" },
+
 ]
 
 
+// const data_list =
+// [
+// 	{ name: "아쿠루", file: "akuru.js" },
+// 	{ name: "감규리", file: "gamgyuri.js" },
+// 	{ name: "이오몽", file: "omong.js" },
+// 	{ name: "마레 플로스", file: "mare.js" },
+// 	{ name: "미녕이데러오께", file: "givemecs.js" },
+// 	{ name: "마젯", file: "mazet.js" },
+// 	{ name: "레드", file: "red.js" },
+// 	{ name: "위도", file: "w2rd0.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "앵보", file: "ab.js" },
+// 	{ name: "불법스님", file: "panguri.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "판구리", file: "panguri.js" },
+// 	{ name: "향아치", file: "hyang.js" },
+// ]
 
-const 임시_목록 = {}
+
+
+
+function get_name(file) // (추가) file에서 확장자를 뺀 부분을 이름으로 사용
+{
+	return file.replace(/\.js$/, "")
+}
+
+
+
+const temp_list = {}
 
 
 // 이름 가나다순 정렬
-function 가나다(목록)
+function name_sort(list)
 {
-	const 정렬규칙 = new Intl.Collator("ko")
-	const 가나다순 = [...목록].sort((앞, 뒤) =>
+	const collator = new Intl.Collator("ko")
+	const list_sort = [...list].sort((a, b) =>
 	{
-		const 비교 = 정렬규칙.compare(앞.이름.trim(), 뒤.이름.trim())
-		return 비교
+		const compare = collator.compare(get_name(a.file).trim(), get_name(b.file).trim())
+		return compare
 	})
 
 	const map = new Map()
-	가나다순.forEach(이거 =>
+	list_sort.forEach(it =>
 	{
-		const 그거 = 이거.이름.trim()
-		if (map.has(그거))
+		const key = get_name(it.file).trim()
+		if (map.has(key))
 		{
-			map.get(그거).중복 = true
+			map.get(key).is_has = true
 		}
 		else
 		{
-			map.set(그거, { ...이거 })
+			map.set(key, { ...it })
 		}
 	})
-	
-	const 결과 = [...map.values()]
+	const list_fix = [...map.values()]
 
-	return 결과
+	return list_fix
 }
 
 
@@ -89,11 +117,11 @@ function render_switch()
 	name_list.className = "name_list"
 	name_box.appendChild(name_list)
 
-	가나다(불러올_목록).forEach(who =>
+	name_sort(data_list).forEach(who =>
 	{
 		const name_btn = document.createElement("div")
 		name_btn.className = "name_tag"
-		name_btn.textContent = who.중복 ? who.이름 + "*" : who.이름
+		name_btn.textContent = who.is_has ? get_name(who.file) + "*" : get_name(who.file)
 		name_list.appendChild(name_btn)
 
 		name_btn.addEventListener("click", () =>
@@ -108,7 +136,7 @@ function render_switch()
 function load_playlist(who)
 {
 	const script = document.createElement("script")
-	script.src = "data/" + who.이름 +".js"
+	script.src = "data/" + who.file
 
 	script.addEventListener("load", async () =>
 	{
@@ -116,7 +144,7 @@ function load_playlist(who)
 
 		await fix_playlist_data(window.playlist)
 
-		나만의_색깔(window.playlist.color)
+		apply_color(window.playlist.color)
 
 		switch_click()
 
@@ -130,19 +158,63 @@ function load_playlist(who)
 
 
 
-function 나만의_색깔(색깔)
+// color 객체 값을 root CSS 변수에 즉시 반영 (추가)
+function apply_color(color)
 {
-	if (!색깔) return
+	if (!color) return
 
 	const root = document.documentElement.style
 
-	if (색깔.bg) root.setProperty("--bg", 색깔.bg)
-	if (색깔.box) root.setProperty("--box", 색깔.box)
-	if (색깔.highlight) root.setProperty("--highlight", 색깔.highlight)
+	if (color.bg) root.setProperty("--bg", color.bg)
+	if (color.box) root.setProperty("--box", color.box)
+	if (color.highlight) root.setProperty("--highlight", color.highlight)
 }
 render_switch()
 
 
+
+
+
+// // url 형태의 id를 실제 id 값으로 가공 (수정) - 재생목록은 pli_*에 동시 저장, 직접 id는 playlist[key]에 유지
+// async function fix_playlist_data(playlist)
+// {
+// 	const keys = Object.keys(playlist)
+
+// 	for (const key of keys)
+// 	{
+// 		if (!Array.isArray(playlist[key]))
+// 			 continue // (수정)
+
+// 		for (const video of playlist[key])
+// 		{
+// 			const list_id = get_list_id(video.id)
+
+// 			if (list_id)
+// 			{
+// 				await cue_and_wait(list_id, key) // (수정) pli_* 대입은 cue_and_wait 내부에서 처리
+// 			}
+// 			else if (key === "intro")
+// 			{
+// 				continue
+// 			}
+// 			else
+// 			{
+// 				const fix = get_id(video.id)
+// 				if (fix)
+// 					video.id = Array.isArray(fix) ? fix[0] : fix
+
+// 				result.push(video)
+// 			}
+// 		}
+
+// 		if (result.length) // (추가) 재생목록이 아닌 직접 id 항목이 있으면 pli_*에 합쳐 저장
+// 		{
+// 			if (key === "ori") pli_ori = (pli_ori ?? []).concat(result) // (추가)
+// 			else if (key === "short") pli_short = (pli_short ?? []).concat(result) // (추가)
+// 			else pli_non = (pli_non ?? []).concat(result) // (추가)
+// 		}
+// 	}
+// }
 
 
 
@@ -167,8 +239,8 @@ async function fix_playlist_data(playlist)
 				{
 					const data = await cue_and_wait(id)
 					// (수정) key 전달 제거, 반환값을 직접 받음
-					임시_목록[key] = (임시_목록[key] ?? []).concat(data)
-					// (추가) 받아온 값을 바로 임시_목록에 삽입
+					temp_list[key] = (temp_list[key] ?? []).concat(data)
+					// (추가) 받아온 값을 바로 temp_list에 삽입
 				}
 				else
 				{
@@ -180,8 +252,8 @@ async function fix_playlist_data(playlist)
 						continue
 
 					const fix_id = Array.isArray(fix) ? fix[0] : fix
-					임시_목록[key] = (임시_목록[key] ?? []).concat([{ id: fix_id, ...rest }])
-					// (수정) result 대신 임시_목록에 직접 삽입
+					temp_list[key] = (temp_list[key] ?? []).concat([{ id: fix_id, ...rest }])
+					// (수정) result 대신 temp_list에 직접 삽입
 				}
 			}
 		}
