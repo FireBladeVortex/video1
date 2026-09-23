@@ -89,7 +89,7 @@ YT.PlayerState.CUED = 5
 */
 const 재생 = () => player?.getPlayerState?.() === YT.PlayerState.PLAYING
 const pause = () => player?.getPlayerState?.() === YT.PlayerState.PAUSED
-const play_now = () => 재생() || 일시중지() // !play_now === !play && !pause
+const 재생중 = () => 재생() || 일시중지() // !재생중 === !play && !pause
 
 // 최초 재생 시작하기 전 상태
 let img_click = null
@@ -925,12 +925,12 @@ document.addEventListener("keydown", 키 =>
 		if (증가)
 		{
 			키.preventDefault()
-			volume_value(+5)
+			소리_크기_조절(+5)
 		}
 		else if (감소)
 		{
 			키.preventDefault()
-			volume_value(-5)
+			소리_크기_조절(-5)
 		}
 	/*
 	}
@@ -940,7 +940,7 @@ document.addEventListener("keydown", 키 =>
 	}
 	*/
 	// 준비안됐으면 작동 중지
-	if (!player || !play_now()) return
+	if (!player || !재생중()) return
 
 	if (!키.repeat)
 	{
@@ -993,7 +993,7 @@ document.addEventListener("keydown", 키 =>
 document.addEventListener("wheel", wheel =>
 {
 	wheel.preventDefault()
-	volume_value(wheel.deltaY < 0 ? +5 : -5)
+	소리_크기_조절(wheel.deltaY < 0 ? +5 : -5)
 },
 {
 	passive: false
@@ -1001,8 +1001,7 @@ document.addEventListener("wheel", wheel =>
 
 
 
-// 소리 크기 조절
-function volume_value(증감)
+function 소리_크기_조절(증감)
 {
 	const 지금소리크기 = player.getVolume()
 	const 올려내려 = 증감 > 0

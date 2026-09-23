@@ -1,30 +1,31 @@
 
-// 이름 가나다순 정렬
-function name_sort(list)
+// 이름 가나다순_정렬
+function 가나다순_정렬(목록)
 {
-	const collator = new Intl.Collator("ko")
-	const list_sort = [...list].sort((a, b) =>
+	const 규칙 = new Intl.Collator("ko")
+	const 정렬 = [...목록].sort((앞, 뒤) =>
 	{
-		const compare = collator.compare(a.name.trim(), b.name.trim())
-		return compare
+		const 비교 = 규칙.compare(앞.이름.trim(), 뒤.이름.trim())
+		return 비교
 	})
 
 	const map = new Map()
-	list_sort.forEach(it =>
+	정렬.forEach(이거 =>
 	{
-		const key = it.name.trim()
-		if (map.has(key))
+		const 그거 = 이거.이름.trim()
+		if (map.has(그거))
 		{
-			map.get(key).is_has = true
+			map.get(그거).중복 = true
 		}
 		else
 		{
-			map.set(key, { ...it })
+			map.set(그거, { ...이거 })
 		}
 	})
-	const list_fix = [...map.values()]
 
-	return list_fix
+	const 결과 = [...map.values()]
+
+	return 결과
 }
 
 
@@ -41,7 +42,7 @@ async function fix_playlist_data(playlist)
 
 		for (const video of playlist[key])
 		{
-			const id = get_id(video.id)
+			const id = id_찾기(video.id)
 
 			if (id)
 			{
@@ -57,7 +58,7 @@ async function fix_playlist_data(playlist)
 					// (추가) id를 제외한 나머지 값(original, song 등) 모두 보존
 					const { id, ...rest } = video
 
-					const fix = get_id(id)
+					const fix = id_찾기(id)
 					if (!fix)
 						continue
 
@@ -91,33 +92,37 @@ function get_songs(video) // valid_list 생성 대신 video 하나당 유효한 
 		.map(song => ({ id: video.id, ...song }))
 }
 
-// 영상 상태 확인
+
+
+
+
 // 재생 종료
-// YT.PlayerState.ENDED = 0
+// YT.PlayerState.ENDED === 0
 // 재생 중
-// YT.PlayerState.PLAYING = 1
+// YT.PlayerState.PLAYING === 1
 // 재생 일시 중지
-// YT.PlayerState.PAUSED = 2
-// 재생하기위한 준비 중
-// YT.PlayerState.BUFFERING = 3
-// 재생하기위한 준비 완료
-// YT.PlayerState.CUED = 5
-const play = () => player?.getPlayerState?.() === YT.PlayerState.PLAYING
-const pause = () => player?.getPlayerState?.() === YT.PlayerState.PAUSED
-const play_now = () => play() || pause() // !play_now === !play && !pause
+// YT.PlayerState.PAUSED === 2
+// 재생 하기위한 준비 중
+// YT.PlayerState.BUFFERING === 3
+// 재생 하기위한 준비 완료
+// YT.PlayerState.CUED === 5
+
+const 재생 = () => player?.getPlayerState?.() === YT.PlayerState.PLAYING
+const 일시중지 = () => player?.getPlayerState?.() === YT.PlayerState.PAUSED
+// !재생중 === !재생() && !일시중지()
+const 재생중 = () => 재생() || 일시중지() 
 
 
 
-// 재생 일시중지
-function play_or_pause()
+function 재생_일시중지_조작()
 {
-	if (play())
+	if (재생())
 	{
-		player?.pauseVideo()
+		player.pauseVideo()
 	}
-	else if (pause())
+	else if (일시중지())
 	{
-		player?.playVideo()
+		player.playVideo()
 	}
 }
 
@@ -160,13 +165,13 @@ document.addEventListener("keydown", key =>
 		if (add)
 		{
 			key.preventDefault()
-			volume_value(+5)
+			소리_크기_조절(+5)
 		}
 		// - 키를 누르면 소리 작게
 		else if (sub)
 		{
 			key.preventDefault()
-			volume_value(-5)
+			소리_크기_조절(-5)
 		}
 	// }
 	// else if (cs && add || sub)
@@ -234,7 +239,7 @@ document.addEventListener("keydown", key =>
 document.addEventListener("wheel", wheel =>
 {
 	wheel.preventDefault()
-	volume_value(wheel.deltaY < 0 ? +5 : -5)
+	소리_크기_조절(wheel.deltaY < 0 ? +5 : -5)
 },
 {
 	passive: false
@@ -242,71 +247,66 @@ document.addEventListener("wheel", wheel =>
 
 
 
-// 소리 크기 조절 5씩 계산
-function volume_value(plma)
+function 소리_크기_조절(증감)
 {
-	const volume = player.getVolume()
-	const updown = plma > 0
-		? Math.floor(volume / 5) * 5 + 5
-		: Math.ceil(volume / 5) * 5 - 5
-	const change = Math.min(100, Math.max(0, updown))
-	player.setVolume(change)
-	volume_bar.value = change
+	const 지금소리크기 = player.getVolume()
+	const 올려내려 = 증감 > 0
+		? Math.floor(지금소리크기 / 5) * 5 + 5
+		: Math.ceil(지금소리크기 / 5) * 5 - 5
+	const 범위 = Math.min(100, Math.max(0, 올려내려))
+	player.setVolume(범위)
+	volume_bar.value = 범위
+}
+
+
+// 만들기 보류
+function 재생_속도_조절(키, 증감)
+{
 }
 
 
 
-// 재생 속도 조절
-// 보류
-function play_speed(key, plma)
+function 재생목록인가(id)
 {
+	const 참_거짓 = id.startsWith("PL")
+	return 참_거짓
 }
 
-
-
-// 링크에서 id만 추출하기
-function get_id(link)
+function id_찾기(주소)
 {
-	// 잘못된것을 받아왔을 때 에러 방지
 	try
 	{
 		// 유효한 링크인지 확인
-		const url = new URL(link)
+		const url = new URL(주소)
 
 		// 해당 링크가 재생목록인지 확인
-		const playlist = url.searchParams.get("list")
+		const id_재생목록 = url.searchParams.get("list")
 		// 재생목록이 맞고 PL 타입 재생목록인지 확인하고 맞으면 값을 전달
-		if (playlist && playlist_or_video(playlist))
-			return playlist
+		if (id_재생목록 && 재생목록인가(id_재생목록))
+			return id_재생목록
 
 		// 해당 링크가 동영상 링크인지 확인
 		// 링크 모양에 따라 경우의 수 대비
 		const v = url.searchParams.get("v")
 		const path = url.pathname.split("/").pop()
-		const vid = v ?? path
+		const id_동영상 = v ?? path
 
-		// 잘못된 링크인지 만약 대비
-		const regex = /^[a-zA-Z0-9_-]{11}$/
+		// 잘못된 링크인지 대비
+		const 정규표현식 = /^[a-zA-Z0-9_-]{11}$/
 		// 잘못됐다면 아무것도 안하고 즉시 null 전달
-		if (!regex.test(vid))
+		if (!정규표현식.test(id_동영상))
 			return null
 
 		// 동영상 시작시간을 포함하고있는지 확인
 		const t = parseInt(url.searchParams.get("t"))
 		// 포함하고 있으면 시간도 같이 전달 아니라면 id만 전달 + NaN 방지
-		return (Number.isNaN(t)) ? vid : [vid, t]
+		return (Number.isNaN(t)) ? id_동영상 : [id_동영상, t]
 	}
 	// try 과정에서 뭔가 잘못됐다면 즉시 멈추고 null 전달
 	catch
 	{
 		return null
 	}
-}
-
-// 재생목록 id인가 동영상 id인가 구분하기
-function playlist_or_video(id)
-{
-	return id.startsWith("PL")
 }
 
 
@@ -318,38 +318,35 @@ function playlist_or_video(id)
 // 시간 표시 변환
 // 100000초 또는 12:34:56 같은 모양으로
 // 없는거 채워서 시간값 2개 전달하기
-function data_split(time) // 함수 이름 교체 대기
+// function data_split(time) // 함수 이름 교체 대기
 // function time_split(time)
+function 시간_표기법(시간)
 {
-	// 숫자 형태 시간 값을 받아왔을 떄
-	if (typeof time === "number" && time > 0)
+	// 숫자 모양인 시간 값이 들어왔을 떄
+	if (typeof 시간 === "number" && 시간 > 0)
 	{
-		const date = new Date(time * 1000)
-		const hh = date.getUTCHours()
-		const mm = date.getUTCMinutes()
-		const ss = date.getUTCSeconds()
-		const sss = time
-		const hms = hms_convert([hh, mm, ss])
-		return [ sss, hms ]
+		const 표준시간 = new Date(시간 * 1000)
+		const 시 = 표준시간.getUTCHours()
+		const 분 = 표준시간.getUTCMinutes()
+		const 초 = 표준시간.getUTCSeconds()
+		const 시간_숫자 = 시간
+		const 시간_문자 = 시분초_표준([시, 분, 초])
+		return [ 시간_숫자, 시간_문자 ]
 	}
-
-	// 문자열 형태 시간 값을 받아왔을 때
-	else if (typeof time === "string")
+	// 문자열 모양 시간 값이 들어왔을 때
+	else if (typeof 시간 === "string")
 	{
-		// 기호 오타 가능성 대비
-		const fix = time.replace(/;/g, ":")
-		// 정상 값인지 기초만 확인
-		const fix_check = fix.includes(":")
-		if (fix_check)
+		const 오타확인 = 시간.replace(/;/g, ":")
+		const 재확인 = 오타확인.includes(":")
+		if (재확인)
 		{
-			// : 를 기준으로 쪼개서 시 분 초 분리
-			const fix_hms = fix.split(":")
-			const ss = +(fix_hms.pop())
-			const mm = fix_hms.length ? +(fix_hms.pop()) : 0
-			const hh = fix_hms.length ? +(fix_hms.pop()) : 0
-			const sss = hh * 3600 + mm * 60 + ss
-			const hms = hms_convert([hh, mm, ss])
-			return [ sss, hms ]
+			const 시분초 = 오타확인.split(":")
+			const 초 = +(시분초.pop())
+			const 분 = 시분초.length ? +(시분초.pop()) : 0
+			const 시 = 시분초.length ? +(시분초.pop()) : 0
+			const 시간_숫자 = 시 * 3600 + 분 * 60 + 초
+			const 시간_문자 = 시분초_표준([시, 분, 초])
+			return [ 시간_숫자, 시간_문자 ]
 		}
 	}
 	else
@@ -360,15 +357,15 @@ function data_split(time) // 함수 이름 교체 대기
 
 
 
-// 시간 문자열 표기법 24:00:00
-function hms_convert(hhmmss)
+// 시간 메세지 표기법 정리 24:00:00
+function 시분초_표준(시분초)
 {
-	const hms_check = hhmmss.findIndex(num => num !== 0)
-	const slice_ready = hms_check === -1 ? hhmmss.length - 1 : hms_check
-	const slice_zero = hhmmss.slice(slice_ready)
-	const ctrl_zero = slice_zero.map((num, idx) => idx === 0 ? (num + "") : (num + "").padStart(2,"0"))
-	const hms = ctrl_zero.join(":")
-	return hms
+	const 시간_길이 = 시분초.findIndex(값 => 값 !== 0)
+	const 시간_길이_확인 = 시간_길이 === -1 ? 시분초.length - 1 : 시간_길이
+	const 시간_정리 = 시분초.slice(시간_길이_확인)
+	const 시간_변환 = 시간_정리.map((값, 순서) => 순서 === 0 ? (값 + "") : (값 + "").padStart(2,"0"))
+	const 시분초 = 시간_변환.join(":")
+	return 시분초
 }
 
 
@@ -474,23 +471,19 @@ function calc_size(list)
 
 // 색상 변경
 // function color_change(color) wait
-function apply_color(color)
+function 나만의_색깔(색깔)
 {
-	if (!color)
+	if (!색깔)
 		return
 
-	const screen = document.documentElement.style
+	const 설정 = document.documentElement.style
 
-	if (color.bg)
-		screen.setProperty("--bg", color.bg)
-	if (color.box)
-		screen.setProperty("--box", color.box)
-	if (color.highlight)
-		screen.setProperty("--highlight", color.highlight)
-	// 추가 색상 css에서 변수 이름따라 추가
-	// if (color.bg) screen.setProperty("--bg", color.bg)
-	// if (color.box) screen.setProperty("--box", color.box)
-	// if (color.highlight) screen.setProperty("--highlight", color.highlight)
+	if (색깔.bg)
+		설정.setProperty("--bg", 색깔.bg)
+	if (색깔.box)
+		설정.setProperty("--box", 색깔.box)
+	if (색깔.highlight)
+		설정.setProperty("--highlight", 색깔.highlight)
 }
 
 
@@ -597,6 +590,10 @@ function wait_cued()
 async function fetch_oembed(id) // 값 실적용 대신 뱉어내는 방식으로 변경
 {
 	const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`
+	const 주소_1 = "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v="
+	const 주소_2 = id
+	const 주소_3 = "&format=json"
+	const 주소 = 주소_1 + 주소_2 + 주소_3
 	try
 	{
 		const input = await fetch(url)
@@ -665,7 +662,7 @@ function cue_and_wait(id)
 // intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
 function cue_intro(intro)
 {
-	if (playlist_or_video(intro))
+	if (재생목록인가(intro))
 	{
 		player.setShuffle(true) // 랜덤 선택
 		player.cuePlaylist(

@@ -5,27 +5,26 @@ api.src = "https://www.youtube.com/iframe_api"
 // wait
 // document.head.appendChild(api)
 
-// 불러올 데이터 목록
 const data_list =
 [
-	{ name: "아쿠루", file: "akuru.js" },
-	{ name: "감규리", file: "gamgyuri.js" },
-	{ name: "이오몽", file: "omong.js" },
-	{ name: "마레 플로스", file: "mare.js" },
-	{ name: "미녕이데러오께", file: "givemecs.js" },
-	{ name: "마젯", file: "mazet.js" },
-	{ name: "레드", file: "red.js" },
-	{ name: "위도", file: "w2rd0.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "앵보", file: "ab.js" },
-	{ name: "불법스님", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "향아치", file: "hyang.js" },
+	{  이름 : "아쿠루" },
+	{  이름 : "감규리" },
+	{  이름 : "이오몽" },
+	{  이름 : "마레 플로스" },
+	{  이름 : "미녕이데러오께" },
+	{  이름 : "마젯" },
+	{  이름 : "레드" },
+	{  이름 : "위도" },
+	{  이름 : "판구리" },
+	{  이름 : "앵보" },
+	{  이름 : "불법스님" },
+	{  이름 : "판구리" },
+	{  이름 : "판구리" },
+	{  이름 : "향아치" },
 ]
 
-// 정렬
-const temp_list = {}
+
+const 임시_목록 = {}
 
 
 
@@ -218,7 +217,7 @@ function load_playlist(data)
 
 		await fix_playlist_data(window.playlist)
 
-		apply_color(window.playlist.color)
+		나만의_색깔(window.playlist.color)
 
 		switch_click()
 

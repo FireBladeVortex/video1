@@ -35,7 +35,7 @@ function render_switch()
 	name_list.className = "name_list"
 	name_box.appendChild(name_list)
 
-	name_sort(data_list).forEach(who =>
+	가나다순_정렬(data_list).forEach(who =>
 	{
 		const name_btn = document.createElement("div")
 		name_btn.className = "name_tag"

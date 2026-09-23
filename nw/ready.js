@@ -7,49 +7,56 @@ api.src = "https://www.youtube.com/iframe_api"
 
 
 
-// 불러올 데이터 목록
 const data_list =
 [
-	{ name: "아쿠루", file: "akuru.js" },
-	{ name: "감규리", file: "gamgyuri.js" },
-	{ name: "이오몽", file: "omong.js" },
-	{ name: "마레 플로스", file: "mare.js" },
-	{ name: "미녕이데러오께", file: "givemecs.js" },
-	{ name: "마젯", file: "mazet.js" },
-	{ name: "레드", file: "red.js" },
-	{ name: "위도", file: "w2rd0.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "앵보", file: "ab.js" },
-	{ name: "불법스님", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "판구리", file: "panguri.js" },
-	{ name: "향아치", file: "hyang.js" },
+	{  이름 : "아쿠루" },
+	{  이름 : "감규리" },
+	{  이름 : "이오몽" },
+	{  이름 : "마레 플로스" },
+	{  이름 : "미녕이데러오께" },
+	{  이름 : "마젯" },
+	{  이름 : "레드" },
+	{  이름 : "위도" },
+	{  이름 : "판구리" },
+	{  이름 : "앵보" },
+	{  이름 : "불법스님" },
+	{  이름 : "판구리" },
+	{  이름 : "판구리" },
+	{  이름 : "향아치" },
 ]
 
 
-const temp_list = {}
+const 임시_목록 = {}
 
-// 이름 가나다순 정렬
-function name_sort(list)
+
+
+// 이름 가나다순_정렬
+function 가나다순_정렬(목록)
 {
-	const list_fix = list.filter((it, idx) =>
+	const 규칙 = new Intl.Collator("ko")
+	const 정렬 = [...목록].sort((앞, 뒤) =>
 	{
-		const fix = idx === list.findIndex(find =>
+		const 비교 = 규칙.compare(앞.이름.trim(), 뒤.이름.trim())
+		return 비교
+	})
+
+	const map = new Map()
+	정렬.forEach(이거 =>
+	{
+		const 그거 = 이거.이름.trim()
+		if (map.has(그거))
 		{
-			const fix = find.name === it.name && find.file === it.file
-			return fix
-		})
-		return fix
+			map.get(그거).중복 = true
+		}
+		else
+		{
+			map.set(그거, { ...이거 })
+		}
 	})
 
-	const collator = new Intl.Collator("ko")
-	const list_sort = [...list_fix].sort((a, b) =>
-	{
-		const compare = collator.compare(a.name, b.name)
-		return compare
-	})
+	const 결과 = [...map.values()]
 
-	return list_sort
+	return 결과
 }
 
 
