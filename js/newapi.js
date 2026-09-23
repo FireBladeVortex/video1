@@ -41,14 +41,14 @@ function onYouTubeIframeAPIReady()
 
 	const intro_id = temp_list.intro // (추가) intro id 유효성 미리 확인 (배열이 비었거나 id가 없어도 안전)
 	const intro_vid = intro_id
-	// Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) get_id가 [id, t] 형태로 반환하는 경우 처리
+	// Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) id_찾기가 [id, t] 형태로 반환하는 경우 처리
 
 	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
 		// videoId: "d8dqNFNrXPk",
-		// videoId: get_id(playlist.intro[0].id),
+		// videoId: id_찾기(playlist.intro[0].id),
 
 		// ...(intro_vid && { videoId: intro_vid }), // (추가) 유효한 id가 있을 때만 videoId 전달
 		...(temp_list.intro.id && { videoId: temp_list.intro.id }), // (추가) 유효한 id가 있을 때만 videoId 전달
@@ -87,9 +87,9 @@ YT.PlayerState.PAUSED = 2
 YT.PlayerState.BUFFERING = 3
 YT.PlayerState.CUED = 5
 */
-const play = () => player?.getPlayerState?.() === YT.PlayerState.PLAYING
+const 재생 = () => player?.getPlayerState?.() === YT.PlayerState.PLAYING
 const pause = () => player?.getPlayerState?.() === YT.PlayerState.PAUSED
-const play_now = () => play() || pause() // !play_now === !play && !pause
+const play_now = () => 재생() || 일시중지() // !play_now === !play && !pause
 
 // 최초 재생 시작하기 전 상태
 let img_click = null
@@ -369,11 +369,11 @@ function fill_page(type_str)
 			const target = (type_str + "_" + (num + "").padStart(3, "0"))
 			if (img_click === target)
 			{
-				if (play())
+				if (재생())
 				{
 					player.pauseVideo()
 				}
-				else if (pause())
+				else if (일시중지())
 				{
 					player.playVideo()
 				}
@@ -544,11 +544,11 @@ function ready_data(id, start = 0, end = 0)
 {
 	// // 주소에서 id 추출
 	// const url = new URL(id)
-	// const get_id = url.searchParams.get("v") ?? url.pathname.split("/").pop()
-	const get_id = id
+	// const id_찾기 = url.searchParams.get("v") ?? url.pathname.split("/").pop()
+	const id_찾기 = id
 
 	if (arguments.length === 1)
-		return get_id
+		return id_찾기
 
 	// 클릭 시 id 저장
 	set_id = id
@@ -556,19 +556,19 @@ function ready_data(id, start = 0, end = 0)
 	// // 주소에서 t값 추출 + 시작시간 비교후 결정
 	// const get_start = parseInt(url.searchParams.get("t"))
 	// const set_start = !Number.isNaN(get_start) ? get_start : start
-	const start_t = data_split(start)
+	const start_t = 시간_표기법(start)
 	sec_start = start_t[0]
 	msg_start = start_t[1]
 
 	// 종료 시간 결정(getDuration() 아님)
-	const end_t = data_split(end)
+	const end_t = 시간_표기법(end)
 	sec_end = end_t[0]
 	msg_end = end_t[1]
 
 	// 영상 불러오기
 	player.cueVideoById(
 	{
-		videoId : get_id,
+		videoId : id_찾기,
 		startSeconds : sec_start, // 광고 때문에 sec_start 대신 임시로 0
 		...(sec_end > 0 && {endSeconds : sec_end})
 	})
@@ -577,32 +577,31 @@ function ready_data(id, start = 0, end = 0)
 
 
 
-// 시간값 시간표시 정리
-function data_split(time)
+function 시간_표기법(시간)
 {
-	if (typeof time === "number" && time > 0)
+	if (typeof 시간 === "number" && 시간 > 0)
 	{
-		const date = new Date(time * 1000)
-		const hh = date.getUTCHours()
-		const mm = date.getUTCMinutes()
-		const ss = date.getUTCSeconds()
-		const sss = time
-		const hms = hms_convert([hh, mm, ss])
-		return [ sss, hms ]
+		const 표준시간 = new Date(시간 * 1000)
+		const 시 = 표준시간.getUTCHours()
+		const 분 = 표준시간.getUTCMinutes()
+		const 초 = 표준시간.getUTCSeconds()
+		const 시간_숫자 = 시간
+		const 시간_문자 = 시분초_표준([시, 분, 초])
+		return [ 시간_숫자, 시간_문자 ]
 	}
-	else if (typeof time === "string")
+	else if (typeof 시간 === "string")
 	{
-		const fix = time.replace(/;/g, ":")
-		const fix_check = time.includes(":")
-		if (fix_check)
+		const 오타수정 = 시간.replace(/;/g, ":")
+		const 재확인 = 오타수정.includes(":")
+		if (재확인)
 		{
-			const fix_hms = fix.split(":")
-			const ss = +(fix_hms.pop())
-			const mm = fix_hms.length ? +(fix_hms.pop()) : 0
-			const hh = fix_hms.length ? +(fix_hms.pop()) : 0
-			const sss = hh * 3600 + mm * 60 + ss
-			const hms = hms_convert([hh, mm, ss])
-			return [ sss, hms ]
+			const 시분초 = 오타수정.split(":")
+			const 초 = +(시분초.pop())
+			const 분 = 시분초.length ? +(시분초.pop()) : 0
+			const 시 = 시분초.length ? +(시분초.pop()) : 0
+			const 시간_숫자 = 시 * 3600 + 분 * 60 + 초
+			const 시간_문자 = 시분초_표준([시, 분, 초])
+			return [ 시간_숫자, 시간_문자 ]
 		}
 	}
 	else
@@ -614,14 +613,14 @@ function data_split(time)
 
 
 // 시간 메세지 표기법 정리 24:00:00
-function hms_convert(hhmmss)
+function 시분초_표준(시분초)
 {
-	const hms_check = hhmmss.findIndex(num => num !== 0)
-	const slice_ready = hms_check === -1 ? hhmmss.length - 1 : hms_check
-	const slice_zero = hhmmss.slice(slice_ready)
-	const ctrl_zero = slice_zero.map((num, idx) => idx === 0 ? (num + "") : (num + "").padStart(2,"0"))
-	const hms = ctrl_zero.join(":")
-	return hms
+	const 시간_길이 = 시분초.findIndex(값 => 값 !== 0)
+	const 시간_길이_확인 = 시간_길이 === -1 ? 시분초.length - 1 : 시간_길이
+	const 시간_정리 = 시분초.slice(시간_길이_확인)
+	const 시간_변환 = 시간_정리.map((값, 순서) => 순서 === 0 ? (값 + "") : (값 + "").padStart(2,"0"))
+	const 시분초 = 시간_변환.join(":")
+	return 시분초
 }
 
 
@@ -637,7 +636,7 @@ function ctrl_view()
 	document.getElementById("play_now").style.width = Math.max(0, Math.min(1, ratio)) * 100 + "%"
 
 	/*
-	const [, msg_cur] = data_split(cur)
+	const [, msg_cur] = 시간_표기법(cur)
 	if (msg_end && msg_start)
 	{
 		if (sec_start === 0)
@@ -856,10 +855,14 @@ function make_long()
 // 이름 제목
 async function fetch_oembed(id) // 값 실적용 대신 뱉어내는 방식으로 변경
 {
-	const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`
+	// const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`
+	const 주소_1 = "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v="
+	const 주소_2 = id
+	const 주소_3 = "&format=json"
+	const 주소 = 주소_1 + 주소_2 + 주소_3
 	try
 	{
-		const input = await fetch(url)
+		const input = await fetch(주소)
 		const data = await input.json()
 
 		set_name = data.author_name
@@ -907,71 +910,71 @@ volume.addEventListener("click", stopp)
 
 
 // 해당하는 키 입력 기본 작동을 무시
-// 스페이스 바가 play_or_pause()를 실행
+// 스페이스 바가 재생_일시중지_조작()를 실행
 // 숫자 패드 컨트롤 또는 쉬프트 +-로 재생 속도 조절 (보류)
 // 숫자 패드 +-로 소리 크기 조절
-document.addEventListener("keydown", key =>
+document.addEventListener("keydown", 키 =>
 {
-	const add = key.code === "NumpadAdd" || key.code === "ArrowUp"
-	const sub = key.code === "NumpadSubtract" || key.code === "ArrowDown"
-	// const cs = key.ctrlKey || key.shiftKey
+	const 증가 = 키.code === "NumpadAdd" || 키.code === "ArrowUp"
+	const 감소 = 키.code === "NumpadSubtract" || 키.code === "ArrowDown"
+	// const 컨트롤_쉬프트 = 키.ctrlKey || 키.shiftKey
 	/*
-	if (!cs)
+	if (!컨트롤_쉬프트)
 	{
 	*/
-		if (add)
+		if (증가)
 		{
-			key.preventDefault()
+			키.preventDefault()
 			volume_value(+5)
 		}
-		else if (sub)
+		else if (감소)
 		{
-			key.preventDefault()
+			키.preventDefault()
 			volume_value(-5)
 		}
 	/*
 	}
-	else if (cs && add || sub)
+	else if (컨트롤_쉬프트 && 증가 || 감소)
 	{
-		key.preventDefault()
+		키.preventDefault()
 	}
 	*/
 	// 준비안됐으면 작동 중지
 	if (!player || !play_now()) return
 
-	if (!key.repeat)
+	if (!키.repeat)
 	{
-		if (key.code === "Space")
+		if (키.code === "Space")
 		{
-			key.preventDefault()
-			play_or_pause()
+			키.preventDefault()
+			재생_일시중지_조작()
 		}
-		if (key.code === "ArrowLeft")
+		if (키.code === "ArrowLeft")
 		{
-			key.preventDefault()
+			키.preventDefault()
 			player.seekTo(Math.max(sec_start, player.getCurrentTime() - 5), true) // sec_start 보다 작아질 수 없음
 		}
-		if (key.code === "ArrowRight")
+		if (키.code === "ArrowRight")
 		{
-			key.preventDefault()
+			키.preventDefault()
 			player.seekTo(Math.min(sec_end, player.getCurrentTime() + 5), true) // sec_end 보다 커질 수 없음
 		}
 		// 현재 재생 위치 변경
-		if (key.code.match(/^(Digit|Numpad)[0-9]$/))
+		if (키.code.match(/^(Digit|Numpad)[0-9]$/))
 		{
-			key.preventDefault()
-			const ratio = +(key.code.slice(-1)) / 10
-			const numkey = sec_start + Math.floor((sec_end - sec_start) * ratio)
-			player.seekTo(numkey, true)
+			키.preventDefault()
+			const 비율 = +(키.code.slice(-1)) / 10
+			const 숫자키 = sec_start + Math.floor((sec_end - sec_start) * 비율)
+			player.seekTo(숫자키, true)
 		}
 
 		/*
-		else if (cs && add || sub)
+		else if (컨트롤_쉬프트 && 증가 || 감소)
 		{
 			key.preventDefault()
-			const updown = add ? 0.05 : -0.05
-			const limit = add ? 2 : 0.25
-			const minmax  = add ? Math.min : Math.max
+			const updown = 증가 ? 0.05 : -0.05
+			const limit = 증가 ? 2 : 0.25
+			const minmax  = 증가 ? Math.min : Math.max
 			player.setPlaybackRate(minmax(limit, (player.getPlaybackRate() + updown)))
 		}
 		else if (key.code === "Numpad0")
@@ -999,34 +1002,33 @@ document.addEventListener("wheel", wheel =>
 
 
 // 소리 크기 조절
-function volume_value(plma)
+function volume_value(증감)
 {
-	const volume = player.getVolume()
-	const updown = plma > 0
-		? Math.floor(volume / 5) * 5 + 5
-		: Math.ceil(volume / 5) * 5 - 5
-	const change = Math.min(100, Math.max(0, updown))
-	player.setVolume(change)
-	volume_bar.value = change
+	const 지금소리크기 = player.getVolume()
+	const 올려내려 = 증감 > 0
+		? Math.floor(지금소리크기 / 5) * 5 + 5
+		: Math.ceil(지금소리크기 / 5) * 5 - 5
+	const 범위 = Math.min(100, Math.max(0, 올려내려))
+	player.setVolume(범위)
+	volume_bar.value = 범위
 }
 
 
 
-// 재생 속도 조절
-function play_speed(key, plma)
+function 재생_속도_조절(키, 증감)
 {
 }
 
 
 
 // 재생 일시중지
-function play_or_pause()
+function 재생_일시중지_조작()
 {
-	if (play())
+	if (재생())
 	{
 		player.pauseVideo()
 	}
-	else if (pause())
+	else if (일시중지())
 	{
 		player.playVideo()
 	}
@@ -1056,7 +1058,7 @@ function onPlayerStateChange(event)
 		player.setPlaybackRate(1)
 		if (sec_end === 0)
 		{
-			[sec_end, msg_end] = data_split(player.getDuration())
+			[sec_end, msg_end] = 시간_표기법(player.getDuration())
 		}
 		let title = null
 		try
@@ -1140,7 +1142,7 @@ function switch_click()
 
 
 // 유효한 유튜브 영상 id 확인 (수정) 재생목록 처리 분리, 동기 함수로 원복
-function get_id(id)
+function id_찾기(id)
 {
 	try
 	{
@@ -1162,19 +1164,6 @@ function get_id(id)
 	}
 }
 
-// 재생목록 id만 추출 (추가)
-function get_list_id(id)
-{
-	try
-	{
-		const url = new URL(id)
-		return url.searchParams.get("list")
-	}
-	catch
-	{
-		return null
-	}
-}
 
 // CUED(5) 상태 감지용 대기 장치 (추가)
 let playlist_ready_resolve = null
@@ -1299,7 +1288,7 @@ function cue_and_wait(id)
 // 		return
 // 	}
 
-// 	const fix = get_id(video.id)
+// 	const fix = id_찾기(video.id)
 // 	if (!fix) return
 
 // 	ready_data(Array.isArray(fix) ? fix[0] : fix)
