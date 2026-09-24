@@ -41,7 +41,7 @@ function onYouTubeIframeAPIReady()
 			onReady: () =>
 			{
 				// 현재 value 적용
-				player.setVolume(+volume_bar.value)
+				player.setVolume(+소리_크기_조절_기능.value)
 				// player 사용 가능해진 시점 알림
 				player_ready_resolve()
 			},

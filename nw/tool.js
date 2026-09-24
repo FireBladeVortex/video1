@@ -126,12 +126,6 @@ function 재생_일시중지_조작()
 	}
 }
 
-
-
-// 소리 크기 조절에 사용할 대상
-// const volume = document.getElementById("volume")
-// const volume_bar = document.getElementById("volume_bar")
-
 const 소리_크기 = document.getElementById("volume")
 const 소리_크기_조절_기능 = document.getElementById("volume_bar")
 
@@ -258,7 +252,7 @@ function 소리_크기_값_조절(증감)
 		: Math.ceil(지금소리크기 / 5) * 5 - 5
 	const 범위 = Math.min(100, Math.max(0, 올려내려))
 	player.setVolume(범위)
-	volume_bar.value = 범위
+	소리_크기_조절_기능.value = 범위
 }
 
 

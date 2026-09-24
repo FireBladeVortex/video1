@@ -4,7 +4,7 @@ const api = document.createElement("script")
 api.src = "https://www.youtube.com/iframe_api"
 // document.head.appendChild(api)
 
-const data_list =
+const 이름_목록 =
 [
 	{  이름 : "아쿠루" },
 	{  이름 : "감규리" },
@@ -23,7 +23,4 @@ const data_list =
 ]
 
 const 임시_목록 = {}
-
-
-
 
