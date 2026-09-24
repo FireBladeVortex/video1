@@ -1,36 +1,4 @@
 
-// YouTube Player iframe API 준비
-const api = document.createElement("script")
-api.src = "https://www.youtube.com/iframe_api"
-// wait
-// document.head.appendChild(api)
-
-const data_list =
-[
-	{  이름 : "아쿠루" },
-	{  이름 : "감규리" },
-	{  이름 : "이오몽" },
-	{  이름 : "마레 플로스" },
-	{  이름 : "미녕이데러오께" },
-	{  이름 : "마젯" },
-	{  이름 : "레드" },
-	{  이름 : "위도" },
-	{  이름 : "판구리" },
-	{  이름 : "앵보" },
-	{  이름 : "불법스님" },
-	{  이름 : "판구리" },
-	{  이름 : "판구리" },
-	{  이름 : "향아치" },
-]
-
-
-const 임시_목록 = {}
-
-
-
-
-
-
 // iframe 호출한다면
 function onYouTubeIframeAPIReady()
 {

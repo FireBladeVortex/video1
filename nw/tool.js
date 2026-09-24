@@ -129,23 +129,26 @@ function 재생_일시중지_조작()
 
 
 // 소리 크기 조절에 사용할 대상
-const volume = document.getElementById("volume")
-const volume_bar = document.getElementById("volume_bar")
+// const volume = document.getElementById("volume")
+// const volume_bar = document.getElementById("volume_bar")
+
+const 소리_크기 = document.getElementById("volume")
+const 소리_크기_조절_기능 = document.getElementById("volume_bar")
 
 
 
 // 소리 크기 조절 막대 값 반영 시키기
-volume_bar.addEventListener("input", () =>
+소리_크기_조절_기능.addEventListener("input", () =>
 {
-	player.setVolume(+volume_bar.value)
+	player.setVolume(+소리_크기_조절_기능.value)
 })
 
 
 
 // 소리 크기 조절하는데 간섭 방지
-const stopp = move => move.stopPropagation()
-volume.addEventListener("mousedown", stopp)
-volume.addEventListener("click", stopp)
+const 방지 = 간섭 => 간섭.stopPropagation()
+소리_크기.addEventListener("mousedown", 방지)
+소리_크기.addEventListener("click", 방지)
 
 
 
@@ -165,13 +168,13 @@ document.addEventListener("keydown", key =>
 		if (add)
 		{
 			key.preventDefault()
-			소리_크기_조절(+5)
+			소리_크기_값_조절(+5)
 		}
 		// - 키를 누르면 소리 작게
 		else if (sub)
 		{
 			key.preventDefault()
-			소리_크기_조절(-5)
+			소리_크기_값_조절(-5)
 		}
 	// }
 	// else if (cs && add || sub)
@@ -236,10 +239,10 @@ document.addEventListener("keydown", key =>
 
 
 // 마우스 휠로 소리 크기 조절 및 오작동 방지
-document.addEventListener("wheel", wheel =>
+document.addEventListener("wheel", 마우스휠 =>
 {
-	wheel.preventDefault()
-	소리_크기_조절(wheel.deltaY < 0 ? +5 : -5)
+	마우스휠.preventDefault()
+	소리_크기_값_조절(마우스휠.deltaY < 0 ? +5 : -5)
 },
 {
 	passive: false
@@ -247,7 +250,7 @@ document.addEventListener("wheel", wheel =>
 
 
 
-function 소리_크기_조절(증감)
+function 소리_크기_값_조절(증감)
 {
 	const 지금소리크기 = player.getVolume()
 	const 올려내려 = 증감 > 0
@@ -274,6 +277,7 @@ function 재생목록인가(id)
 
 function id_찾기(주소)
 {
+	// 잘못된 것을 받아왔을 때 에러 방지를 위한 try
 	try
 	{
 		// 유효한 링크인지 확인
@@ -308,8 +312,6 @@ function id_찾기(주소)
 		return null
 	}
 }
-
-
 
 
 

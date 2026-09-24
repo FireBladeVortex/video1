@@ -35,19 +35,19 @@ function render_switch()
 	name_list.className = "name_list"
 	name_box.appendChild(name_list)
 
-	가나다순_정렬(data_list).forEach(who =>
+	가나다순_정렬(data_list).forEach(누구 =>
 	{
 		const name_btn = document.createElement("div")
 		name_btn.className = "name_tag"
 
-		name_btn.textContent = who.is_has ? who.name + "*" : who.name
+		name_btn.textContent = 누구.중복 ? 누구.이름 + "*" : 누구.이름
 		name_box.appendChild(name_btn)
 
 		name_btn.addEventListener("click", () =>
 		{
 			name_box.innerHTML = ""
 			name_box.textContent = "불러오는 중"
-			load_playlist(who)
+			load_playlist(누구)
 		})
 	})
 }
