@@ -1,42 +1,74 @@
 
-window.playlist ??= {}
+window.재생목록 ??= {}
 
-playlist.intro =
+재생목록.색깔 =
+{
+	오른쪽바탕색 : "", 
+	왼쪽바탕색: "", 
+	강조1 : "",
+	강조2 : "",
+	강조3 : "",
+}
+
+재생목록.소개 =
 [
 	{
 		id : "https://youtu.be/d8dqNFNrXPk?si=wSS9YNVGFHjeMy2o",
 	},
 ]
 
-playlist.ori =
+재생목록.원곡 =
 [
 	{
 		id : "https://youtube.com/playlist?list=PLH9yc0jVu0zg&si=GH1RW_pyR-KpA1rK",
 	},
 ]
 
-playlist.video =
+재생목록.동영상 =
 [
 	{
 		id : "https://youtube.com/playlist?list=PLE21tp32aHko&si=oJoYfrEexYslRUys",
 	},
 ]
 
-playlist.short =
+재생목록.쇼츠 =
 [
 	{
 		id : "https://youtube.com/playlist?list=PLbb18kSPKZhk&si=1TcFaFxYqDJ-ZD5J",
 	},
 ]
 
-playlist.part =
+재생목록.부분재생 =
 [
 	{
 		id: "https://youtu.be/ux7en3vXRVE?si=EZ77ZtDKSi26Yw2N", // 5만 기념
-		song:
+		노래 :
 		[
-			{ lang : ["한국어", "개사"], name : "아쿠루", title : "나는 반딧불이", start : "1:11:33", end : "1:15:15", },
-			{ lang : ["한국어"], name : "아쿠루", title : "한숨", start : "1:22:45", end : "1:27:33", },
+			{ 
+				언어 : ["한국어", "개사"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["한국어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["일본어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["영어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["외국어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
 		]
 	},
 ]

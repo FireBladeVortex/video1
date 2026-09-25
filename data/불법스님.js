@@ -1,42 +1,74 @@
 
-window.playlist ??= {}
+window.재생목록 ??= {}
 
-playlist.intro =
+재생목록.색깔 =
+{
+	오른쪽바탕색 : "", 
+	왼쪽바탕색: "", 
+	강조1 : "",
+	강조2 : "",
+	강조3 : "",
+}
+
+재생목록.소개 =
 [
 	{
 		id : "https://youtu.be/GhiU-IvtBHo?si=NIhfhheEv50_EAk1",
 	},
 ]
 
-playlist.ori =
+재생목록.원곡 =
 [
 	{
 		id : "",
 	},
 ]
 
-playlist.video =
+재생목록.동영상 =
 [
 	{
 		id : "https://youtube.com/playlist?list=PLb8LSvEXeCbo&si=EH-6queDKFjh3LQ9",
 	},
 ]
 
-playlist.short =
+재생목록.쇼츠 =
 [
 	{
 		id : "",
 	},
 ]
 
-playlist.part =
+재생목록.부분재생 =
 [
 	{
 		id: "",
-		song:
+		노래 :
 		[
-			{ lang : ["한국어", "개사"], name : "", title : "", start : "", end : "", },
-			{ lang : ["한국어"], name : "", title : "", start : "", end : "", },
+			{ 
+				언어 : ["한국어", "개사"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["한국어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["일본어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["영어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
+			{ 
+				언어 : ["외국어"], 
+				이름 : "", 제목 : "", 
+				시작 : "", 종료 : "", 
+			},
 		]
 	},
 ]

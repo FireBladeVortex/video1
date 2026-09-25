@@ -445,8 +445,8 @@ function click_img(target)
 function calc_size(list)
 {
 	const screen = getComputedStyle(document.documentElement)
-	const img_w = parseInt(screen.getPropertyValue("--img-w"))
-	const img_h = parseInt(screen.getPropertyValue("--img-h"))
+	const img_w = parseInt(screen.getPropertyValue("--가로"))
+	const img_h = parseInt(screen.getPropertyValue("--세로"))
 
 	const short = list.target.classList.contains("short")
 
@@ -474,12 +474,16 @@ function 나만의_색깔(색깔)
 
 	const 설정 = document.documentElement.style
 
-	if (색깔.bg)
-		설정.setProperty("--bg", 색깔.bg)
-	if (색깔.box)
-		설정.setProperty("--box", 색깔.box)
-	if (색깔.highlight)
-		설정.setProperty("--highlight", 색깔.highlight)
+	if (색깔.오른쪽바탕색)
+		설정.setProperty("--오른쪽바탕색", 색깔.오른쪽바탕색)
+	if (색깔.왼쪽바탕색)
+		설정.setProperty("--왼쪽바탕색", 색깔.왼쪽바탕색)
+	if (색깔.강조1)
+		설정.setProperty("--강조1", 색깔.강조1)
+	if (색깔.강조2)
+		설정.setProperty("--강조1", 색깔.강조2)
+	if (색깔.강조3)
+		설정.setProperty("--강조1", 색깔.강조3)
 }
 
 

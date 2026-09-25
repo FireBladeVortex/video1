@@ -132,14 +132,23 @@ function load_playlist(who)
 
 function 나만의_색깔(색깔)
 {
-	if (!색깔) return
+	if (!색깔)
+		return
 
-	const root = document.documentElement.style
+	const 설정 = document.documentElement.style
 
-	if (색깔.bg) root.setProperty("--bg", 색깔.bg)
-	if (색깔.box) root.setProperty("--box", 색깔.box)
-	if (색깔.highlight) root.setProperty("--highlight", 색깔.highlight)
+	if (색깔.오른쪽바탕색)
+		설정.setProperty("--오른쪽바탕색", 색깔.오른쪽바탕색)
+	if (색깔.왼쪽바탕색)
+		설정.setProperty("--왼쪽바탕색", 색깔.왼쪽바탕색)
+	if (색깔.강조1)
+		설정.setProperty("--강조1", 색깔.강조1)
+	if (색깔.강조2)
+		설정.setProperty("--강조1", 색깔.강조2)
+	if (색깔.강조3)
+		설정.setProperty("--강조1", 색깔.강조3)
 }
+
 render_switch()
 
 

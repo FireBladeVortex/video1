@@ -310,8 +310,8 @@ function make_list()
 function calc_size(list)
 {
 	const root = getComputedStyle(document.documentElement)
-	const img_w = parseInt(root.getPropertyValue("--img-w"))
-	const img_h = parseInt(root.getPropertyValue("--img-h"))
+	const img_w = parseInt(root.getPropertyValue("--가로"))
+	const img_h = parseInt(root.getPropertyValue("--세로"))
 
 	const short = list.target.classList.contains("short")
 
