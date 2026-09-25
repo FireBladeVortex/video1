@@ -444,23 +444,23 @@ function click_img(target)
 // 미리보기 몇개 들어가는지 계산
 function calc_size(list)
 {
-	const screen = getComputedStyle(document.documentElement)
-	const img_w = parseInt(screen.getPropertyValue("--가로"))
-	const img_h = parseInt(screen.getPropertyValue("--세로"))
+	const 설정 = getComputedStyle(document.documentElement)
+	const 가로값 = parseInt(설정.getPropertyValue("--가로"))
+	const 세로값 = parseInt(설정.getPropertyValue("--세로"))
 
-	const short = list.target.classList.contains("short")
+	const 쇼츠 = list.target.classList.contains("short")
 
-	const cell_w = short ? img_h : img_w
-	const cell_h = short ? img_w : img_h
+	const 쇼츠_가로 = 쇼츠 ? 세로값 : 가로값
+	const 쇼츠_세로 = 쇼츠 ? 가로값 : 세로값
 
-	const width = list.contentBoxSize[0].inlineSize
-	const height = list.contentBoxSize[0].blockSize
+	const 너비 = list.contentBoxSize[0].inlineSize
+	const 높이 = list.contentBoxSize[0].blockSize
 
-	const col = Math.floor(width / cell_w)
-	const row = Math.floor(height / cell_h)
-	const cell = col * row
+	const 가로 = Math.floor(너비 / 쇼츠_가로)
+	const 세로 = Math.floor(높이 / 쇼츠_세로)
+	const 몇칸 = 가로 * 세로
 
-	return cell
+	return 몇칸
 }
 
 
