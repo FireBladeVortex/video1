@@ -1,4 +1,8 @@
 
+
+// iframe 들어갈 변수 준비
+let 유튜브_플레이어 = null
+
 // iframe 호출한다면
 function onYouTubeIframeAPIReady()
 {
@@ -7,7 +11,7 @@ function onYouTubeIframeAPIReady()
 	// const intro_vid = intro_id
 	// // Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) get_id가 [id, t] 형태로 반환하는 경우 처리
 
-	player = new YT.Player("you_player",
+	유튜브_플레이어 = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
@@ -41,7 +45,7 @@ function onYouTubeIframeAPIReady()
 			onReady: () =>
 			{
 				// 현재 value 적용
-				player.setVolume(+소리_크기_조절_기능.value)
+				유튜브_플레이어.setVolume(+소리_크기_조절_기능.value)
 				// player 사용 가능해진 시점 알림
 				player_ready_resolve()
 			},
@@ -102,15 +106,15 @@ function onPlayerStateChange(event)
 			playlist_ready_resolve()
 			playlist_ready_resolve = null
 		}
-		player.setPlaybackRate(1)
+		유튜브_플레이어.setPlaybackRate(1)
 		if (sec_end === 0)
 		{
-			[sec_end, msg_end] = data_split(player.getDuration())
+			[sec_end, msg_end] = data_split(유튜브_플레이어.getDuration())
 		}
 		let title = null
 		try
 		{
-			title = player.getVideoData().title
+			title = 유튜브_플레이어.getVideoData().title
 		}
 		catch
 		{
@@ -129,9 +133,9 @@ function onPlayerStateChange(event)
 	// 재생 중일 때 100ms마다 진행바 갱신
 	if (event.data === 1)
 	{
-		if (player.getCurrentTime() < sec_start)
+		if (유튜브_플레이어.getCurrentTime() < sec_start)
 		{
-			player.seekTo(sec_start, true)
+			유튜브_플레이어.seekTo(sec_start, true)
 		}
 		clearInterval(play_bar) // 인터벌 중복 호출 방지
 		play_bar = setInterval(ctrl_view, 100)
@@ -143,8 +147,8 @@ function onPlayerStateChange(event)
 	// 영상 재시작
 	if (event.data === 0)
 	{
-		player.seekTo(sec_start, true)
-		player.playVideo()
+		유튜브_플레이어.seekTo(sec_start, true)
+		유튜브_플레이어.playVideo()
 	}
 	//
 	const pop = [1, 2, 3].includes(event.data)
@@ -172,10 +176,10 @@ function switch_click()
 
 // document.getElementById("switch").addEventListener("click", switch_click)
 
-function load_playlist(data)
+function 재생목록_불러오기(누구)
 {
 	const script = document.createElement("script")
-	script.src = "data/" + data.file
+	script.src = "data/" + 누구.이름 + ".js"
 
 	// 준비 되었을때 실행
 	// https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event

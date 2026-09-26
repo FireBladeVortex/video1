@@ -71,6 +71,8 @@ async function fix_playlist_data(playlist)
 	}
 }
 
+
+
 // id 값이 실제로 채워진 배열인지 확인 (추가)
 function valid_playlist(arr)
 {
@@ -118,11 +120,11 @@ function 재생_일시중지_조작()
 {
 	if (재생())
 	{
-		player.pauseVideo()
+		유튜브_플레이어.pauseVideo()
 	}
 	else if (일시중지())
 	{
-		player.playVideo()
+		유튜브_플레이어.playVideo()
 	}
 }
 
@@ -134,7 +136,7 @@ const 소리_크기_조절_기능 = document.getElementById("volume_bar")
 // 소리 크기 조절 막대 값 반영 시키기
 소리_크기_조절_기능.addEventListener("input", () =>
 {
-	player.setVolume(+소리_크기_조절_기능.value)
+	유튜브_플레이어.setVolume(+소리_크기_조절_기능.value)
 })
 
 
@@ -150,83 +152,83 @@ const 방지 = 간섭 => 간섭.stopPropagation()
 // 스페이스 바가 play_or_pause()를 실행
 // 숫자 패드 컨트롤 또는 쉬프트 +-로 재생 속도 조절 (보류)
 // 숫자 패드 +-로 소리 크기 조절
-document.addEventListener("keydown", key =>
+document.addEventListener("keydown", 키 =>
 {
-	const add = key.code === "NumpadAdd" || key.code === "ArrowUp"
-	const sub = key.code === "NumpadSubtract" || key.code === "ArrowDown"
-	// const cs = key.ctrlKey || key.shiftKey
+	const 증가 = 키.code === "NumpadAdd" || 키.code === "ArrowUp"
+	const 감소 = 키.code === "NumpadSubtract" || 키.code === "ArrowDown"
+	// const 컨트롤_쉬프트 = 키.ctrlKey || 키.shiftKey
 
-	// if (!cs)
+	// if (!컨트롤_쉬프트)
 	// {
 		// + 키를 누르면 소리 크게
-		if (add)
+		if (증가)
 		{
-			key.preventDefault()
+			키.preventDefault()
 			소리_크기_값_조절(+5)
 		}
 		// - 키를 누르면 소리 작게
-		else if (sub)
+		else if (감소)
 		{
-			key.preventDefault()
+			키.preventDefault()
 			소리_크기_값_조절(-5)
 		}
 	// }
-	// else if (cs && add || sub)
+	// else if (컨트롤_쉬프트 && 증가 || 감소)
 	// {
-	// 	key.preventDefault()
+	// 	키.preventDefault()
 	// }
 
 	// 준비안됐으면 작동 중지
-	if (!player || !play_now())
+	if (!player || !재생중())
 		return
 
 	// 키 반복입력 방지
-	if (!key.repeat)
+	if (!키.repeat)
 	{
 		// 스페이스바 = 재생, 일시중지
-		if (key.code === "Space")
+		if (키.code === "Space")
 		{
-			key.preventDefault()
-			play_or_pause()
+			키.preventDefault()
+			재생_일시중지_조작()
 		}
 
 		// 방향키 왼쪽 = 5초 전으로
-		else if (key.code === "ArrowLeft")
+		else if (키.code === "ArrowLeft")
 		{
-			key.preventDefault()
-			player.seekTo(Math.max(sec_start, player.getCurrentTime() - 5), true) // sec_start 보다 작아질 수 없음
+			키.preventDefault()
+			유튜브_플레이어.seekTo(Math.max(sec_start, 유튜브_플레이어.getCurrentTime() - 5), true) // sec_start 보다 작아질 수 없음
 		}
 
 		// 방향키 오른쪽 = 5초 앞으로
-		else if (key.code === "ArrowRight")
+		else if (키.code === "ArrowRight")
 		{
-			key.preventDefault()
-			player.seekTo(Math.min(sec_end, player.getCurrentTime() + 5), true) // sec_end 보다 커질 수 없음
+			키.preventDefault()
+			유튜브_플레이어.seekTo(Math.min(sec_end, 유튜브_플레이어.getCurrentTime() + 5), true) // sec_end 보다 커질 수 없음
 		}
 
 		// 숫자키 0-9 = 현재 재생 위치 변경
-		else if (key.code.match(/^(Digit|Numpad)[0-9]$/))
+		else if (키.code.match(/^(Digit|Numpad)[0-9]$/))
 		{
-			key.preventDefault()
-			const ratio = +(key.code.slice(-1)) / 10
-			const numkey = sec_start + Math.floor((sec_end - sec_start) * ratio)
-			player.seekTo(numkey, true)
+			키.preventDefault()
+			const 비율 = +(키.code.slice(-1)) / 10
+			const 숫자키 = sec_start + Math.floor((sec_end - sec_start) * 비율)
+			유튜브_플레이어.seekTo(숫자키, true)
 		}
 
 		// 재생 속도 조절
-		// else if (cs && add || sub)
-		// {
-		// 	key.preventDefault()
-		// 	const updown = add ? 0.05 : -0.05
-		// 	const limit = add ? 2 : 0.25
-		// 	const minmax  = add ? Math.min : Math.max
-		// 	player.setPlaybackRate(minmax(limit, (player.getPlaybackRate() + updown)))
-		// }
-		// else if (key.code === "Numpad0")
-		// {
-		// 	key.preventDefault()
-		// 	player.setPlaybackRate(1)
-		// }
+		else if (컨트롤_쉬프트 && 증가 || 감소)
+		{
+			키.preventDefault()
+			const 증감 = 증가 ? 0.05 : -0.05
+			const 제한 = 증가 ? 2 : 0.25
+			const 최대최소  = 증가 ? Math.min : Math.max
+			유튜브_플레이어.setPlaybackRate(최대최소(제한, (유튜브_플레이어.getPlaybackRate() + 증감)))
+		}
+		else if (키.code === "Numpad0")
+		{
+			키.preventDefault()
+			유튜브_플레이어.setPlaybackRate(1)
+		}
 	}
 })
 
@@ -246,12 +248,12 @@ document.addEventListener("wheel", 마우스휠 =>
 
 function 소리_크기_값_조절(증감)
 {
-	const 지금소리크기 = player.getVolume()
+	const 지금소리크기 = 유튜브_플레이어.getVolume()
 	const 올려내려 = 증감 > 0
 		? Math.floor(지금소리크기 / 5) * 5 + 5
 		: Math.ceil(지금소리크기 / 5) * 5 - 5
 	const 범위 = Math.min(100, Math.max(0, 올려내려))
-	player.setVolume(범위)
+	유튜브_플레이어.setVolume(범위)
 	소리_크기_조절_기능.value = 범위
 }
 
@@ -370,7 +372,7 @@ function 시분초_표준(시분초)
 function ctrl_view()
 {
 	// 지금 재생 중인 동영상 시간 확인
-	const cur = player.getCurrentTime()
+	const cur = 유튜브_플레이어.getCurrentTime()
 	const ratio = (cur - sec_start) / (sec_end - sec_start)
 	document.getElementById("play_now").style.width = Math.max(0, Math.min(1, ratio)) * 100 + "%"
 
@@ -566,7 +568,7 @@ function ready_data(id, start = 0, end = 0)
 	msg_end = end_t[1]
 
 	// 영상 불러오기
-	player.cueVideoById(
+	유튜브_플레이어.cueVideoById(
 	{
 		videoId : get_id,
 		startSeconds : sec_start, // 광고 때문에 sec_start 대신 임시로 0
@@ -619,36 +621,35 @@ async function fetch_oembed(id) // 값 실적용 대신 뱉어내는 방식으�
 
 function cue_and_wait(id)
 {
-	const temp_div = document.createElement("div")
-	document.body.appendChild(temp_div)
+	const 임시_공간 = document.createElement("div")
+	document.body.appendChild(임시_공간)
 
-	let temp_player = null // (추가) 콜백 내부에서 참조할 수 있도록 미리 선언
+	let 임시_플레이어 = null
 
-	const promise = new Promise(resolve => // (수정) Promise를 변수에 먼저 담음
+	const promise = new Promise(resolve =>
 	{
-		temp_player = new YT.Player(temp_div,
+		임시_플레이어 = new YT.Player(임시_공간,
 		{
 			height: "0", width: "0",
 			events:
 			{
-				onReady: () => // (추가) player가 실제로 준비된 뒤에만 메서드 호출 가능
+				onReady: () => 
 				{
-					temp_player.cuePlaylist({ listType: "playlist", list: id })
-					// (수정) 위치 이동: onReady 안에서 실행
+					임시_플레이어.cuePlaylist({ listType: "playlist", list: id })
 				},
 				onStateChange: event =>
 				{
 					if (event.data !== YT.PlayerState.CUED)
 						return
 
-					const list = temp_player.getPlaylist()
+					const list = 임시_플레이어.getPlaylist()
 					if (!list)
 						return
 
 					const result = list.map(id => ({ id }))
 
-					temp_player.destroy()
-					temp_div.remove()
+					임시_플레이어.destroy()
+					임시_공간.remove()
 
 					resolve(result)
 				}
@@ -664,8 +665,8 @@ function cue_intro(intro)
 {
 	if (재생목록인가(intro))
 	{
-		player.setShuffle(true) // 랜덤 선택
-		player.cuePlaylist(
+		유튜브_플레이어.setShuffle(true) // 랜덤 선택
+		유튜브_플레이어.cuePlaylist(
 		{
 			listType: "playlist",
 			list: intro
@@ -673,7 +674,7 @@ function cue_intro(intro)
 	}
 	else
 	{
-		player.cueVideoById(
+		유튜브_플레이어.cueVideoById(
 		{
 			videoId : intro,
 		})

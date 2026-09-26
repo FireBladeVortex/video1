@@ -100,15 +100,15 @@ function render_switch()
 		{
 			name_box.innerHTML = ""
 			name_box.textContent = "불러오는 중"
-			load_playlist(who)
+			재생목록_불러오기(who)
 		})
 	})
 }
 
-function load_playlist(who)
+function 재생목록_불러오기(누구)
 {
 	const script = document.createElement("script")
-	script.src = "data/" + who.이름 +".js"
+	script.src = "data/" + 누구.이름 + ".js"
 
 	script.addEventListener("load", async () =>
 	{

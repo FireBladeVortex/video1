@@ -1,7 +1,4 @@
 
-// 함수 모음
-
-
 
 // switch 상자 내부에 이름 목록 채우기 (추가)
 function render_switch()
@@ -47,7 +44,7 @@ function render_switch()
 		{
 			name_box.innerHTML = ""
 			name_box.textContent = "불러오는 중"
-			load_playlist(누구)
+			재생목록_불러오기(누구)
 		})
 	})
 }
@@ -330,11 +327,11 @@ function fill_page(type_str)
 			{
 				if (play())
 				{
-					player.pauseVideo()
+					유튜브_플레이어.pauseVideo()
 				}
 				else if (pause())
 				{
-					player.playVideo()
+					유튜브_플레이어.playVideo()
 				}
 				else
 					return
