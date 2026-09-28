@@ -44,7 +44,7 @@ body
 	overflow : hidden;
 }
 
-#name_box
+#이름_상자
 {
 	position : fixed;
 	top : 0;
@@ -61,7 +61,7 @@ body
 	justify-content: flex-start;
 }
 
-.abc_h1
+.가나다_h1
 {
 	display : grid;
 	grid-template-columns : repeat(7, 3fr 1fr);
@@ -75,14 +75,14 @@ body
 	padding-bottom : 3px;
 }
 
-.abc_box, .abc_num
+.자음_상자, .자음_번호
 {
 	display : flex;
 	align-items : center;
 	justify-content : center;
 }
 
-.name_list
+.이름표_목록
 {
 	display : grid;
 	grid-template-columns : repeat(5, 1fr);
@@ -91,14 +91,14 @@ body
 	padding-top: 10px;
 }
 
-.name_tag
+.이름표
 {
 	color: var(--강조3);
 	font-size: 20px;
 	cursor: pointer;
 }
 
-.name_tag:hover
+.이름표:hover
 {
 	color: var(--강조1);
 }

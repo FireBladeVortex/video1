@@ -53,12 +53,10 @@ function 가나다(목록)
 
 
 
-
-function make_abc(이름_상자)
+function 만들기_가나다(이름_상자)
 {
 	const 가나다_h1 = document.createElement("h1")
-	가나다_h1.className = "abc_h1"
-	// 가나다_h1.className = "가나다_h1"
+	가나다_h1.className = "가나다_h1"
 	이름_상자.appendChild(가나다_h1)
 
 	const 가나다 =
@@ -69,36 +67,27 @@ function make_abc(이름_상자)
 
 	가나다.forEach(가나다_순서대로 =>
 	{
-		// const abc_box = document.createElement("span")
 		const 자음_상자 = document.createElement("span")
-		자음_상자.className = "abc_item"
-		// 자음_상자.className = "abc_item"
+		자음_상자.className = "자음_상자"
 		자음_상자.textContent = 가나다_순서대로
 		가나다_h1.appendChild(자음_상자)
 
-		// const abc_num = document.createElement("span")
 		const 자음_번호 = document.createElement("span")
-		// abc_num.className = "abc_num"
 		자음_번호.className = "자음_번호"
 		가나다_h1.appendChild(자음_번호)
-
 	})
 }
 
 
 
-function make_name_list(이름_상자)
+function 만들기_이름표들(이름_상자)
 {
-	// const name_list = document.createElement("div")
 	const 이름표_목록 = document.createElement("div")
-	이름표_목록.className = "name_list"
-	// 이름표_목록.className = "이름표_목록"
+	이름표_목록.className = "이름표_목록"
 	이름_상자.appendChild(이름표_목록)
 
 	가나다순_정렬(이름_목록).forEach(누구 =>
 	{
-		const name_btn = document.createElement("div")
-		name_btn.className = "name_tag"
 		const 이름표 = document.createElement("div")
 		이름표.className = "이름표"
 
@@ -118,12 +107,12 @@ function make_name_list(이름_상자)
 
 function render_switch()
 {
-	const name_box = document.getElementById("name_box")
-	// const 이름_상자 = document.getElementById("이름_상자")
+	const 이름_상자 = document.getElementById("이름_상자")
 
-	make_abc(name_box)
-	make_name_list(name_box)
+	만들기_가나다(이름_상자)
+	만들기_이름표들(이름_상자)
 }
+
 
 
 

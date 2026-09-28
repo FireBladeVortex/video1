@@ -146,7 +146,7 @@ function 재생목록_불러오기(누구)
 
 		await cue_intro(temp_list.intro)
 
-		document.getElementById("name_box").remove()
+		document.getElementById("이름_상자").remove()
 	})
 
 	document.head.appendChild(script)
