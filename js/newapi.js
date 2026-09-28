@@ -38,21 +38,11 @@ function load_player()
 // iframe 호출
 function onYouTubeIframeAPIReady()
 {
-
-	const intro_id = temp_list.intro // (추가) intro id 유효성 미리 확인 (배열이 비었거나 id가 없어도 안전)
-	const intro_vid = intro_id
-	// Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) id_찾기가 [id, t] 형태로 반환하는 경우 처리
-
 	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
-		// videoId: "d8dqNFNrXPk",
-		// videoId: id_찾기(playlist.intro[0].id),
-
-		// ...(intro_vid && { videoId: intro_vid }), // (추가) 유효한 id가 있을 때만 videoId 전달
-		...(temp_list.intro.id && { videoId: temp_list.intro.id }), // (추가) 유효한 id가 있을 때만 videoId 전달
-
+		videoId: "",
 		playerVars:
 		{
 			autoplay: 0, // 자동재생 방지
@@ -108,7 +98,7 @@ let msg_end = null
 let video_multiple = 1
 let short_multiple = 1
 
-let active_data = { video: null, short: null } // 현재 표시중인 목록 데이터
+let active_data = { video: null, 쇼츠: null } // 현재 표시중인 목록 데이터
 let list_ori = [] // original 값을 가진 데이터만 모음
 let list_non = [] // original 값이 없는 데이터만 모음
 let pli_ori = null // (추가) 재생목록에서 받아온 원곡 목록 저장
@@ -125,7 +115,7 @@ function valid_playlist(arr)
 
 function make_list()
 {
-	const left = document.getElementById("left")
+	const 왼쪽 = document.getElementById("왼쪽")
 
 
 
@@ -144,7 +134,7 @@ function make_list()
 	const video_type =
 	[
 		{ type: "video", tag: "동영상", data: video_data ?? null }, // 수정
-		{ type: "short", tag: "쇼츠", data: temp_list.short ?? null }, // 수정
+		{ type: "쇼츠", tag: "쇼츠", data: temp_list.쇼츠 ?? null }, // 수정
 		{ type: "long", tag: "부분 재생", data: temp_list.part ?? null }, // 수정
 	]
 
@@ -156,18 +146,18 @@ function make_list()
 		if (!type.data)
 			return
 
-		const section = document.createElement("div")
-		section.className = "section"
-		section.dataset.type = type.type
-		left.appendChild(section)
+		const 구역 = document.createElement("div")
+		구역.className = "구역"
+		구역.dataset.type = type.type
+		왼쪽.appendChild(구역)
 
 		const h1 = document.createElement("h1")
-		section.appendChild(h1)
+		구역.appendChild(h1)
 
-		const h1_name = document.createElement("div")
-		h1_name.className = "h1_name"
-		h1_name.textContent = type.tag + " 재생 목록"
-		h1.appendChild(h1_name)
+		const 구역_재생목록 = document.createElement("div")
+		구역_재생목록.className = "구역_재생목록"
+		구역_재생목록.textContent = type.tag + " 재생 목록"
+		h1.appendChild(구역_재생목록)
 
 
 		const h1_class = document.createElement("div")
@@ -233,7 +223,7 @@ function make_list()
 					btn_prev.appendChild(btn_prev_txt)
 					btn_prev_txt.addEventListener("click", () =>
 					{
-						if (type.type === "short")
+						if (type.type === "쇼츠")
 							short_multiple = Math.max(1, short_multiple - 1)
 						else
 							video_multiple = Math.max(1, video_multiple - 1)
@@ -257,10 +247,10 @@ function make_list()
 					btn_next_txt.addEventListener("click", () =>
 					{
 						const last = get_last(type.type)
-						const multiple = type.type === "short" ? short_multiple : video_multiple
+						const multiple = type.type === "쇼츠" ? short_multiple : video_multiple
 						if (multiple >= last)
 							return
-						if (type.type === "short")
+						if (type.type === "쇼츠")
 							short_multiple = short_multiple + 1
 						else
 							video_multiple = video_multiple + 1
@@ -291,14 +281,14 @@ function make_list()
 
 
 
-		const list = document.createElement("div")
-		list.className = `list ${type.type}`
-		section.appendChild(list)
+		const 목록 = document.createElement("div")
+		목록.className = `목록 ${type.type}`
+		구역.appendChild(목록)
 
 		// list 크기를 가로 세로 썸네일 크기 배수 구해서 총 몇칸인지 구하고 page로 넘겨
-		const page = document.createElement("div")
-		page.className = `page ${type.type}`
-		list.appendChild(page)
+		const 쪽 = document.createElement("div")
+		쪽.className = `쪽 ${type.type}`
+		목록.appendChild(쪽)
 
 
 		fill_page(type.type)
@@ -307,19 +297,19 @@ function make_list()
 
 
 //
-function calc_size(list)
+function calc_size(목록)
 {
 	const 설정 = getComputedStyle(document.documentElement)
 	const 가로값 = parseInt(설정.getPropertyValue("--가로"))
 	const 세로값 = parseInt(설정.getPropertyValue("--세로"))
 
-	const 쇼츠 = list.target.classList.contains("short")
+	const 쇼츠 = 목록.target.classList.contains("쇼츠")
 
 	const 쇼츠_가로 = 쇼츠 ? 세로값 : 가로값
 	const 쇼츠_세로 = 쇼츠 ? 가로값 : 세로값
 
-	const 너비 = list.contentBoxSize[0].inlineSize
-	const 높이 = list.contentBoxSize[0].blockSize
+	const 너비 = 목록.contentBoxSize[0].inlineSize
+	const 높이 = 목록.contentBoxSize[0].blockSize
 
 	const 가로 = Math.floor(너비 / 쇼츠_가로)
 	const 세로 = Math.floor(높이 / 쇼츠_세로)
@@ -332,15 +322,15 @@ function calc_size(list)
 // total_cell 값에 맞춰 썸네일 버튼을 (재)생성하는 함수
 function fill_page(type_str)
 {
-	const page = document.querySelector(`.page.${type_str}`)
-	if (!page)
+	const 쪽 = document.querySelector(`.쪽.${type_str}`)
+	if (!쪽)
 		return
 
 	const data = active_data[type_str] ?? list_data[type_str]
 	if (!data)
 		return
 
-	const crrt_data_count = page.children.length
+	const crrt_data_count = 쪽.children.length
 	const nxxt_data_count = data.length
 
 	// const next_count = total_cell[type_str] 새로 계산된 필요 개수
@@ -350,10 +340,10 @@ function fill_page(type_str)
 		const ready = data[num]
 		if (!ready) break
 
-		const btn = document.createElement("button")
-		btn.className = "btn"
-		btn.dataset.num = num
-		btn.dataset.type = type_str
+		const 버튼 = document.createElement("button")
+		버튼.className = "버튼"
+		버튼.dataset.num = num
+		버튼.dataset.type = type_str
 
 		const img = document.createElement("img")
 		const src_1 = "https://img.youtube.com/vi/"
@@ -361,10 +351,10 @@ function fill_page(type_str)
 		const src_3 = "/mqdefault.jpg"
 		img.src = src_1 + src_2 + src_3
 
-		btn.appendChild(img)
-		page.appendChild(btn)
+		버튼.appendChild(img)
+		쪽.appendChild(버튼)
 
-		btn.addEventListener("click", () =>
+		버튼.addEventListener("click", () =>
 		{
 			const target = (type_str + "_" + (num + "").padStart(3, "0"))
 			if (img_click === target)
@@ -383,8 +373,8 @@ function fill_page(type_str)
 			else
 			{
 				click_img(target)
-				const short = type_str === "short"
-				ready_data(ready.id, short ? 0 : ready.start, short ? 0 : ready.end)
+				const 쇼츠 = type_str === "쇼츠"
+				ready_data(ready.id, 쇼츠 ? 0 : ready.start, 쇼츠 ? 0 : ready.end)
 			}
 		})
 	}
@@ -396,8 +386,8 @@ function switch_video_data(next_data)
 {
 	active_data.video = next_data // 현재 데이터 갱신
 
-	const page = document.querySelector(`.page.video`)
-	if (page) page.innerHTML = "" // 기존 썸네일 제거 후 재생성
+	const 쪽 = document.querySelector(`.쪽.video`)
+	if (쪽) 쪽.innerHTML = "" // 기존 썸네일 제거 후 재생성
 
 	fill_page("video") // 새 데이터로 다시 채움
 
@@ -413,22 +403,22 @@ function update_page(type_str)
 	if (!num)
 		return
 
-	const multiple = type_str === "short" ? short_multiple : video_multiple
+	const multiple = type_str === "쇼츠" ? short_multiple : video_multiple
 	const min_num = (multiple - 1) * num
 	const max_num = (multiple * num) - 1
 
-	document.querySelectorAll(`.btn[data-type="${type_str}"]`).forEach(btn =>
+	document.querySelectorAll(`.버튼[data-type="${type_str}"]`).forEach(버튼 =>
 	{
-		const idx = +btn.dataset.num
+		const idx = +버튼.dataset.num
 		const show = idx >= min_num && idx <= max_num
-		btn.style.display = show ? "" : "none"
+		버튼.style.display = show ? "" : "none"
 	})
 }
 
 // 크기 변경 시 multiple, 표시값 초기화
 function reset_page(type_str)
 {
-	if (type_str === "short")
+	if (type_str === "쇼츠")
 		short_multiple = 1
 	else
 		video_multiple = 1
@@ -470,7 +460,7 @@ function render_nav(type_str)
 		return
 	}
 
-	const multiple = type_str === "short" ? short_multiple : video_multiple
+	const multiple = type_str === "쇼츠" ? short_multiple : video_multiple
 
 	btn_prev_txt.textContent = multiple === 1 ? "" : "이전"
 	btn_center.textContent = ""
@@ -500,12 +490,12 @@ function render_nav(type_str)
 function click_img(target)
 {
 	// 활성화 버튼 강조 나머지 버튼 어둡게
-	document.querySelectorAll(".btn").forEach(btn =>
+	document.querySelectorAll(".버튼").forEach(버튼 =>
 	{
-		const compare = (btn.dataset.type + "_" + (btn.dataset.num + "").padStart(3, "0"))
+		const compare = (버튼.dataset.type + "_" + (버튼.dataset.num + "").padStart(3, "0"))
 		const click_img = compare === target
-		btn.classList.toggle("active", click_img)
-		btn.classList.toggle("blur", !click_img)
+		버튼.classList.toggle("강조", click_img)
+		버튼.classList.toggle("발기", !click_img)
 	})
 	// total_list에서 클릭한 썸네일 또 클릭할때 쓰는 장치
 	img_click = target
@@ -516,19 +506,19 @@ let big_type = null // 현재 확대된 섹션 타입 저장
 // (수정) 재생 목록 칸 확대/축소 전환 (토글 방식)
 function resize_section(type_str)
 {
-	const left = document.getElementById("left")
-	const rows = { video: "2fr", short: "2fr", long: "1fr" }
+	const 왼쪽 = document.getElementById("왼쪽")
+	const rows = { video: "2fr", 쇼츠: "2fr", long: "1fr" }
 
 	const next_big = big_type === type_str ? null : type_str // 같은 타입 재클릭 시 해제
 
 	if (next_big)
 	{
 		rows.video = type_str === "video" ? "1fr" : "0fr"
-		rows.short = type_str === "short" ? "1fr" : "0fr"
+		rows.쇼츠 = type_str === "쇼츠" ? "1fr" : "0fr"
 		rows.long = type_str === "long" ? "1fr" : "0fr"
 	}
 
-	left.style.gridTemplateRows = `${rows.video} ${rows.short} ${rows.long}`
+	왼쪽.style.gridTemplateRows = `${rows.video} ${rows.쇼츠} ${rows.long}`
 
 	big_type = next_big // 상태 갱신
 
@@ -677,14 +667,14 @@ function make_long()
 	if (!playlist.part)
 		return // long 파일 없으면 작동 안함
 
-	const section = document.querySelector('.section[data-type="long"]')
-	if (!section)
+	const 구역 = document.querySelector('.구역[data-type="long"]')
+	if (!구역)
 		return
 
 	// 1행 (3칸, 1:3:1)
 	const row1 = document.createElement("div")
 	row1.className = "long_row1"
-	section.appendChild(row1)
+	구역.appendChild(row1)
 
 	const lang_select = document.createElement("select")
 	lang_select.className = "long_lang"
@@ -702,13 +692,13 @@ function make_long()
 	ready_btn.className = "long_ready"
 	ready_btn.textContent = "재생 준비"
 	empty_col.appendChild(ready_btn)
-	ready_btn.classList.add("blur")
+	ready_btn.classList.add("발기")
 
 
 	// 2행 (1칸, 100%)
 	const row2 = document.createElement("div")
 	row2.className = "long_row2"
-	section.appendChild(row2)
+	구역.appendChild(row2)
 
 	const title_select = document.createElement("select")
 	title_select.className = "long_title"
@@ -791,7 +781,7 @@ function make_long()
 
 
 		;[...titles].forEach(title => make_option(title_select, title, title))
-		ready_btn.classList.toggle("active", false)
+		ready_btn.classList.toggle("강조", false)
 	}
 
 	lang_select.addEventListener("change", () =>
@@ -803,8 +793,8 @@ function make_long()
 
 	title_select.addEventListener("change", () =>
 	{
-		ready_btn.classList.toggle("active", title_select.value)
-		ready_btn.classList.toggle("blur", !title_select.value)
+		ready_btn.classList.toggle("강조", title_select.value)
+		ready_btn.classList.toggle("발기", !title_select.value)
 	})
 
 	ready_btn.addEventListener("click", () =>
@@ -1100,7 +1090,7 @@ function onPlayerStateChange(event)
 	}
 	//
 	const pop = [1, 2, 3].includes(event.data)
-	document.querySelectorAll("#right").forEach(overlay => // ("#right, #ad") // #ad 임시 삭제 사용자 선택으로 버튼 만들기 전까지
+	document.querySelectorAll("#오른쪽").forEach(overlay => // ("#right, #ad") // #ad 임시 삭제 사용자 선택으로 버튼 만들기 전까지
 	{
 		overlay.style.cursor = pop ? "pointer" : "default"
 		overlay.onclick = pop ? play_or_pause : null
@@ -1109,14 +1099,14 @@ function onPlayerStateChange(event)
 }
 
 // 싲가
-const total_cell = { video: 0, short: 0 }
+const total_cell = { video: 0, 쇼츠: 0 }
 
 const resize = new ResizeObserver(entry =>
 {
-	entry.forEach(list =>
+	entry.forEach(목록 =>
 	{
-		const type = list.target.classList.contains("short") ? "short" : "video"
-		total_cell[type] = calc_size(list)
+		const type = 목록.target.classList.contains("쇼츠") ? "쇼츠" : "video"
+		total_cell[type] = calc_size(목록)
 
 		reset_page(type)
 		update_page(type)
@@ -1130,7 +1120,7 @@ function switch_click()
 
 	make_list() // 뼈대(.list, .page) + 썸네일 DOM 생성
 
-	document.querySelectorAll(".list").forEach(list => resize.observe(list)) // 크기 관찰 시작
+	document.querySelectorAll(".목록").forEach(목록 => resize.observe(목록)) // 크기 관찰 시작
 
 	// this.remove() // 스위치 사각형 제거
 }
@@ -1245,11 +1235,11 @@ function cue_and_wait(id)
 					if (event.data !== YT.PlayerState.CUED)
 						return
 
-					const list = temp_player.getPlaylist()
-					if (!list)
+					const 재생목록 = temp_player.getPlaylist()
+					if (!재생목록)
 						return
 
-					const result = list.map(id => ({ id }))
+					const result = 재생목록.map(id => ({ id }))
 
 					temp_player.destroy()
 					temp_div.remove()

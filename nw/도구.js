@@ -94,9 +94,13 @@ function 재생목록_조사(id)
 			height: "0", width: "0",
 			events:
 			{
-				onReady: () => 
+				onReady: () =>
 				{
-					임시_플레이어.cuePlaylist({ listType: "playlist", list: id })
+					임시_플레이어.cuePlaylist(
+						{
+							listType: "playlist",
+							list: id
+						})
 				},
 				onStateChange: event =>
 				{
@@ -224,7 +228,7 @@ function get_songs(video) // valid_list 생성 대신 video 하나당 유효한 
 const 재생 = () => player?.getPlayerState?.() === YT.PlayerState.PLAYING
 const 일시중지 = () => player?.getPlayerState?.() === YT.PlayerState.PAUSED
 // !재생중 === !재생() && !일시중지()
-const 재생중 = () => 재생() || 일시중지() 
+const 재생중 = () => 재생() || 일시중지()
 
 
 
@@ -459,19 +463,19 @@ let big_type = null // 현재 확대된 섹션 타입 저장
 // (수정) 재생 목록 칸 확대/축소 전환 (토글 방식)
 function resize_section(type_str)
 {
-	const left = document.getElementById("left")
-	const rows = { video: "2fr", short: "2fr", long: "1fr" }
+	const 왼쪽 = document.getElementById("왼쪽")
+	const rows = { video: "2fr", 쇼츠: "2fr", long: "1fr" }
 
 	const next_big = big_type === type_str ? null : type_str // 같은 타입 재클릭 시 해제
 
 	if (next_big)
 	{
 		rows.video = type_str === "video" ? "1fr" : "0fr"
-		rows.short = type_str === "short" ? "1fr" : "0fr"
+		rows.쇼츠 = type_str === "쇼츠" ? "1fr" : "0fr"
 		rows.long = type_str === "long" ? "1fr" : "0fr"
 	}
 
-	left.style.gridTemplateRows = `${rows.video} ${rows.short} ${rows.long}`
+	왼쪽.style.gridTemplateRows = `${rows.video} ${rows.쇼츠} ${rows.long}`
 
 	big_type = next_big // 상태 갱신
 
@@ -494,12 +498,12 @@ function get_last(type_str)
 function click_img(target)
 {
 	// 활성화 버튼 강조 나머지 버튼 어둡게
-	document.querySelectorAll(".btn").forEach(btn =>
+	document.querySelectorAll(".버튼").forEach(버튼 =>
 	{
-		const compare = (btn.dataset.type + "_" + (btn.dataset.num + "").padStart(3, "0"))
+		const compare = (버튼.dataset.type + "_" + (버튼.dataset.num + "").padStart(3, "0"))
 		const click_img = compare === target
-		btn.classList.toggle("active", click_img)
-		btn.classList.toggle("blur", !click_img)
+		버튼.classList.toggle("강조", click_img)
+		버튼.classList.toggle("발기", !click_img)
 	})
 	// total_list에서 클릭한 썸네일 또 클릭할때 쓰는 장치
 	img_click = target
@@ -508,19 +512,19 @@ function click_img(target)
 
 
 // 미리보기 몇개 들어가는지 계산
-function calc_size(list)
+function calc_size(목록)
 {
 	const 설정 = getComputedStyle(document.documentElement)
 	const 가로값 = parseInt(설정.getPropertyValue("--가로"))
 	const 세로값 = parseInt(설정.getPropertyValue("--세로"))
 
-	const 쇼츠 = list.target.classList.contains("short")
+	const 쇼츠 = 목록.target.classList.contains("쇼츠")
 
 	const 쇼츠_가로 = 쇼츠 ? 세로값 : 가로값
 	const 쇼츠_세로 = 쇼츠 ? 가로값 : 세로값
 
-	const 너비 = list.contentBoxSize[0].inlineSize
-	const 높이 = list.contentBoxSize[0].blockSize
+	const 너비 = 목록.contentBoxSize[0].inlineSize
+	const 높이 = 목록.contentBoxSize[0].blockSize
 
 	const 가로 = Math.floor(너비 / 쇼츠_가로)
 	const 세로 = Math.floor(높이 / 쇼츠_세로)
@@ -564,22 +568,22 @@ function update_page(type_str)
 	if (!num)
 		return
 
-	const multiple = type_str === "short" ? short_multiple : video_multiple
+	const multiple = type_str === "쇼츠" ? short_multiple : video_multiple
 	const min_num = (multiple - 1) * num
 	const max_num = (multiple * num) - 1
 
-	document.querySelectorAll(`.btn[data-type="${type_str}"]`).forEach(btn =>
+	document.querySelectorAll(`.버튼[data-type="${type_str}"]`).forEach(버튼 =>
 	{
-		const idx = +btn.dataset.num
+		const idx = +버튼.dataset.num
 		const show = idx >= min_num && idx <= max_num
-		btn.style.display = show ? "" : "none"
+		버튼.style.display = show ? "" : "none"
 	})
 }
 
 // 크기 변경 시 multiple, 표시값 초기화
 function reset_page(type_str)
 {
-	if (type_str === "short")
+	if (type_str === "쇼츠")
 		short_multiple = 1
 	else
 		video_multiple = 1
@@ -664,8 +668,12 @@ function switch_video_data(next_data)
 {
 	active_data.video = next_data // 현재 데이터 갱신
 
-	const page = document.querySelector(`.page.video`)
-	if (page) page.innerHTML = "" // 기존 썸네일 제거 후 재생성
+	const 쪽 = document.querySelector(`.쪽.video`)
+	if (쪽)
+	{
+		// 기존 썸네일 제거 후 재생성
+		쪽.innerHTML = ""
+	}
 
 	fill_page("video") // 새 데이터로 다시 채움
 
@@ -676,17 +684,19 @@ function switch_video_data(next_data)
 
 
 // 크기 계산
-const total_cell = { video: 0, short: 0 }
+const total_cell = { video: 0, 쇼츠: 0 }
 
-const resize = new ResizeObserver(box =>
+const resize = new ResizeObserver(구역 =>
 {
-	box.forEach(cell =>
+	구역.forEach(목록 =>
 	{
-		const type = cell.target.classList.contains("short") ? "short" : "video"
-		total_cell[type] = calc_size(cell)
+		const 분류 = 목록.target.classList.contains("쇼츠") ? "쇼츠" : "video"
+		total_cell[분류] = calc_size(목록)
 
-		reset_page(type)
-		update_page(type)
+		reset_page(분류)
+		update_page(분류)
 	})
 })
+
+
 

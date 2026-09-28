@@ -105,7 +105,7 @@ function onPlayerStateChange(event)
 	}
 	//
 	const pop = [1, 2, 3].includes(event.data)
-	document.querySelectorAll("#right").forEach(overlay => // ("#right, #ad") // #ad 임시 삭제 사용자 선택으로 버튼 만들기 전까지
+	document.querySelectorAll("#오른쪽").forEach(overlay => // ("#right, #ad") // #ad 임시 삭제 사용자 선택으로 버튼 만들기 전까지
 	{
 		overlay.style.cursor = pop ? "pointer" : "default"
 		overlay.onclick = pop ? play_or_pause : null
@@ -124,7 +124,7 @@ function switch_click()
 
 	make_list() // 뼈대(.list, .page) + 썸네일 DOM 생성
 
-	document.querySelectorAll(".list").forEach(list => resize.observe(list)) // 크기 관찰 시작
+	document.querySelectorAll(".목록").forEach(목록 => resize.observe(목록)) // 크기 관찰 시작
 
 }
 

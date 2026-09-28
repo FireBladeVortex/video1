@@ -83,7 +83,7 @@ function render_switch()
 
 function make_list()
 {
-	const left = document.getElementById("left")
+	const 왼쪽 = document.getElementById("왼쪽")
 
 
 
@@ -102,7 +102,7 @@ function make_list()
 	const video_type =
 	[
 		{ type: "video", tag: "동영상", data: video_data ?? null }, // 수정
-		{ type: "short", tag: "쇼츠", data: 임시_목록.short ?? null }, // 수정
+		{ type: "쇼츠", tag: "쇼츠", data: 임시_목록.쇼츠 ?? null }, // 수정
 		{ type: "long", tag: "부분 재생", data: 임시_목록.part ?? null }, // 수정
 	]
 
@@ -112,18 +112,18 @@ function make_list()
 		if (!type.data)
 			return
 
-		const section = document.createElement("div")
-		section.className = "section"
-		section.dataset.type = type.type
-		left.appendChild(section)
+		const 구역 = document.createElement("div")
+		구역.className = "구역"
+		구역.dataset.type = type.type
+		왼쪽.appendChild(구역)
 
 		const h1 = document.createElement("h1")
-		section.appendChild(h1)
+		구역.appendChild(h1)
 
-		const h1_name = document.createElement("div")
-		h1_name.className = "h1_name"
-		h1_name.textContent = type.tag + " 재생 목록"
-		h1.appendChild(h1_name)
+		const 구역_재생목록 = document.createElement("div")
+		구역_재생목록.className = "구역_재생목록"
+		구역_재생목록.textContent = type.tag + " 재생 목록"
+		h1.appendChild(구역_재생목록)
 
 
 		const h1_class = document.createElement("div")
@@ -189,7 +189,7 @@ function make_list()
 					btn_prev.appendChild(btn_prev_txt)
 					btn_prev_txt.addEventListener("click", () =>
 					{
-						if (type.type === "short")
+						if (type.type === "쇼츠")
 							short_multiple = Math.max(1, short_multiple - 1)
 						else
 							video_multiple = Math.max(1, video_multiple - 1)
@@ -213,10 +213,10 @@ function make_list()
 					btn_next_txt.addEventListener("click", () =>
 					{
 						const last = get_last(type.type)
-						const multiple = type.type === "short" ? short_multiple : video_multiple
+						const multiple = type.type === "쇼츠" ? short_multiple : video_multiple
 						if (multiple >= last)
 							return
-						if (type.type === "short")
+						if (type.type === "쇼츠")
 							short_multiple = short_multiple + 1
 						else
 							video_multiple = video_multiple + 1
@@ -247,14 +247,14 @@ function make_list()
 
 
 
-		const list = document.createElement("div")
-		list.className = `list ${type.type}`
-		section.appendChild(list)
+		const 목록 = document.createElement("div")
+		목록.className = `목록 ${type.type}`
+		구역.appendChild(목록)
 
 		// list 크기를 가로 세로 썸네일 크기 배수 구해서 총 몇칸인지 구하고 page로 넘겨
-		const page = document.createElement("div")
-		page.className = `page ${type.type}`
-		list.appendChild(page)
+		const 쪽 = document.createElement("div")
+		쪽.className = `쪽 ${type.type}`
+		목록.appendChild(쪽)
 
 
 		fill_page(type.type)
@@ -264,15 +264,15 @@ function make_list()
 // total_cell 값에 맞춰 썸네일 버튼을 (재)생성하는 함수
 function fill_page(type_str)
 {
-	const page = document.querySelector(`.page.${type_str}`)
-	if (!page)
+	const 쪽 = document.querySelector(`.쪽.${type_str}`)
+	if (!쪽)
 		return
 
 	const data = active_data[type_str] ?? list_data[type_str]
 	if (!data)
 		return
 
-	const crrt_data_count = page.children.length
+	const crrt_data_count = 쪽.children.length
 	const nxxt_data_count = data.length
 
 	// const next_count = total_cell[type_str] 새로 계산된 필요 개수
@@ -282,10 +282,10 @@ function fill_page(type_str)
 		const ready = data[num]
 		if (!ready) break
 
-		const btn = document.createElement("button")
-		btn.className = "btn"
-		btn.dataset.num = num
-		btn.dataset.type = type_str
+		const 버튼 = document.createElement("button")
+		버튼.className = "버튼"
+		버튼.dataset.num = num
+		버튼.dataset.type = type_str
 
 		const img = document.createElement("img")
 		const src_1 = "https://img.youtube.com/vi/"
@@ -293,10 +293,10 @@ function fill_page(type_str)
 		const src_3 = "/mqdefault.jpg"
 		img.src = src_1 + src_2 + src_3
 
-		btn.appendChild(img)
-		page.appendChild(btn)
+		버튼.appendChild(img)
+		쪽.appendChild(버튼)
 
-		btn.addEventListener("click", () =>
+		버튼.addEventListener("click", () =>
 		{
 			const target = (type_str + "_" + (num + "").padStart(3, "0"))
 			if (img_click === target)
@@ -315,8 +315,8 @@ function fill_page(type_str)
 			else
 			{
 				click_img(target)
-				const short = type_str === "short"
-				ready_data(ready.id, short ? 0 : ready.start, short ? 0 : ready.end)
+				const 쇼츠 = type_str === "쇼츠"
+				ready_data(ready.id, 쇼츠 ? 0 : ready.start, 쇼츠 ? 0 : ready.end)
 			}
 		})
 	}
@@ -329,14 +329,14 @@ function make_long()
 	if (!playlist.part)
 		return // long 파일 없으면 작동 안함
 
-	const section = document.querySelector('.section[data-type="long"]')
-	if (!section)
+	const 구역 = document.querySelector('.구역[data-type="long"]')
+	if (!구역)
 		return
 
 	// 1행 (3칸, 1:3:1)
 	const row1 = document.createElement("div")
 	row1.className = "long_row1"
-	section.appendChild(row1)
+	구역.appendChild(row1)
 
 	const lang_select = document.createElement("select")
 	lang_select.className = "long_lang"
@@ -354,13 +354,13 @@ function make_long()
 	ready_btn.className = "long_ready"
 	ready_btn.textContent = "재생 준비"
 	empty_col.appendChild(ready_btn)
-	ready_btn.classList.add("blur")
+	ready_btn.classList.add("발기")
 
 
 	// 2행 (1칸, 100%)
 	const row2 = document.createElement("div")
 	row2.className = "long_row2"
-	section.appendChild(row2)
+	구역.appendChild(row2)
 
 	const title_select = document.createElement("select")
 	title_select.className = "long_title"
@@ -443,7 +443,7 @@ function make_long()
 
 
 		;[...titles].forEach(title => make_option(title_select, title, title))
-		ready_btn.classList.toggle("active", false)
+		ready_btn.classList.toggle("강조", false)
 	}
 
 	lang_select.addEventListener("change", () =>
@@ -455,8 +455,8 @@ function make_long()
 
 	title_select.addEventListener("change", () =>
 	{
-		ready_btn.classList.toggle("active", title_select.value)
-		ready_btn.classList.toggle("blur", !title_select.value)
+		ready_btn.classList.toggle("강조", title_select.value)
+		ready_btn.classList.toggle("발기", !title_select.value)
 	})
 
 	ready_btn.addEventListener("click", () =>
@@ -520,7 +520,7 @@ function render_nav(type_str)
 		return
 	}
 
-	const multiple = type_str === "short" ? short_multiple : video_multiple
+	const multiple = type_str === "쇼츠" ? short_multiple : video_multiple
 
 	btn_prev_txt.textContent = multiple === 1 ? "" : "이전"
 	btn_center.textContent = ""

@@ -103,7 +103,7 @@ body
 	color: var(--강조1);
 }
 
-#left
+#왼쪽
 {
 	display : grid;
 	grid-template-rows : 2fr 2fr 1fr; /* (추가) video:short:long 비율 고정 */
@@ -113,7 +113,7 @@ body
 	height : 100%;
 }
 
-#left h1
+#왼쪽 h1
 {
 	width : 95%;
 	font-size : 14px;
@@ -126,16 +126,16 @@ body
 
 
 
-#left h1 .h1_name
+#왼쪽 h1 .구역_재생목록
 {
 	flex : 1;
 	display : flex;
 }
 
 
-#left h1 .h1_class,
-#left h1 .h1_page,
-#left h1 .h1_size,
+#왼쪽 h1 .h1_class,
+#왼쪽 h1 .h1_page,
+#왼쪽 h1 .h1_size,
 .h1_class_item,
 .btn_prev,
 .btn_center,
@@ -164,7 +164,7 @@ body
 
 
 
-.section
+.구역
 {
 	display : flex;
 	flex-direction : column;
@@ -176,18 +176,18 @@ body
 	min-height : 0;
 }
 
-.section[data-type="video"],
-.section[data-type="short"]
+.구역[data-type="video"],
+.구역[data-type="쇼츠"]
 {
 	display : grid;
-	grid-template-rows : auto 1fr; /* (추가) h1은 내용 크기, .list는 남은 공간 전부 */
+	grid-template-rows : auto 1fr;
 	justify-items : center;
 	align-items : start;
 	align-content : start;
 }
 
 
-.list
+.목록
 {
 	margin-top : 9px;
 	width : 100%;
@@ -199,7 +199,7 @@ body
 
 
 
-.list.short
+.목록.쇼츠
 {
 	max-width : round(down, 90%, var(--세로));
 	max-height : round(down, 100%, var(--가로));
@@ -207,7 +207,7 @@ body
 
 
 
-.page
+.쪽
 {
 	display : grid;
 	grid-template-columns : repeat(auto-fill, var(--가로));
@@ -215,14 +215,14 @@ body
 
 
 
-.page.short
+.쪽.쇼츠
 {
 	grid-template-columns : repeat(auto-fill, var(--세로));
 }
 
 
 
-.btn
+.버튼
 {
 	display : flex;
 	align-items : center;
@@ -234,35 +234,35 @@ body
 	cursor : pointer; /* 커서 변경 */
 }
 
-.list.short .btn
+.목록.쇼츠 .버튼
 {
 	width : var(--세로);
 	height : var(--가로);
 }
 
-.btn:hover
+.버튼:hover
 { /* 마우스 올라간 이미지 강조 // 클릭 전 */
 	outline : 3px solid var(--강조1);
 	outline-offset : -3px;
 }
 
-.btn.active
+.버튼.강조
 { /* 활성화 상태 강조 // 클릭 후 */
 	outline : 3px solid var(--강조1);
 	outline-offset : -3px;
 }
 
-.btn.blur  /* 비활성 표시 흐리고 어둡게 */
+.버튼.발기  /* 비활성 표시 흐리고 어둡게 */
 {
 	filter : brightness(25%); /* 어둡게 */
 }
 
-.btn.blur:hover  /* 마우스 올라가면 비활성 취소 */
+.버튼.발기:hover  /* 마우스 올라가면 비활성 취소 */
 {
 	filter : brightness(100%);
 }
 
-.btn img
+.버튼 img
 {
 	width : 100%; /* 100% */
 	height : 100%; /* 100% */
@@ -271,8 +271,8 @@ body
 	object-fit : cover;
 }
 
-#right
-{ /* 오른쪽 */
+#오른쪽
+{
 	position : relative;
 	display : flex; /* 정렬 */
 	flex : 1; /* 일정하게 정렬 */
@@ -292,8 +292,9 @@ body
 	z-index : 3;
 }
 
+/* 유튜브가 들어갈 공간 */
 #player iframe, #you_player
-{ /* 유튜브가 들어갈 공간 */
+{
 	width : 100%;
 	height : 100%;
 	display : block;
@@ -415,13 +416,13 @@ body
 	cursor : pointer;
 }
 
-.long_ready.active /* (추가) 조건 만족 시 활성 상태 */
+.long_ready.강조 /* (추가) 조건 만족 시 활성 상태 */
 {
 	opacity : 1;
 	pointer-events : auto;
 }
 
-.long_ready.blur /* (추가) 조건 만족 시 활성 상태 */
+.long_ready.발기 /* (추가) 조건 만족 시 활성 상태 */
 {
 	opacity : 0.5; /* (추가) 기본 반투명 */
 	pointer-events : none; /* (추가) 기본 상태에서는 클릭 막음 */
@@ -433,12 +434,12 @@ body
 	cursor : pointer;
 }
 
-.h1_name, /* (수정) */
+.구역_재생목록, /* (수정) */
 .btn_center
 {
 	cursor : default;
 }
-#right h1
+#오른쪽 h1
 {
 	position : absolute;
 	top : 0;
@@ -484,7 +485,7 @@ body
 	z-index : 100;
 }
 
-#popup.active /* 추가 */
+#popup.강조 /* 추가 */
 {
 	display : flex;
 }
