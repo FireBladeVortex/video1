@@ -43,7 +43,7 @@ function 가나다(목록)
 			map.set(그거, { ...이거 })
 		}
 	})
-	
+
 	const 결과 = [...map.values()]
 
 	return 결과
@@ -54,56 +54,129 @@ function 가나다(목록)
 
 
 
-
-
-
-
-// switch 상자 내부에 이름 목록 채우기 (추가)
-function render_switch()
+function make_abc(이름_상자)
 {
-	const name_box = document.getElementById("name_box")
+	const 가나다_h1 = document.createElement("h1")
+	가나다_h1.className = "abc_h1"
+	// 가나다_h1.className = "가나다_h1"
+	이름_상자.appendChild(가나다_h1)
 
-	const abc_h1 = document.createElement("h1")
-	abc_h1.className = "abc_h1"
-	name_box.appendChild(abc_h1)
-
-	const abc =
+	const 가나다 =
 	[
 		"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ",
 		"ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
 	]
 
-	abc.forEach(abc =>
+	가나다.forEach(가나다_순서대로 =>
 	{
-		const abc_box = document.createElement("span")
-		abc_box.className = "abc_item"
-		abc_box.textContent = abc
-		abc_h1.appendChild(abc_box)
+		// const abc_box = document.createElement("span")
+		const 자음_상자 = document.createElement("span")
+		자음_상자.className = "abc_item"
+		// 자음_상자.className = "abc_item"
+		자음_상자.textContent = 가나다_순서대로
+		가나다_h1.appendChild(자음_상자)
 
-		const abc_num = document.createElement("span")
-		abc_num.className = "abc_num"
-		abc_h1.appendChild(abc_num)
+		// const abc_num = document.createElement("span")
+		const 자음_번호 = document.createElement("span")
+		// abc_num.className = "abc_num"
+		자음_번호.className = "자음_번호"
+		가나다_h1.appendChild(자음_번호)
+
 	})
+}
 
-	const name_list = document.createElement("div")
-	name_list.className = "name_list"
-	name_box.appendChild(name_list)
 
-	가나다(불러올_목록).forEach(who =>
+
+function make_name_list(이름_상자)
+{
+	// const name_list = document.createElement("div")
+	const 이름표_목록 = document.createElement("div")
+	이름표_목록.className = "name_list"
+	// 이름표_목록.className = "이름표_목록"
+	이름_상자.appendChild(이름표_목록)
+
+	가나다순_정렬(이름_목록).forEach(누구 =>
 	{
 		const name_btn = document.createElement("div")
 		name_btn.className = "name_tag"
-		name_btn.textContent = who.중복 ? who.이름 + "*" : who.이름
-		name_list.appendChild(name_btn)
+		const 이름표 = document.createElement("div")
+		이름표.className = "이름표"
 
-		name_btn.addEventListener("click", () =>
+		이름표.textContent = 누구.중복 ? 누구.이름 + "*" : 누구.이름
+		이름표_목록.appendChild(이름표)
+
+		이름표.addEventListener("click", () =>
 		{
-			name_box.innerHTML = ""
-			name_box.textContent = "불러오는 중"
-			재생목록_불러오기(who)
+			이름_상자.innerHTML = ""
+			이름_상자.textContent = "불러오는 중"
+			재생목록_불러오기(누구)
 		})
 	})
 }
+
+
+
+function render_switch()
+{
+	const name_box = document.getElementById("name_box")
+	// const 이름_상자 = document.getElementById("이름_상자")
+
+	make_abc(name_box)
+	make_name_list(name_box)
+}
+
+
+
+
+
+
+
+// // switch 상자 내부에 이름 목록 채우기 (추가)
+// function render_switch()
+// {
+// 	const name_box = document.getElementById("name_box")
+
+// 	const abc_h1 = document.createElement("h1")
+// 	abc_h1.className = "abc_h1"
+// 	name_box.appendChild(abc_h1)
+
+// 	const abc =
+// 	[
+// 		"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ",
+// 		"ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
+// 	]
+
+// 	abc.forEach(abc =>
+// 	{
+// 		const abc_box = document.createElement("span")
+// 		abc_box.className = "abc_item"
+// 		abc_box.textContent = abc
+// 		abc_h1.appendChild(abc_box)
+
+// 		const abc_num = document.createElement("span")
+// 		abc_num.className = "abc_num"
+// 		abc_h1.appendChild(abc_num)
+// 	})
+
+// 	const name_list = document.createElement("div")
+// 	name_list.className = "name_list"
+// 	name_box.appendChild(name_list)
+
+// 	가나다(불러올_목록).forEach(who =>
+// 	{
+// 		const name_btn = document.createElement("div")
+// 		name_btn.className = "name_tag"
+// 		name_btn.textContent = who.중복 ? who.이름 + "*" : who.이름
+// 		name_list.appendChild(name_btn)
+
+// 		name_btn.addEventListener("click", () =>
+// 		{
+// 			name_box.innerHTML = ""
+// 			name_box.textContent = "불러오는 중"
+// 			재생목록_불러오기(who)
+// 		})
+// 	})
+// }
 
 function 재생목록_불러오기(누구)
 {
