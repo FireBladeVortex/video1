@@ -29,14 +29,116 @@ function 가나다순_정렬(목록)
 }
 
 
-async function fix_playlist_data(playlist)
+
+
+
+
+function 재생목록인가(id)
+{
+	const 참_거짓 = id.startsWith("PL")
+	return 참_거짓
+}
+
+function id_찾기(주소)
+{
+	// 잘못된 것을 받아왔을 때 에러 방지를 위한 try
+	try
+	{
+		// 유효한 링크인지 확인
+		const url = new URL(주소)
+
+		// 해당 링크가 재생목록인지 확인
+		const id_재생목록 = url.searchParams.get("list")
+		// 재생목록이 맞고 PL 타입 재생목록인지 확인하고 맞으면 값을 전달
+		if (id_재생목록 && 재생목록인가(id_재생목록))
+			return id_재생목록
+
+		// 해당 링크가 동영상 링크인지 확인
+		// 링크 모양에 따라 경우의 수 대비
+		const v = url.searchParams.get("v")
+		const path = url.pathname.split("/").pop()
+		const id_동영상 = v ?? path
+
+		// 잘못된 링크인지 대비
+		const 정규표현식 = /^[a-zA-Z0-9_-]{11}$/
+		// 잘못됐다면 아무것도 안하고 즉시 null 전달
+		if (!정규표현식.test(id_동영상))
+			return null
+
+		// 동영상 시작시간을 포함하고있는지 확인
+		const t = parseInt(url.searchParams.get("t"))
+		// 포함하고 있으면 시간도 같이 전달 아니라면 id만 전달 + NaN 방지
+		return (Number.isNaN(t)) ? id_동영상 : [id_동영상, t]
+	}
+	// try 과정에서 뭔가 잘못됐다면 즉시 멈추고 null 전달
+	catch
+	{
+		return null
+	}
+}
+
+
+
+
+function 재생목록_조사(id)
+{
+	const 임시_공간 = document.createElement("div")
+	document.body.appendChild(임시_공간)
+
+	let 임시_플레이어 = null
+
+	const promise = new Promise(resolve =>
+	{
+		임시_플레이어 = new YT.Player(임시_공간,
+		{
+			height: "0", width: "0",
+			events:
+			{
+				onReady: () => 
+				{
+					임시_플레이어.cuePlaylist({ listType: "playlist", list: id })
+				},
+				onStateChange: event =>
+				{
+					if (event.data !== YT.PlayerState.CUED)
+						return
+
+					const 재생목록 = 임시_플레이어.getPlaylist()
+					if (!재생목록)
+						return
+
+					const 결과 = 재생목록.map(id => ({ id }))
+
+					임시_플레이어.destroy()
+					임시_공간.remove()
+
+					resolve(결과)
+				}
+			}
+		})
+	})
+	return promise
+}
+
+
+
+
+
+
+
+
+
+
+
+
+async function id_가공(playlist)
 {
 	const keys = Object.keys(playlist)
 
 
 	for (const key of keys)
 	{
-		// color 등 붎필요한 호출 방지 및 미래 대비
+		// 불필요한 호출 방지 및 대비
 		if (!Array.isArray(playlist[key]))
 			continue
 
@@ -46,28 +148,41 @@ async function fix_playlist_data(playlist)
 
 			if (id)
 			{
-				if (id.startsWith("PL"))
+				if (재생목록인가(id))
 				{
-					const data = await cue_and_wait(id)
-					// (수정) key 전달 제거, 반환값을 직접 받음
-					temp_list[key] = (temp_list[key] ?? []).concat(data)
-					// (추가) 받아온 값을 바로 temp_list에 삽입
+					const 값 = await 재생목록_조사(id)
+					temp_list[key] = (temp_list[key] ?? []).concat(값)
 				}
-				else
+				else if ()
 				{
-					// (추가) id를 제외한 나머지 값(original, song 등) 모두 보존
 					const { id, ...rest } = video
-
-					const fix = id_찾기(id)
-					if (!fix)
-						continue
-
-					const fix_id = Array.isArray(fix) ? fix[0] : fix
-					temp_list[key] = (temp_list[key] ?? []).concat([{ id: fix_id, ...rest }])
-					// (수정) result 대신 temp_list에 직접 삽입
+					const 값 = Array.isArray(id) ? id[0] : id
+					temp_list[key] = (temp_list[key] ?? []).concat([{ id: 값, ...rest }])
 				}
 			}
 		}
+	}
+}
+
+
+// intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
+function cue_intro(intro)
+{
+	if (재생목록인가(intro))
+	{
+		player.setShuffle(true) // 랜덤 선택
+		player.cuePlaylist(
+		{
+			listType: "playlist",
+			list: intro
+		})
+	}
+	else
+	{
+		player.cueVideoById(
+		{
+			videoId : intro,
+		})
 	}
 }
 
@@ -120,11 +235,11 @@ function 재생_일시중지_조작()
 {
 	if (재생())
 	{
-		유튜브_플레이어.pauseVideo()
+		player.pauseVideo()
 	}
 	else if (일시중지())
 	{
-		유튜브_플레이어.playVideo()
+		player.playVideo()
 	}
 }
 
@@ -136,7 +251,7 @@ const 소리_크기_조절_기능 = document.getElementById("volume_bar")
 // 소리 크기 조절 막대 값 반영 시키기
 소리_크기_조절_기능.addEventListener("input", () =>
 {
-	유튜브_플레이어.setVolume(+소리_크기_조절_기능.value)
+	player.setVolume(+소리_크기_조절_기능.value)
 })
 
 
@@ -196,14 +311,14 @@ document.addEventListener("keydown", 키 =>
 		else if (키.code === "ArrowLeft")
 		{
 			키.preventDefault()
-			유튜브_플레이어.seekTo(Math.max(sec_start, 유튜브_플레이어.getCurrentTime() - 5), true) // sec_start 보다 작아질 수 없음
+			player.seekTo(Math.max(sec_start, player.getCurrentTime() - 5), true) // sec_start 보다 작아질 수 없음
 		}
 
 		// 방향키 오른쪽 = 5초 앞으로
 		else if (키.code === "ArrowRight")
 		{
 			키.preventDefault()
-			유튜브_플레이어.seekTo(Math.min(sec_end, 유튜브_플레이어.getCurrentTime() + 5), true) // sec_end 보다 커질 수 없음
+			player.seekTo(Math.min(sec_end, player.getCurrentTime() + 5), true) // sec_end 보다 커질 수 없음
 		}
 
 		// 숫자키 0-9 = 현재 재생 위치 변경
@@ -212,7 +327,7 @@ document.addEventListener("keydown", 키 =>
 			키.preventDefault()
 			const 비율 = +(키.code.slice(-1)) / 10
 			const 숫자키 = sec_start + Math.floor((sec_end - sec_start) * 비율)
-			유튜브_플레이어.seekTo(숫자키, true)
+			player.seekTo(숫자키, true)
 		}
 
 		// 재생 속도 조절
@@ -222,12 +337,12 @@ document.addEventListener("keydown", 키 =>
 			const 증감 = 증가 ? 0.05 : -0.05
 			const 제한 = 증가 ? 2 : 0.25
 			const 최대최소  = 증가 ? Math.min : Math.max
-			유튜브_플레이어.setPlaybackRate(최대최소(제한, (유튜브_플레이어.getPlaybackRate() + 증감)))
+			player.setPlaybackRate(최대최소(제한, (player.getPlaybackRate() + 증감)))
 		}
 		else if (키.code === "Numpad0")
 		{
 			키.preventDefault()
-			유튜브_플레이어.setPlaybackRate(1)
+			player.setPlaybackRate(1)
 		}
 	}
 })
@@ -248,12 +363,12 @@ document.addEventListener("wheel", 마우스휠 =>
 
 function 소리_크기_값_조절(증감)
 {
-	const 지금소리크기 = 유튜브_플레이어.getVolume()
+	const 지금소리크기 = player.getVolume()
 	const 올려내려 = 증감 > 0
 		? Math.floor(지금소리크기 / 5) * 5 + 5
 		: Math.ceil(지금소리크기 / 5) * 5 - 5
 	const 범위 = Math.min(100, Math.max(0, 올려내려))
-	유튜브_플레이어.setVolume(범위)
+	player.setVolume(범위)
 	소리_크기_조절_기능.value = 범위
 }
 
@@ -262,54 +377,6 @@ function 소리_크기_값_조절(증감)
 function 재생_속도_조절(키, 증감)
 {
 }
-
-
-
-function 재생목록인가(id)
-{
-	const 참_거짓 = id.startsWith("PL")
-	return 참_거짓
-}
-
-function id_찾기(주소)
-{
-	// 잘못된 것을 받아왔을 때 에러 방지를 위한 try
-	try
-	{
-		// 유효한 링크인지 확인
-		const url = new URL(주소)
-
-		// 해당 링크가 재생목록인지 확인
-		const id_재생목록 = url.searchParams.get("list")
-		// 재생목록이 맞고 PL 타입 재생목록인지 확인하고 맞으면 값을 전달
-		if (id_재생목록 && 재생목록인가(id_재생목록))
-			return id_재생목록
-
-		// 해당 링크가 동영상 링크인지 확인
-		// 링크 모양에 따라 경우의 수 대비
-		const v = url.searchParams.get("v")
-		const path = url.pathname.split("/").pop()
-		const id_동영상 = v ?? path
-
-		// 잘못된 링크인지 대비
-		const 정규표현식 = /^[a-zA-Z0-9_-]{11}$/
-		// 잘못됐다면 아무것도 안하고 즉시 null 전달
-		if (!정규표현식.test(id_동영상))
-			return null
-
-		// 동영상 시작시간을 포함하고있는지 확인
-		const t = parseInt(url.searchParams.get("t"))
-		// 포함하고 있으면 시간도 같이 전달 아니라면 id만 전달 + NaN 방지
-		return (Number.isNaN(t)) ? id_동영상 : [id_동영상, t]
-	}
-	// try 과정에서 뭔가 잘못됐다면 즉시 멈추고 null 전달
-	catch
-	{
-		return null
-	}
-}
-
-
 
 
 
@@ -372,7 +439,7 @@ function 시분초_표준(시분초)
 function ctrl_view()
 {
 	// 지금 재생 중인 동영상 시간 확인
-	const cur = 유튜브_플레이어.getCurrentTime()
+	const cur = player.getCurrentTime()
 	const ratio = (cur - sec_start) / (sec_end - sec_start)
 	document.getElementById("play_now").style.width = Math.max(0, Math.min(1, ratio)) * 100 + "%"
 
@@ -493,21 +560,6 @@ function 나만의_색깔(색깔)
 
 
 
-// iframe 들어갈 변수 준비
-let player = null
-
-let player_ready_resolve = null // (추가)
-const player_ready = new Promise(resolve => { player_ready_resolve = resolve }) // (추가) player 준비 완료 시점을 외부에서 기다리기 위함
-
-// api 스크립트 삽입 + player 준비될 때까지 대기 (추가)
-function load_player()
-{
-	document.head.appendChild(api)
-	return player_ready
-}
-
-
-
 // multiple 값에 맞는 범위만 썸네일 표시/숨김
 function update_page(type_str)
 {
@@ -568,23 +620,13 @@ function ready_data(id, start = 0, end = 0)
 	msg_end = end_t[1]
 
 	// 영상 불러오기
-	유튜브_플레이어.cueVideoById(
+	player.cueVideoById(
 	{
 		videoId : get_id,
 		startSeconds : sec_start, // 광고 때문에 sec_start 대신 임시로 0
 		...(sec_end > 0 && {endSeconds : sec_end})
 	})
 
-}
-
-
-// CUED(5) 상태 감지용 대기 장치 (추가)
-let playlist_ready_resolve = null
-
-// 큐잉 완료(CUED)까지 대기 (추가)
-function wait_cued()
-{
-	return new Promise(resolve => { playlist_ready_resolve = resolve })
 }
 
 
@@ -618,66 +660,4 @@ async function fetch_oembed(id) // 값 실적용 대신 뱉어내는 방식으�
 }
 
 
-
-function cue_and_wait(id)
-{
-	const 임시_공간 = document.createElement("div")
-	document.body.appendChild(임시_공간)
-
-	let 임시_플레이어 = null
-
-	const promise = new Promise(resolve =>
-	{
-		임시_플레이어 = new YT.Player(임시_공간,
-		{
-			height: "0", width: "0",
-			events:
-			{
-				onReady: () => 
-				{
-					임시_플레이어.cuePlaylist({ listType: "playlist", list: id })
-				},
-				onStateChange: event =>
-				{
-					if (event.data !== YT.PlayerState.CUED)
-						return
-
-					const list = 임시_플레이어.getPlaylist()
-					if (!list)
-						return
-
-					const result = list.map(id => ({ id }))
-
-					임시_플레이어.destroy()
-					임시_공간.remove()
-
-					resolve(result)
-				}
-			}
-		})
-	})
-	return promise
-}
-
-
-// intro 데이터 재생 준비 (추가) - 재생목록이면 cuePlaylist(랜덤), 일반 동영상이면 cueVideoById
-function cue_intro(intro)
-{
-	if (재생목록인가(intro))
-	{
-		유튜브_플레이어.setShuffle(true) // 랜덤 선택
-		유튜브_플레이어.cuePlaylist(
-		{
-			listType: "playlist",
-			list: intro
-		})
-	}
-	else
-	{
-		유튜브_플레이어.cueVideoById(
-		{
-			videoId : intro,
-		})
-	}
-}
 

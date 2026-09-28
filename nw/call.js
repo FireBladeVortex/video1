@@ -1,7 +1,7 @@
 
 
 // iframe 들어갈 변수 준비
-let 유튜브_플레이어 = null
+let player = null
 
 // iframe 호출한다면
 function onYouTubeIframeAPIReady()
@@ -11,7 +11,7 @@ function onYouTubeIframeAPIReady()
 	// const intro_vid = intro_id
 	// // Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) get_id가 [id, t] 형태로 반환하는 경우 처리
 
-	유튜브_플레이어 = new YT.Player("you_player",
+	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
@@ -45,9 +45,7 @@ function onYouTubeIframeAPIReady()
 			onReady: () =>
 			{
 				// 현재 value 적용
-				유튜브_플레이어.setVolume(+소리_크기_조절_기능.value)
-				// player 사용 가능해진 시점 알림
-				player_ready_resolve()
+				player.setVolume(+소리_크기_조절_기능.value)
 			},
 			onStateChange : onPlayerStateChange,
 		}
@@ -106,15 +104,15 @@ function onPlayerStateChange(event)
 			playlist_ready_resolve()
 			playlist_ready_resolve = null
 		}
-		유튜브_플레이어.setPlaybackRate(1)
+		player.setPlaybackRate(1)
 		if (sec_end === 0)
 		{
-			[sec_end, msg_end] = data_split(유튜브_플레이어.getDuration())
+			[sec_end, msg_end] = data_split(player.getDuration())
 		}
 		let title = null
 		try
 		{
-			title = 유튜브_플레이어.getVideoData().title
+			title = player.getVideoData().title
 		}
 		catch
 		{
@@ -133,9 +131,9 @@ function onPlayerStateChange(event)
 	// 재생 중일 때 100ms마다 진행바 갱신
 	if (event.data === 1)
 	{
-		if (유튜브_플레이어.getCurrentTime() < sec_start)
+		if (player.getCurrentTime() < sec_start)
 		{
-			유튜브_플레이어.seekTo(sec_start, true)
+			player.seekTo(sec_start, true)
 		}
 		clearInterval(play_bar) // 인터벌 중복 호출 방지
 		play_bar = setInterval(ctrl_view, 100)
@@ -147,8 +145,8 @@ function onPlayerStateChange(event)
 	// 영상 재시작
 	if (event.data === 0)
 	{
-		유튜브_플레이어.seekTo(sec_start, true)
-		유튜브_플레이어.playVideo()
+		player.seekTo(sec_start, true)
+		player.playVideo()
 	}
 	//
 	const pop = [1, 2, 3].includes(event.data)
@@ -162,10 +160,12 @@ function onPlayerStateChange(event)
 
 
 
+
+
+
 // 스위치 클릭 시 실제 초기화 실행 (추가)
 function switch_click()
 {
-	// document.head.appendChild(api) // YouTube iframe API 로드 시작 → onYouTubeIframeAPIReady 자동 호출됨
 
 	make_list() // 뼈대(.list, .page) + 썸네일 DOM 생성
 
@@ -174,7 +174,6 @@ function switch_click()
 	// this.remove() // 스위치 사각형 제거
 }
 
-// document.getElementById("switch").addEventListener("click", switch_click)
 
 function 재생목록_불러오기(누구)
 {
@@ -185,9 +184,7 @@ function 재생목록_불러오기(누구)
 	// https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
 	script.addEventListener("load", async () =>
 	{
-		await load_player()
-
-		await fix_playlist_data(window.playlist)
+		await id_가공(window.playlist)
 
 		나만의_색깔(window.playlist.color)
 

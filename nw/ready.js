@@ -2,7 +2,7 @@
 // YouTube Player iframe API 준비
 const api = document.createElement("script")
 api.src = "https://www.youtube.com/iframe_api"
-// document.head.appendChild(api)
+document.head.appendChild(api)
 
 const 이름_목록 =
 [

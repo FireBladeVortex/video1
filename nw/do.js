@@ -56,48 +56,11 @@ function render_switch()
 
 
 
-///////////////////////////////////////////////////////
-/////////////////////////////////////////////////////// 설명 필요
-let player_ready_resolve = null // (추가)
-const player_ready = new Promise(resolve => { player_ready_resolve = resolve })
-// (추가) player 준비 완료 시점을 외부에서 기다리기 위함
-
-// api 스크립트 삽입 + player 준비될 때까지 대기 (추가)
-function load_player()
-{
-	document.head.appendChild(api)
-	return player_ready
-}
-///////////////////////////////////////////////////////
-/////////////////////////////////////////////////////// 설명 필요
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-// 스위치 클릭 시 실제 초기화 실행 (추가)
-function switch_click()
-{
-	// document.head.appendChild(api) // YouTube iframe API 로드 시작 → onYouTubeIframeAPIReady 자동 호출됨
-
-	make_list() // 뼈대(.list, .page) + 썸네일 DOM 생성
-
-	document.querySelectorAll(".list").forEach(list => resize.observe(list)) // 크기 관찰 시작
-
-	// this.remove() // 스위치 사각형 제거
-}
-
-// document.getElementById("switch").addEventListener("click", switch_click)
 
 
 
@@ -327,11 +290,11 @@ function fill_page(type_str)
 			{
 				if (play())
 				{
-					유튜브_플레이어.pauseVideo()
+					player.pauseVideo()
 				}
 				else if (pause())
 				{
-					유튜브_플레이어.playVideo()
+					player.playVideo()
 				}
 				else
 					return
