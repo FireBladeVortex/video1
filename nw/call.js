@@ -6,19 +6,11 @@ let player = null
 // iframe 호출한다면
 function onYouTubeIframeAPIReady()
 {
-
-	// const intro_id = temp_list.intro // (추가) intro id 유효성 미리 확인 (배열이 비었거나 id가 없어도 안전)
-	// const intro_vid = intro_id
-	// // Array.isArray(intro_id) ? intro_id[0] : intro_id // (추가) get_id가 [id, t] 형태로 반환하는 경우 처리
-
 	player = new YT.Player("you_player",
 	{
 		width: "100%",
 		height: "100%",
-		// videoId: "d8dqNFNrXPk",
-		// videoId: get_id(playlist.intro[0].id),
-		// ...(intro_vid && { videoId: intro_vid }), // (추가) 유효한 id가 있을 때만 videoId 전달
-		...(temp_list.intro.id && { videoId: temp_list.intro.id }), // (추가) 유효한 id가 있을 때만 videoId 전달
+		videoId: "",
 
 		playerVars:
 		{
@@ -53,38 +45,6 @@ function onYouTubeIframeAPIReady()
 }
 
 
-// 크기 계산
-const total_cell = { video: 0, short: 0 }
-
-const resize = new ResizeObserver(box =>
-{
-	box.forEach(cell =>
-	{
-		const type = cell.target.classList.contains("short") ? "short" : "video"
-		total_cell[type] = calc_size(cell)
-
-		reset_page(type)
-		update_page(type)
-	})
-})
-
-
-// 모두/원곡/커버 클릭 시 표시할 video 데이터 교체
-function switch_video_data(next_data)
-{
-	active_data.video = next_data // 현재 데이터 갱신
-
-	const page = document.querySelector(`.page.video`)
-	if (page) page.innerHTML = "" // 기존 썸네일 제거 후 재생성
-
-	fill_page("video") // 새 데이터로 다시 채움
-
-	video_multiple = 1 // 페이지 번호 초기화
-	render_nav("video")
-	update_page("video")
-}
-
-
 
 // 영상 상태 확인
 // YT.PlayerState.ENDED = 0
@@ -99,11 +59,6 @@ function onPlayerStateChange(event)
 	// 영상 정보 불러온 상태(재생 시작 전)
 	if (event.data === 5)
 	{
-		if (playlist_ready_resolve) // (추가) 대기 중인 큐잉이 있으면 완료 알림
-		{
-			playlist_ready_resolve()
-			playlist_ready_resolve = null
-		}
 		player.setPlaybackRate(1)
 		if (sec_end === 0)
 		{
@@ -171,7 +126,6 @@ function switch_click()
 
 	document.querySelectorAll(".list").forEach(list => resize.observe(list)) // 크기 관찰 시작
 
-	// this.remove() // 스위치 사각형 제거
 }
 
 

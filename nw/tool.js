@@ -131,33 +131,30 @@ function 재생목록_조사(id)
 
 
 
-async function id_가공(playlist)
+async function id_가공(재생목록)
 {
-	const keys = Object.keys(playlist)
-
+	const keys = Object.keys(재생목록)
 
 	for (const key of keys)
 	{
 		// 불필요한 호출 방지 및 대비
-		if (!Array.isArray(playlist[key]))
+		if (!Array.isArray(재생목록[key]))
 			continue
 
-		for (const video of playlist[key])
+		for (const video of 재생목록[key])
 		{
-			const id = id_찾기(video.id)
-
+			const id = Array.isArray(id_찾기(video.id)) ? id[0] : id
 			if (id)
 			{
 				if (재생목록인가(id))
 				{
 					const 값 = await 재생목록_조사(id)
-					temp_list[key] = (temp_list[key] ?? []).concat(값)
+					임시_목록[key] = (임시_목록[key] ?? []).concat(값)
 				}
-				else if ()
+				else
 				{
 					const { id, ...rest } = video
-					const 값 = Array.isArray(id) ? id[0] : id
-					temp_list[key] = (temp_list[key] ?? []).concat([{ id: 값, ...rest }])
+					임시_목록[key] = (임시_목록[key] ?? []).concat([{ id: 값, ...rest }])
 				}
 			}
 		}
@@ -660,4 +657,36 @@ async function fetch_oembed(id) // 값 실적용 대신 뱉어내는 방식으�
 }
 
 
+
+
+// 모두/원곡/커버 클릭 시 표시할 video 데이터 교체
+function switch_video_data(next_data)
+{
+	active_data.video = next_data // 현재 데이터 갱신
+
+	const page = document.querySelector(`.page.video`)
+	if (page) page.innerHTML = "" // 기존 썸네일 제거 후 재생성
+
+	fill_page("video") // 새 데이터로 다시 채움
+
+	video_multiple = 1 // 페이지 번호 초기화
+	render_nav("video")
+	update_page("video")
+}
+
+
+// 크기 계산
+const total_cell = { video: 0, short: 0 }
+
+const resize = new ResizeObserver(box =>
+{
+	box.forEach(cell =>
+	{
+		const type = cell.target.classList.contains("short") ? "short" : "video"
+		total_cell[type] = calc_size(cell)
+
+		reset_page(type)
+		update_page(type)
+	})
+})
 

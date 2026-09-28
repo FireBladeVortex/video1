@@ -74,11 +74,11 @@ function make_list()
 
 
 
-	const has_ori = valid_playlist(temp_list.ori)
-	const has_video = valid_playlist(temp_list.video)
+	const has_ori = valid_playlist(임시_목록.ori)
+	const has_video = valid_playlist(임시_목록.video)
 
-	list_ori = has_ori ? temp_list.ori : []
-	list_non = has_video ? temp_list.video : []
+	list_ori = has_ori ? 임시_목록.ori : []
+	list_non = has_video ? 임시_목록.video : []
 
 	const video_data = // (추가) 존재 조합에 따른 기본 표시 데이터 결정
 		has_ori && has_video ? list_ori.concat(list_non) :
@@ -89,8 +89,8 @@ function make_list()
 	const video_type =
 	[
 		{ type: "video", tag: "동영상", data: video_data ?? null }, // 수정
-		{ type: "short", tag: "쇼츠", data: temp_list.short ?? null }, // 수정
-		{ type: "long", tag: "부분 재생", data: temp_list.part ?? null }, // 수정
+		{ type: "short", tag: "쇼츠", data: 임시_목록.short ?? null }, // 수정
+		{ type: "long", tag: "부분 재생", data: 임시_목록.part ?? null }, // 수정
 	]
 
 
