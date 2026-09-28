@@ -40,4 +40,4 @@ switch_click()으로 make_list() 실행 + 썸네일 들어갈 크기 계산
 
 
 //
-make_list() 내부 
+make_list() 내부 순서
