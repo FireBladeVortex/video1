@@ -38,3 +38,6 @@ switch_click()으로 make_list() 실행 + 썸네일 들어갈 크기 계산
 
 5. 이름 목록들 제거
 
+
+//
+make_list() 내부 
