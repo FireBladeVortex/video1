@@ -126,15 +126,15 @@ function make_list()
 		h1.appendChild(구역_재생목록)
 
 
-		const h1_class = document.createElement("div")
-		h1_class.className = "h1_class"
-		h1.appendChild(h1_class)
+		const h1_분류 = document.createElement("div")
+		h1_분류.className = "h1_분류"
+		h1.appendChild(h1_분류)
 
 
 
-			const h1_page = document.createElement("div")
-			h1_page.className = "h1_page"
-			h1.appendChild(h1_page)
+			const h1_쪽 = document.createElement("div")
+			h1_쪽.className = "h1_쪽"
+			h1.appendChild(h1_쪽)
 
 
 		if (type.type !== "long")
@@ -146,48 +146,48 @@ function make_list()
 			{
 				if (has_ori && has_video) // (수정) 위에서 계산한 값 재사용
 				{
-					const h1_class_all = document.createElement("div")
-					h1_class_all.className = "h1_class_item"
-					h1_class.appendChild(h1_class_all)
+					const h1_모두 = document.createElement("div")
+					h1_모두.className = "h1_종류"
+					h1_분류.appendChild(h1_모두)
 
-						const all_txt = document.createElement("span")
-						all_txt.className = "txt_click"
-						all_txt.textContent = "모두"
-						h1_class_all.appendChild(all_txt)
-						all_txt.addEventListener("click", () => switch_video_data(list_ori.concat(list_non))) // (수정)
+						const 모두 = document.createElement("span")
+						모두.className = "문자열_클릭"
+						모두.textContent = "모두"
+						h1_모두.appendChild(모두)
+						모두.addEventListener("click", () => switch_video_data(list_ori.concat(list_non))) // (수정)
 
-					const h1_class_original = document.createElement("div")
-					h1_class_original.className = "h1_class_item"
-					h1_class.appendChild(h1_class_original)
+					const h1_원곡 = document.createElement("div")
+					h1_원곡.className = "h1_종류"
+					h1_분류.appendChild(h1_원곡)
 
-						const original_txt = document.createElement("span")
-						original_txt.className = "txt_click"
-						original_txt.textContent = "원곡"
-						h1_class_original.appendChild(original_txt)
-						original_txt.addEventListener("click", () => switch_video_data(list_ori))
+						const 원곡 = document.createElement("span")
+						원곡.className = "문자열_클릭"
+						원곡.textContent = "원곡"
+						h1_원곡.appendChild(원곡)
+						원곡.addEventListener("click", () => switch_video_data(list_ori))
 
-					const h1_class_cover = document.createElement("div")
-					h1_class_cover.className = "h1_class_item"
-					h1_class.appendChild(h1_class_cover)
+					const h1_커버 = document.createElement("div")
+					h1_커버.className = "h1_종류"
+					h1_분류.appendChild(h1_커버)
 
-						const cover_txt = document.createElement("span")
-						cover_txt.className = "txt_click"
-						cover_txt.textContent = "커버"
-						h1_class_cover.appendChild(cover_txt)
-						cover_txt.addEventListener("click", () => switch_video_data(list_non))
+						const 커버 = document.createElement("span")
+						커버.className = "문자열_클릭"
+						커버.textContent = "커버"
+						h1_커버.appendChild(커버)
+						커버.addEventListener("click", () => switch_video_data(list_non))
 				}
 			}
 
 
-				const btn_prev = document.createElement("div")
-				btn_prev.className = "btn_prev"
-				btn_prev.dataset.type = type.type
-				h1_page.appendChild(btn_prev)
+				const 버튼_이전 = document.createElement("div")
+				버튼_이전.className = "버튼_이전"
+				버튼_이전.dataset.type = type.type
+				h1_쪽.appendChild(버튼_이전)
 
-					const btn_prev_txt = document.createElement("span")
-					btn_prev_txt.className = "txt_click"
-					btn_prev.appendChild(btn_prev_txt)
-					btn_prev_txt.addEventListener("click", () =>
+					const 버튼_이전_문자열 = document.createElement("span")
+					버튼_이전_문자열.className = "문자열_클릭"
+					버튼_이전.appendChild(버튼_이전_문자열)
+					버튼_이전_문자열.addEventListener("click", () =>
 					{
 						if (type.type === "쇼츠")
 							short_multiple = Math.max(1, short_multiple - 1)
@@ -197,20 +197,20 @@ function make_list()
 						update_page(type.type)
 					})
 
-				const btn_center = document.createElement("div")
-				btn_center.className = "btn_center"
-				btn_center.dataset.type = type.type
-				h1_page.appendChild(btn_center)
+				const 버튼_지금 = document.createElement("div")
+				버튼_지금.className = "버튼_지금"
+				버튼_지금.dataset.type = type.type
+				h1_쪽.appendChild(버튼_지금)
 
-				const btn_next = document.createElement("div")
-				btn_next.className = "btn_next"
-				btn_next.dataset.type = type.type
-				h1_page.appendChild(btn_next)
+				const 버튼_다음 = document.createElement("div")
+				버튼_다음.className = "버튼_다음"
+				버튼_다음.dataset.type = type.type
+				h1_쪽.appendChild(버튼_다음)
 
-					const btn_next_txt = document.createElement("span")
-					btn_next_txt.className = "txt_click"
-					btn_next.appendChild(btn_next_txt)
-					btn_next_txt.addEventListener("click", () =>
+					const 버튼_다음_문자열 = document.createElement("span")
+					버튼_다음_문자열.className = "문자열_클릭"
+					버튼_다음.appendChild(버튼_다음_문자열)
+					버튼_다음_문자열.addEventListener("click", () =>
 					{
 						const last = get_last(type.type)
 						const multiple = type.type === "쇼츠" ? short_multiple : video_multiple
@@ -226,16 +226,16 @@ function make_list()
 			render_nav(type.type)
 		}
 
-		const h1_size = document.createElement("div")
-		h1_size.className = "h1_size"
-		h1.appendChild(h1_size)
+		const h1_크기 = document.createElement("div")
+		h1_크기.className = "h1_크기"
+		h1.appendChild(h1_크기)
 
-			const toggle_txt = document.createElement("span")
-			toggle_txt.className = "txt_click"
-			toggle_txt.textContent = "크게"
-			toggle_txt.dataset.type = type.type
-			h1_size.appendChild(toggle_txt)
-			toggle_txt.addEventListener("click", () => resize_section(type.type))
+			const 크기_조절 = document.createElement("span")
+			크기_조절.className = "문자열_클릭"
+			크기_조절.textContent = "크게"
+			크기_조절.dataset.type = type.type
+			h1_크기.appendChild(크기_조절)
+			크기_조절.addEventListener("click", () => resize_section(type.type))
 
 		if (type.type === "long")
 		{
@@ -498,49 +498,49 @@ function make_long()
 // 이전/중앙/다음 버튼 영역을 상태에 맞게 다시 그리는 공통 함수
 function render_nav(type_str)
 {
-	const btn_prev = document.querySelector(`.btn_prev[data-type="${type_str}"]`)
-	const btn_center = document.querySelector(`.btn_center[data-type="${type_str}"]`)
-	const btn_next = document.querySelector(`.btn_next[data-type="${type_str}"]`)
-	if (!btn_prev || !btn_center || !btn_next)
+	const 버튼_이전 = document.querySelector(`.버튼_이전[data-type="${type_str}"]`)
+	const 버튼_지금 = document.querySelector(`.버튼_지금[data-type="${type_str}"]`)
+	const 버튼_다음 = document.querySelector(`.버튼_다음[data-type="${type_str}"]`)
+	if (!버튼_이전 || !버튼_지금 || !버튼_다음)
 		return
 
 
 
-	const btn_prev_txt = btn_prev.querySelector(".txt_click")
-	const btn_next_txt = btn_next.querySelector(".txt_click")
+	const 버튼_이전_문자열 = 버튼_이전.querySelector(".문자열_클릭")
+	const 버튼_다음_문자열 = 버튼_다음.querySelector(".문자열_클릭")
 
 
 	const last = get_last(type_str)
 
 	if (last <= 1)
 	{
-		btn_prev_txt.textContent = ""
-		btn_center.textContent = ""
-		btn_next_txt.textContent = ""
+		버튼_이전_문자열.textContent = ""
+		버튼_지금.textContent = ""
+		버튼_다음_문자열.textContent = ""
 		return
 	}
 
 	const multiple = type_str === "쇼츠" ? short_multiple : video_multiple
 
-	btn_prev_txt.textContent = multiple === 1 ? "" : "이전"
-	btn_center.textContent = ""
-	btn_next_txt.textContent = multiple >= last ? "" : "다음"
+	버튼_이전_문자열.textContent = multiple === 1 ? "" : "이전"
+	버튼_지금.textContent = ""
+	버튼_다음_문자열.textContent = multiple >= last ? "" : "다음"
 
-	const num_prev = document.createElement("div")
-	num_prev.className = "num_prev"
-	num_prev.dataset.type = type_str
-	num_prev.textContent = multiple === 1 ? "" : multiple - 1
-	btn_center.appendChild(num_prev)
+	const 이전_숫자 = document.createElement("div")
+	이전_숫자.className = "이전_숫자"
+	이전_숫자.dataset.type = type_str
+	이전_숫자.textContent = multiple === 1 ? "" : multiple - 1
+	버튼_지금.appendChild(이전_숫자)
 
-	const num_curr = document.createElement("div")
-	num_curr.className = "num_curr"
-	num_curr.dataset.type = type_str
-	num_curr.textContent = multiple
-	btn_center.appendChild(num_curr)
+	const 지금_숫자 = document.createElement("div")
+	지금_숫자.className = "지금_숫자"
+	지금_숫자.dataset.type = type_str
+	지금_숫자.textContent = multiple
+	버튼_지금.appendChild(지금_숫자)
 
-	const num_next = document.createElement("div")
-	num_next.className = "num_next"
-	num_next.dataset.type = type_str
-	num_next.textContent = multiple + 1 > last ? "" : multiple + 1
-	btn_center.appendChild(num_next)
+	const 다음_숫자 = document.createElement("div")
+	다음_숫자.className = "다음_숫자"
+	다음_숫자.dataset.type = type_str
+	다음_숫자.textContent = multiple + 1 > last ? "" : multiple + 1
+	버튼_지금.appendChild(다음_숫자)
 }

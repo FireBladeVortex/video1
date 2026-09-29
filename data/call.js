@@ -123,11 +123,11 @@ function render_switch()
 // // switch 상자 내부에 이름 목록 채우기 (추가)
 // function render_switch()
 // {
-// 	const name_box = document.getElementById("name_box")
+// 	const 이름_상자 = document.getElementById("이름_상자")
 
 // 	const abc_h1 = document.createElement("h1")
 // 	abc_h1.className = "abc_h1"
-// 	name_box.appendChild(abc_h1)
+// 	이름_상자.appendChild(abc_h1)
 
 // 	const abc =
 // 	[
@@ -149,7 +149,7 @@ function render_switch()
 
 // 	const name_list = document.createElement("div")
 // 	name_list.className = "name_list"
-// 	name_box.appendChild(name_list)
+// 	이름_상자.appendChild(name_list)
 
 // 	가나다(불러올_목록).forEach(who =>
 // 	{
@@ -160,8 +160,8 @@ function render_switch()
 
 // 		name_btn.addEventListener("click", () =>
 // 		{
-// 			name_box.innerHTML = ""
-// 			name_box.textContent = "불러오는 중"
+// 			이름_상자.innerHTML = ""
+// 			이름_상자.textContent = "불러오는 중"
 // 			재생목록_불러오기(who)
 // 		})
 // 	})
@@ -183,7 +183,7 @@ function 재생목록_불러오기(누구)
 		switch_click()
 
 		await cue_intro(window.playlist.intro)
-		document.getElementById("name_box").remove()
+		document.getElementById("이름_상자").remove()
 
 	})
 

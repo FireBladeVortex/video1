@@ -244,23 +244,23 @@ function 재생_일시중지_조작()
 	}
 }
 
-const 소리_크기 = document.getElementById("volume")
-const 소리_크기_조절_기능 = document.getElementById("volume_bar")
+const 볼륨 = document.getElementById("볼륨")
+const 볼륨_조절 = document.getElementById("볼륨_조절")
 
 
 
 // 소리 크기 조절 막대 값 반영 시키기
-소리_크기_조절_기능.addEventListener("input", () =>
+볼륨_조절.addEventListener("input", () =>
 {
-	player.setVolume(+소리_크기_조절_기능.value)
+	player.setVolume(+볼륨_조절.value)
 })
 
 
 
 // 소리 크기 조절하는데 간섭 방지
 const 방지 = 간섭 => 간섭.stopPropagation()
-소리_크기.addEventListener("mousedown", 방지)
-소리_크기.addEventListener("click", 방지)
+볼륨.addEventListener("mousedown", 방지)
+볼륨.addEventListener("click", 방지)
 
 
 
@@ -370,7 +370,7 @@ function 소리_크기_값_조절(증감)
 		: Math.ceil(지금소리크기 / 5) * 5 - 5
 	const 범위 = Math.min(100, Math.max(0, 올려내려))
 	player.setVolume(범위)
-	소리_크기_조절_기능.value = 범위
+	볼륨_조절.value = 범위
 }
 
 
@@ -442,18 +442,18 @@ function ctrl_view()
 	// 지금 재생 중인 동영상 시간 확인
 	const cur = player.getCurrentTime()
 	const ratio = (cur - sec_start) / (sec_end - sec_start)
-	document.getElementById("play_now").style.width = Math.max(0, Math.min(1, ratio)) * 100 + "%"
+	document.getElementById("재생_시간_지금").style.width = Math.max(0, Math.min(1, ratio)) * 100 + "%"
 
 	// const [, msg_cur] = data_split(cur)
 	// if (msg_end && msg_start)
 	// {
 	// 	if (sec_start === 0)
 	// 	{
-	// 		document.getElementById("play_msg").textContent = `${msg_cur} < ${msg_end}`
+	// 		document.getElementById("플레이어_메세지").textContent = `${msg_cur} < ${msg_end}`
 	// 	}
 	// 	else
 	// 	{
-	// 		document.getElementById("play_msg").textContent = `${msg_start} < ${msg_cur} > ${msg_end}`
+	// 		document.getElementById("플레이어_메세지").textContent = `${msg_start} < ${msg_cur} > ${msg_end}`
 	// 	}
 	// }
 }
@@ -479,7 +479,7 @@ function resize_section(type_str)
 
 	big_type = next_big // 상태 갱신
 
-	document.querySelectorAll(".h1_size .txt_click").forEach(span => // 모든 토글 문자열 재설정
+	document.querySelectorAll(".h1_크기 .문자열_클릭").forEach(span => // 모든 토글 문자열 재설정
 	{
 		span.textContent = span.dataset.type === big_type ? "작게" : "크게"
 	})
@@ -652,8 +652,8 @@ async function fetch_oembed(id) // 값 실적용 대신 뱉어내는 방식으�
 		if (arguments.length !== 1)
 			return
 
-		document.getElementById("play_msg").style.textAlign = "start"
-		document.getElementById("play_msg").textContent = set_title
+		document.getElementById("플레이어_메세지").style.textAlign = "start"
+		document.getElementById("플레이어_메세지").textContent = set_title
 	}
 	catch
 	{

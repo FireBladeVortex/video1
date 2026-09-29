@@ -6,7 +6,7 @@ let player = null
 // iframe 호출한다면
 function onYouTubeIframeAPIReady()
 {
-	player = new YT.Player("you_player",
+	player = new YT.Player("YTP",
 	{
 		width: "100%",
 		height: "100%",
@@ -37,7 +37,7 @@ function onYouTubeIframeAPIReady()
 			onReady: () =>
 			{
 				// 현재 value 적용
-				player.setVolume(+소리_크기_조절_기능.value)
+				player.setVolume(+볼륨_조절.value)
 			},
 			onStateChange : onPlayerStateChange,
 		}
@@ -74,8 +74,8 @@ function onPlayerStateChange(event)
 		}
 		if (title)
 		{
-			document.getElementById("play_msg").style.textAlign = "start"
-			document.getElementById("play_msg").textContent = title
+			document.getElementById("플레이어_메세지").style.textAlign = "start"
+			document.getElementById("플레이어_메세지").textContent = title
 			fetch_oembed(set_id, title)
 		}
 		else
@@ -90,12 +90,12 @@ function onPlayerStateChange(event)
 		{
 			player.seekTo(sec_start, true)
 		}
-		clearInterval(play_bar) // 인터벌 중복 호출 방지
-		play_bar = setInterval(ctrl_view, 100)
+		clearInterval(재생_시간_표시줄) // 인터벌 중복 호출 방지
+		재생_시간_표시줄 = setInterval(ctrl_view, 100)
 	}
 	else
 	{
-		clearInterval(play_bar)
+		clearInterval(재생_시간_표시줄)
 	}
 	// 영상 재시작
 	if (event.data === 0)
@@ -105,12 +105,13 @@ function onPlayerStateChange(event)
 	}
 	//
 	const pop = [1, 2, 3].includes(event.data)
-	document.querySelectorAll("#오른쪽").forEach(overlay => // ("#right, #ad") // #ad 임시 삭제 사용자 선택으로 버튼 만들기 전까지
+	// ("#오른쪽, #클릭_방지") // #클릭_방지 임시 중지 사용자 선택으로 버튼 만들기 전까지
+	document.querySelectorAll("#오른쪽").forEach(overlay =>
 	{
 		overlay.style.cursor = pop ? "pointer" : "default"
 		overlay.onclick = pop ? play_or_pause : null
 	})
-	// document.getElementById("ad").style.pointerEvents = pop ? "auto" : "none" // 상동
+	// document.getElementById("클릭_방지").style.pointerEvents = pop ? "auto" : "none"
 }
 
 

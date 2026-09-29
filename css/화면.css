@@ -29,12 +29,12 @@ body
 {
 	width : 100%;
 	height : 100%;
-	overflow : hidden; /* 스크롤바 방지 */
+	overflow : hidden;
 	background : var(--오른쪽바탕색);
 }
 
  /* 바탕 크기 결정 */
-#box
+#화면
 {
 	display : flex;
 	width : 100vw;
@@ -106,9 +106,9 @@ body
 #왼쪽
 {
 	display : grid;
-	grid-template-rows : 2fr 2fr 1fr; /* (추가) video:short:long 비율 고정 */
-	flex : 0 0 50%; /* 화면 절반으로 고정 */
-	min-width : 0; /* 50% 이상 늘어나는 것 방지 */
+	grid-template-rows : 2fr 2fr 1fr;
+	flex : 0 0 50%;
+	min-width : 0;
 	background : var(--왼쪽바탕색);
 	height : 100%;
 }
@@ -120,8 +120,8 @@ body
 	color : var(--강조1);
 	border-bottom : 3px solid var(--강조2);
 	padding-bottom : 3px;
-	display : flex; /* (수정) 좌우 2등분 배치 */
-	align-items : center; /* (추가) */
+	display : flex;
+	align-items : center;
 }
 
 
@@ -133,16 +133,16 @@ body
 }
 
 
-#왼쪽 h1 .h1_class,
-#왼쪽 h1 .h1_page,
-#왼쪽 h1 .h1_size,
-.h1_class_item,
-.btn_prev,
-.btn_center,
-.btn_next,
-.num_prev,
-.num_curr,
-.num_next
+#왼쪽 h1 .h1_분류,
+#왼쪽 h1 .h1_쪽,
+#왼쪽 h1 .h1_크기,
+.h1_종류,
+.버튼_이전,
+.버튼_지금,
+.버튼_다음,
+.이전_숫자,
+.지금_숫자,
+.다음_숫자
 {
 	flex : 1;
 	display : flex;
@@ -150,7 +150,7 @@ body
 }
 
 
-.btn_center /* (수정) */
+.버튼_지금
 {
 	display : flex;
 	justify-content : space-evenly;
@@ -230,8 +230,8 @@ body
 	position : relative;
 	width : var(--가로);
 	height : var(--세로);
-	overflow : hidden; /* 스크롤 바 방지 */
-	cursor : pointer; /* 커서 변경 */
+	overflow : hidden;
+	cursor : pointer;
 }
 
 .목록.쇼츠 .버튼
@@ -241,31 +241,31 @@ body
 }
 
 .버튼:hover
-{ /* 마우스 올라간 이미지 강조 // 클릭 전 */
+{
 	outline : 3px solid var(--강조1);
 	outline-offset : -3px;
 }
 
 .버튼.강조
-{ /* 활성화 상태 강조 // 클릭 후 */
+{
 	outline : 3px solid var(--강조1);
 	outline-offset : -3px;
 }
 
-.버튼.발기  /* 비활성 표시 흐리고 어둡게 */
+.버튼.발기
 {
-	filter : brightness(25%); /* 어둡게 */
+	filter : brightness(25%);
 }
 
-.버튼.발기:hover  /* 마우스 올라가면 비활성 취소 */
+.버튼.발기:hover
 {
 	filter : brightness(100%);
 }
 
 .버튼 img
 {
-	width : 100%; /* 100% */
-	height : 100%; /* 100% */
+	width : 100%;
+	height : 100%;
 	/* 이미지 비율 유지 + 가득 채움
 	// contain = 대체 옵션 / 비율 유지 큰거 우선 맞춤 (빈공간 생김) */
 	object-fit : cover;
@@ -274,33 +274,32 @@ body
 #오른쪽
 {
 	position : relative;
-	display : flex; /* 정렬 */
-	flex : 1; /* 일정하게 정렬 */
-	flex-direction : column; /* 가로 정렬 */
-	align-items : center; /* 가운데 */
-	justify-content : center; /* 가운데 */
+	display : flex;
+	flex : 1;
+	flex-direction : column;
+	align-items : center;
+	justify-content : center;
 	gap : 3px;
 	cursor : default;
 }
 
 #player
-{ /* 재생 공간 */
+{
 	position : relative;
-	width : clamp(480px, 100%, 640px); /* 최소 480px 최대 640px, 공간 부족하면 축소 */
+	width : clamp(480px, 100%, 640px);
 	height : clamp(270px, 100%, 360px);
 	margin-bottom : 10px;
 	z-index : 3;
 }
 
-/* 유튜브가 들어갈 공간 */
-#player iframe, #you_player
+#player iframe, #YTP
 {
 	width : 100%;
 	height : 100%;
 	display : block;
 }
 
-#ad
+#클릭_방지
 {
 	position : absolute;
 	inset : 0;
@@ -309,8 +308,8 @@ body
 	pointer-events : none;
 }
 
-#play_bar
-{ /* 재생 막대 표시 */
+#재생_시간_표시줄
+{
 	width : clamp(480px, 100%, 640px);
 	height : 9px;
 	background : #000000;
@@ -319,8 +318,8 @@ body
 	margin-bottom : 10px;
 }
 
-#play_now
-{ /* 재생 막대 진행도 */
+#재생_시간_지금
+{
 	height : 100%;
 	width : 0%;
 	background : var(--강조2);
@@ -328,7 +327,7 @@ body
 	overflow : hidden;
 }
 
-#play_msg
+#플레이어_메세지
 {
 	width : clamp(480px, 100%, 640px);
 	font-size : 14px;
@@ -336,7 +335,7 @@ body
 	text-align : center;
 }
 
-#volume
+#볼륨
 {
 	display : flex;
 	align-items : center;
@@ -344,26 +343,25 @@ body
 	height : 50px;
 }
 
-#volume_bar
+#볼륨_조절
 {
 	flex : 1;
 	accent-color : var(--강조2);
 	height : 6px;
 }
 
-#volume_bar:hover
+#볼륨_조절:hover
 {
 	cursor : grab;
 	accent-color : var(--강조2);
 }
 
-#volume_bar:active
+#볼륨_조절:active
 {
 	cursor : grabbing;
 	accent-color : var(--강조2);
 }
 
-/* long 필터 드롭다운 레이아웃 (추가) */
 .long_row1
 {
 	display : flex;
@@ -409,36 +407,37 @@ body
 .long_ready
 {
 	width : 100%;
-	height : 100%; /* (추가) 허용하는 만큼 세로 공간 채움 */
+	height : 100%;
 	display : flex;
-	align-items : center; /* (추가) 세로 중앙 정렬 */
-	justify-content : center; /* (추가) 가로 중앙 정렬 */
+	align-items : center;
+	justify-content : center;
 	cursor : pointer;
 }
 
-.long_ready.강조 /* (추가) 조건 만족 시 활성 상태 */
+.long_ready.강조
 {
 	opacity : 1;
 	pointer-events : auto;
 }
 
-.long_ready.발기 /* (추가) 조건 만족 시 활성 상태 */
+.long_ready.발기
 {
-	opacity : 0.5; /* (추가) 기본 반투명 */
-	pointer-events : none; /* (추가) 기본 상태에서는 클릭 막음 */
+	opacity : 0.5;
+	pointer-events : none;
 }
 
 
-.txt_click /* (추가) 텍스트 영역만 클릭 가능하도록 커서 표시 */
+.문자열_클릭
 {
 	cursor : pointer;
 }
 
-.구역_재생목록, /* (수정) */
-.btn_center
+.구역_재생목록,
+.버튼_지금
 {
 	cursor : default;
 }
+
 #오른쪽 h1
 {
 	position : absolute;
@@ -471,7 +470,7 @@ body
 	color : var(--강조1);
 }
 
-#popup /* 추가 */
+#popup
 {
 	display : none;
 	position : fixed;
@@ -485,12 +484,12 @@ body
 	z-index : 100;
 }
 
-#popup.강조 /* 추가 */
+#popup.강조
 {
 	display : flex;
 }
 
-#popup_close /* 추가 */
+#popup_close
 {
 	position : absolute;
 	top : 0;
@@ -498,8 +497,8 @@ body
 	font-size : 60px;
 	cursor : pointer;
 }
-#popup_txt /* 추가 */
+#popup_txt
 {
-	white-space : pre-wrap; /* 추가 */
-	tab-size : 4; /* 추가 */
+	white-space : pre-wrap;
+	tab-size : 4;
 }
