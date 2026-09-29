@@ -1,9 +1,4 @@
 
-// YouTube Player iframe API 준비
-const api = document.createElement("script")
-api.src = "https://www.youtube.com/iframe_api"
-document.head.appendChild(api)
-
 const 이름_목록 =
 [
 	{  이름 : "아쿠루" },
@@ -23,6 +18,158 @@ const 이름_목록 =
 ]
 
 const 임시_목록 = {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// YouTube Player iframe API 준비
+const api = document.createElement("script")
+api.src = "https://www.youtube.com/iframe_api"
+document.head.appendChild(api)
+
+// iframe 들어갈 변수 준비
+let player = null
+
+// iframe 호출한다면
+function onYouTubeIframeAPIReady()
+{
+	player = new YT.Player("YTP",
+	{
+		width: "100%",
+		height: "100%",
+		videoId: "",
+		playerVars:
+		{
+			// 자동재생 방지
+			autoplay: 0,
+			// 영상 종료 때 추천 방지
+			rel: 0,
+			// 풀 스크린 버튼 숨김
+			// fs: 0,
+			// 유튜브 자체 키보드 조작 기능 방지 방향키 숫자 0~9 등
+			disablekb: 1,
+			// 유튜브 일부 ui 숨김
+			// controls: 0,
+			// 뭐임?
+			origin: window.location.origin,
+			// 자막 한글 pip 모드 제작 대비
+			cc_lang_pref: "ko",
+			// 자막 자동 실행 pip 모드 제작 대비
+			cc_load_policy: 1,
+		},
+
+		// 현재 상태 불러오기
+		events:
+		{
+			onReady: () =>
+			{
+				// 현재 value 적용
+				player.setVolume(+볼륨_조절.value)
+			},
+			onStateChange : onPlayerStateChange,
+		}
+	})
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 1. render_switch()
