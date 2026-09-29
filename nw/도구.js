@@ -668,11 +668,11 @@ function switch_video_data(next_data)
 {
 	active_data.video = next_data // 현재 데이터 갱신
 
-	const 쪽 = document.querySelector(`.쪽.video`)
-	if (쪽)
+	const 페이지 = document.querySelector(`.페이지.video`)
+	if (페이지)
 	{
 		// 기존 썸네일 제거 후 재생성
-		쪽.innerHTML = ""
+		페이지.innerHTML = ""
 	}
 
 	fill_page("video") // 새 데이터로 다시 채움

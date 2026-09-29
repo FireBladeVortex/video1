@@ -132,9 +132,9 @@ function make_list()
 
 
 
-			const h1_쪽 = document.createElement("div")
-			h1_쪽.className = "h1_쪽"
-			h1.appendChild(h1_쪽)
+			const h1_페이지 = document.createElement("div")
+			h1_페이지.className = "h1_페이지"
+			h1.appendChild(h1_페이지)
 
 
 		if (type.type !== "long")
@@ -182,7 +182,7 @@ function make_list()
 				const 버튼_이전 = document.createElement("div")
 				버튼_이전.className = "버튼_이전"
 				버튼_이전.dataset.type = type.type
-				h1_쪽.appendChild(버튼_이전)
+				h1_페이지.appendChild(버튼_이전)
 
 					const 버튼_이전_문자열 = document.createElement("span")
 					버튼_이전_문자열.className = "문자열_클릭"
@@ -200,12 +200,12 @@ function make_list()
 				const 버튼_지금 = document.createElement("div")
 				버튼_지금.className = "버튼_지금"
 				버튼_지금.dataset.type = type.type
-				h1_쪽.appendChild(버튼_지금)
+				h1_페이지.appendChild(버튼_지금)
 
 				const 버튼_다음 = document.createElement("div")
 				버튼_다음.className = "버튼_다음"
 				버튼_다음.dataset.type = type.type
-				h1_쪽.appendChild(버튼_다음)
+				h1_페이지.appendChild(버튼_다음)
 
 					const 버튼_다음_문자열 = document.createElement("span")
 					버튼_다음_문자열.className = "문자열_클릭"
@@ -252,9 +252,9 @@ function make_list()
 		구역.appendChild(목록)
 
 		// list 크기를 가로 세로 썸네일 크기 배수 구해서 총 몇칸인지 구하고 page로 넘겨
-		const 쪽 = document.createElement("div")
-		쪽.className = `쪽 ${type.type}`
-		목록.appendChild(쪽)
+		const 페이지 = document.createElement("div")
+		페이지.className = `페이지 ${type.type}`
+		목록.appendChild(페이지)
 
 
 		fill_page(type.type)
@@ -264,15 +264,15 @@ function make_list()
 // total_cell 값에 맞춰 썸네일 버튼을 (재)생성하는 함수
 function fill_page(type_str)
 {
-	const 쪽 = document.querySelector(`.쪽.${type_str}`)
-	if (!쪽)
+	const 페이지 = document.querySelector(`.페이지.${type_str}`)
+	if (!페이지)
 		return
 
 	const data = active_data[type_str] ?? list_data[type_str]
 	if (!data)
 		return
 
-	const crrt_data_count = 쪽.children.length
+	const crrt_data_count = 페이지.children.length
 	const nxxt_data_count = data.length
 
 	// const next_count = total_cell[type_str] 새로 계산된 필요 개수
@@ -294,7 +294,7 @@ function fill_page(type_str)
 		img.src = src_1 + src_2 + src_3
 
 		버튼.appendChild(img)
-		쪽.appendChild(버튼)
+		페이지.appendChild(버튼)
 
 		버튼.addEventListener("click", () =>
 		{

@@ -134,7 +134,7 @@ body
 
 
 #왼쪽 h1 .h1_분류,
-#왼쪽 h1 .h1_쪽,
+#왼쪽 h1 .h1_페이지,
 #왼쪽 h1 .h1_크기,
 .h1_종류,
 .버튼_이전,
@@ -207,7 +207,7 @@ body
 
 
 
-.쪽
+.페이지
 {
 	display : grid;
 	grid-template-columns : repeat(auto-fill, var(--가로));
@@ -215,7 +215,7 @@ body
 
 
 
-.쪽.쇼츠
+.페이지.쇼츠
 {
 	grid-template-columns : repeat(auto-fill, var(--세로));
 }
