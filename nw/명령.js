@@ -819,3 +819,4 @@ function render_switch()
 	만들기_이름표들(이름_상자)
 }
 
+render_switch()
