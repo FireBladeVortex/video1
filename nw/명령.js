@@ -277,8 +277,8 @@ function 시분초_표준(시분초)
 	const 시간_길이_확인 = 시간_길이 === -1 ? 시분초.length - 1 : 시간_길이
 	const 시간_정리 = 시분초.slice(시간_길이_확인)
 	const 시간_변환 = 시간_정리.map((값, 순서) => 순서 === 0 ? (값 + "") : (값 + "").padStart(2,"0"))
-	const 시분초 = 시간_변환.join(":")
-	return 시분초
+	const 결과 = 시간_변환.join(":")
+	return 결과
 }
 
 
